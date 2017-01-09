@@ -1,0 +1,38 @@
+gedi_base_groupe:
+    resource: "@GediBaseBundle/Controller/GroupeController.php"
+    type:     annotation
+
+gedi_base_document:
+    resource: "@GediBaseBundle/Controller/DocumentController.php"
+    type:     annotation
+
+gedi_base_projet:
+    resource: "@GediBaseBundle/Controller/ProjetController.php"
+    type:     annotation
+
+gedi_base_utilisateur:
+    resource: "@GediBaseBundle/Controller/UtilisateurController.php"
+    type:     annotation
+
+gedi_base:
+    resource: "@GediBaseBundle/Resources/config/routing.yml"
+    prefix:   /
+
+login:
+    path: /login
+    defaults:
+        _controller: GediBaseBundle:Security:login
+
+login_check:
+    path: /login_check
+
+logout:
+    path: /logout
+
+gedi_admin:
+    resource: "@GediAdminBundle/Resources/config/routing.yml"
+    prefix:   /admin
+
+gedi_user:
+    resource: "@GediUserBundle/Resources/config/routing.yml"
+    prefix:   /user

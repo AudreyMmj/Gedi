@@ -1,0 +1,123 @@
+{% extends "GediAdminBundle::layout_admin.html.twig" %}
+
+{% block title_admin %}Documents{% endblock %}
+{% block titre_admin_1 %}documents{% endblock %}
+{% block tooltip_admin_1 %}des documents{% endblock %}
+
+{% block boutons_admin_1 %}
+    {#<label class="btn btn-success"><span#}
+                {#class="glyphicon glyphicon-cloud-upload"></span>#}
+        {#Uploader <input type="file" style="display: none">#}
+    {#</label>#}
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Créer</button>
+    <button type="button" class="btn btn-info boutonDesactive"><span
+                class="glyphicon glyphicon-cloud-download"></span> Downloader <span
+                class="badge spanNbSel"></span>
+    </button>
+    <button type="button" class="btn btn-danger boutonDesactive" data-toggle="modal" data-target="#popup-delete"
+            onclick="majPopupDelete()">Supprimer <span class="badge spanNbSel"></span>
+    </button>
+{% endblock %}
+
+{% block tableau_admin_1 %}
+    <thead>
+    <tr>
+        <th data-checkbox="true"></th>
+        <th>Id</th>
+        <th data-sortable="true">Nom du document</th>
+        <th data-sortable="true">Type</th>
+        <th data-sortable="true">Tag</th>
+        <th data-sortable="true">Date de création</th>
+        <th data-sortable="true">Date de modification</th>
+        <th data-sortable="true">Projet</th>
+        <th data-sortable="true">Propriétaire</th>
+        <th data-align="center">Partagé</th>
+        <th data-align="center">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for document in tab_objets %}
+        <article>
+            <tr>
+                <td></td>
+                <td>{{ document.idDocument }}</td>
+                <td>{{ document.nom }}</td>
+                <td>{{ document.typeDoc }}</td>
+                <td>{{ document.tag }}</td>
+                <td>{{ document.dateCreation|date('Y-m-d H:i:s') }}</td>
+                <td>{{ document.dateModification|date('Y-m-d H:i:s') }}</td>
+                <td>{{ document.idProjetFkDocument.nom }}</td>
+                <td>{{ document.idUtilisateurFkDocument.nom }} {{ document.idUtilisateurFkDocument.prenom }}</td>
+                <td data-align="center">
+                    {# mettre la condition : si le document est partagé, mettre le drapeau#}
+                    <span class="glyphicon glyphicon-flag" style="color:blue"></span>
+                </td>
+                <td data-align="center">
+    <span data-toggle="tooltip" data-placement="bottom"
+          title="Editer le document">
+    <button type="button"
+            class="btn btn-default btn-warning round-button" data-toggle="modal" data-target="#popup-add"><span
+                class="glyphicon glyphicon-pencil"></span>
+    </button>
+    </span>
+                </td>
+            </tr>
+        </article>
+    {% endfor %}
+    </tbody>
+{% endblock %}
+
+{% block breadcrumb_admin_1 %}Documents{% endblock %}
+{% block popup_admin_del_titre %}de documents{% endblock %}
+{% block popup_admin_del_1 %}documents{% endblock %}
+{% block popup_admin_add_1 %}document{% endblock %}
+
+{% block popup_admin_add_2 %}
+    {% if documentForm %}
+        {{ form_start(documentForm) }}
+        <div class="form-group">
+            <br>
+            {{ form_errors(documentForm.nom) }}
+            {{ form_widget(documentForm.nom, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'placeholder': 'Nom du ducument'
+            }}) }}
+            <br>
+            {{ form_errors(documentForm.typeDoc) }}
+            {{ form_widget(documentForm.typeDoc, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'placeholder': 'Type du ducument'
+            }}) }}
+            <br>
+            {{ form_errors(documentForm.tag) }}
+            {{ form_widget(documentForm.tag, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'placeholder': 'Tag du ducument'
+            }}) }}
+            <br>
+            {{ form_errors(documentForm.resume) }}
+            {{ form_widget(documentForm.resume, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'placeholder': 'Resumé du ducument'
+            }}) }}
+            <br>
+        </div>
+        <div class="modal-footer">
+            <div class="form-group">
+                <label class="btn btn-primary"><span
+                            class="glyphicon glyphicon-cloud-upload"></span>
+                    Uploader <input type="file" style="display: none">
+                </label>
+                <input type="submit" class="btn btn-success" value="Créer"/>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+        {{ form_end(documentForm) }}
+    {% else %}
+        <a href="{{ path('login') }} ">Connectez-vous</a> pour créer un document.
+    {% endif %}
+{% endblock %}

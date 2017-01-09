@@ -1,0 +1,15 @@
+start:
+    path:     /
+    defaults: { _controller: GediBaseBundle:Base:start }
+
+home:
+    path:     /home
+    defaults: { _controller: GediBaseBundle:Base:home }
+
+register:
+    path:     /register
+    defaults: { _controller: GediBaseBundle:Base:register }
+
+contact:
+    path:     /contact
+    defaults: { _controller: GediBaseBundle:Base:contact }

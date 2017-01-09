@@ -1,0 +1,53 @@
+{#{% extends "GediUserBundle:User:home_user.html.twig" %}#}
+
+{% block body %}
+    <h1>Utilisateurs list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Idutilisateur</th>
+                <th>Login</th>
+                <th>Motdepasse</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Salt</th>
+                <th>Role</th>
+                <th>Datecreation</th>
+                <th>Datemodification</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for utilisateur in utilisateurs %}
+            <tr>
+                <td><a href="{{ path('utilisateur_show', { 'id': utilisateur.idUtilisateur }) }}">{{ utilisateur.idUtilisateur }}</a></td>
+                <td>{{ utilisateur.login }}</td>
+                <td>{{ utilisateur.motDePasse }}</td>
+                <td>{{ utilisateur.nom }}</td>
+                <td>{{ utilisateur.prenom }}</td>
+                <td>{{ utilisateur.salt }}</td>
+                <td>{{ utilisateur.role }}</td>
+                <td>{% if utilisateur.dateCreation %}{{ utilisateur.dateCreation|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if utilisateur.dateModification %}{{ utilisateur.dateModification|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('utilisateur_show', { 'id': utilisateur.idUtilisateur }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('utilisateur_edit', { 'id': utilisateur.idUtilisateur }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('utilisateur_new') }}">Create a new utilisateur</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "GediAdminBundle::layout_admin.html.twig" %}
+
+{% block titre_admin %}Utilisateurs{% endblock %}
+{% block titre_admin_1 %}utilisateurs{% endblock %}
+{% block tooltip_admin_1 %}d'utilisateur{% endblock %}
+
+{% block boutons_admin_1 %}
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Ajouter</button>
+    <button type="button" class="btn btn-danger boutonDesactive" data-toggle="modal" data-target="#popup-delete"
+            onclick="majPopupDelete()">
+        Supprimer <span class="badge spanNbSel"></span>
+    </button>
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#popup-add">Demandes d'ajout <span
+                class="badge">3</span>
+    </button>
+{% endblock %}
+
+{% block tableau_admin_1 %}
+    <thead>
+    <tr>
+        <th data-checkbox="true"></th>
+        <th>Id</th>
+        <th data-sortable="true">Nom</th>
+        <th data-sortable="true">Prenom</th>
+        <th data-sortable="true">Login</th>
+        <th data-sortable="true">Date de création</th>
+        <th data-sortable="true">Date de modification</th>
+        <th data-align="center">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for utilisateur in tab_objets %}
+        <article>
+            {% if (utilisateur.role == 'ROLE_ADMIN') %}
+            <tr class="info">
+                {% else %}
+            <tr>
+                {% endif %}
+                <td></td>
+                <td>{{ utilisateur.idUtilisateur }}</td>
+                <td>{{ utilisateur.nom }}</td>
+                <td>{{ utilisateur.prenom }}</td>
+                <td>{{ utilisateur.username }}</td>
+                <td>{{ utilisateur.dateCreation|date('Y-m-d H:i:s') }}</td>
+                <td>{{ utilisateur.dateModification|date('Y-m-d H:i:s') }}</td>
+                <td data-align="center">
+    <span data-toggle="tooltip" data-placement="bottom"
+          title="Accéder à l'espace utilisateur">
+    <button type="button"
+            class="btn btn-default btn-primary round-button"><span
+                class="glyphicon glyphicon-dashboard"></span>
+    </button>
+    </span>
+                    <span data-toggle="tooltip" data-placement="bottom"
+                          title="Editer la fiche utilisateur">
+    <button type="button"
+            class="btn btn-default btn-warning round-button" data-toggle="modal" data-target="#popup-add"><span
+                class="glyphicon glyphicon-pencil"></span>
+    </button>
+    </span>
+                </td>
+            </tr>
+        </article>
+    {% endfor %}
+    </tbody>
+{% endblock %}
+
+{% block breadcrumb_admin_1 %}Utilisateurs{% endblock %}
+{% block popup_admin_del_titre %}d'utilisateurs{% endblock %}
+{% block popup_admin_del_1 %}utilisateurs{% endblock %}
+{% block popup_admin_add_1 %}utilisateur{% endblock %}
+
+{% block popup_admin_add_2 %}
+    {% if utilisateurForm %}
+        {{ form_start(utilisateurForm) }}
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">1</span>
+                {{ form_errors(utilisateurForm.username) }}
+                {{ form_widget(utilisateurForm.username, { 'attr':  {
+                    'rows': '1',
+                    'class': 'form-control',
+                    'placeholder': 'Login'
+                }}) }}
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">2</span>
+            {{ form_errors(utilisateurForm.password.first) }}
+            {{ form_widget(utilisateurForm.password.first, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'placeholder': 'Mot de passe'
+            }}) }}
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">3</span>
+            {{ form_errors(utilisateurForm.password.second) }}
+            {{ form_widget(utilisateurForm.password.second, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'placeholder': 'Confirmation'
+            }}) }}
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">4</span>
+            {{ form_errors(utilisateurForm.nom) }}
+            {{ form_widget(utilisateurForm.nom, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'placeholder': 'Nom'
+            }}) }}
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">5</span>
+            {{ form_errors(utilisateurForm.prenom) }}
+            {{ form_widget(utilisateurForm.prenom, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'placeholder': 'Prenom'
+            }}) }}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Créer"/>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+        {{ form_end(utilisateurForm) }}
+    {% else %}
+        <a href="{{ path('login') }} ">Connectez-vous</a> pour créer un utilisateur.
+    {% endif %}
+{% endblock %}

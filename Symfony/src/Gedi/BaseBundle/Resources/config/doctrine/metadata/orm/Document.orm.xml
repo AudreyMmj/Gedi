@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Document" table="Document">
+    <indexes>
+      <index name="fk_utilisateur_document" columns="id_utilisateur_fk_document"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="un_path_titre_type_doc" columns="path,nom,type_doc"/>
+      <unique-constraint name="un_projet" columns="id_projet_fk_document"/>
+    </unique-constraints>
+    <id name="idDocument" type="integer" column="id_document">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nom" type="string" column="nom" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">nom du document</option>
+      </options>
+    </field>
+    <field name="typeDoc" type="string" column="type_doc" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">type du document</option>
+      </options>
+    </field>
+    <field name="dateCreation" type="datetime" column="date_creation" nullable="false">
+      <options>
+        <option name="comment">date de création document</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="dateModification" type="datetime" column="date_modification" nullable="true">
+      <options>
+        <option name="comment">date de modification document</option>
+      </options>
+    </field>
+    <field name="tag" type="string" column="tag" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">tags du document</option>
+      </options>
+    </field>
+    <field name="resume" type="text" column="resume" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">resumé du document</option>
+      </options>
+    </field>
+    <field name="path" type="string" column="path" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">chemin du document</option>
+        <option name="default">/var/www/html/gedi/</option>
+      </options>
+    </field>
+    <many-to-one field="idProjetFkDocument" target-entity="Projet" fetch="LAZY">
+      <join-columns>
+        <join-column name="id_projet_fk_document" referenced-column-name="id_projet"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idUtilisateurFkDocument" target-entity="Utilisateur" fetch="LAZY">
+      <join-columns>
+        <join-column name="id_utilisateur_fk_document" referenced-column-name="id_utilisateur"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="idGroupeGd" target-entity="Groupe" mapped-by="idDocumentGd" fetch="LAZY"/>
+    <many-to-many field="idUtilisateurDu" target-entity="Utilisateur" mapped-by="idDocumentDu" fetch="LAZY"/>
+  </entity>
+</doctrine-mapping>

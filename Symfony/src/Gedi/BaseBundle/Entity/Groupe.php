@@ -1,0 +1,313 @@
+<?php
+
+namespace Gedi\BaseBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Groupe
+ *
+ * @ORM\Table(name="Groupe", indexes={@ORM\Index(name="fk_utilisateur_groupe_1", columns={"id_utilisateur_fk_groupe"})})
+ * @ORM\Entity
+ */
+class Groupe
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_groupe", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idGroupe;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom", type="string", length=50, nullable=false)
+     */
+    private $nom;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
+     */
+    private $dateCreation = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_modification", type="datetime", nullable=true)
+     */
+    private $dateModification;
+
+    /**
+     * @var Utilisateur
+     *
+     * @ORM\ManyToOne(targetEntity="Utilisateur")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_utilisateur_fk_groupe", referencedColumnName="id_utilisateur")
+     * })
+     */
+    private $idUtilisateurFkGroupe;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Document", inversedBy="idGroupeGd")
+     * @ORM\JoinTable(name="groupe_document",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="id_groupe_gd", referencedColumnName="id_groupe")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="id_document_gd", referencedColumnName="id_document")
+     *   }
+     * )
+     */
+    private $idDocumentGd;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Projet", inversedBy="idGroupeGp")
+     * @ORM\JoinTable(name="groupe_projet",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="id_groupe_gp", referencedColumnName="id_groupe")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="id_projet_gp", referencedColumnName="id_projet")
+     *   }
+     * )
+     */
+    private $idProjetGp;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Utilisateur", mappedBy="idGroupeUg")
+     */
+    private $idUtilisateurUg;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->idDocumentGd = new ArrayCollection();
+        $this->idProjetGp = new ArrayCollection();
+        $this->idUtilisateurUg = new ArrayCollection();
+        $this->dateCreation = new \DateTime();
+        $this->dateModification = new \DateTime();
+    }
+
+
+    /**
+     * Get idGroupe
+     *
+     * @return integer
+     */
+    public function getIdGroupe()
+    {
+        return $this->idGroupe;
+    }
+
+    /**
+     * Set nom
+     *
+     * @param string $nom
+     *
+     * @return Groupe
+     */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * Get nom
+     *
+     * @return string
+     */
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    /**
+     * Set dateCreation
+     *
+     * @param \DateTime $dateCreation
+     *
+     * @return Groupe
+     */
+    public function setDateCreation($dateCreation)
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreation
+     *
+     * @return \DateTime
+     */
+    public function getDateCreation()
+    {
+        return $this->dateCreation;
+    }
+
+    /**
+     * Set dateModification
+     *
+     * @param \DateTime $dateModification
+     *
+     * @return Groupe
+     */
+    public function setDateModification($dateModification)
+    {
+        $this->dateModification = $dateModification;
+
+        return $this;
+    }
+
+    /**
+     * Get dateModification
+     *
+     * @return \DateTime
+     */
+    public function getDateModification()
+    {
+        return $this->dateModification;
+    }
+
+    /**
+     * Set idUtilisateurFkGroupe
+     *
+     * @param integer $idUtilisateurFkGroupe
+     *
+     * @return Groupe
+     */
+    public function setIdUtilisateurFkGroupe($idUtilisateurFkGroupe)
+    {
+        $this->idUtilisateurFkGroupe = $idUtilisateurFkGroupe;
+
+        return $this;
+    }
+
+    /**
+     * Get idUtilisateurFkGroupe
+     *
+     * @return integer
+     */
+    public function getIdUtilisateurFkGroupe()
+    {
+        return $this->idUtilisateurFkGroupe;
+    }
+
+    /**
+     * Add idDocumentGd
+     *
+     * @param Document $idDocumentGd
+     *
+     * @return Groupe
+     */
+    public function addIdDocumentGd(Document $idDocumentGd)
+    {
+        $this->idDocumentGd[] = $idDocumentGd;
+
+        return $this;
+    }
+
+    /**
+     * Remove idDocumentGd
+     *
+     * @param Document $idDocumentGd
+     */
+    public function removeIdDocumentGd(Document $idDocumentGd)
+    {
+        $this->idDocumentGd->removeElement($idDocumentGd);
+    }
+
+    /**
+     * Get idDocumentGd
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getIdDocumentGd()
+    {
+        return $this->idDocumentGd;
+    }
+
+    /**
+     * Add idProjetGp
+     *
+     * @param Projet $idProjetGp
+     *
+     * @return Groupe
+     */
+    public function addIdProjetGp(Projet $idProjetGp)
+    {
+        $this->idProjetGp[] = $idProjetGp;
+
+        return $this;
+    }
+
+    /**
+     * Remove idProjetGp
+     *
+     * @param Projet $idProjetGp
+     */
+    public function removeIdProjetGp(Projet $idProjetGp)
+    {
+        $this->idProjetGp->removeElement($idProjetGp);
+    }
+
+    /**
+     * Get idProjetGp
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getIdProjetGp()
+    {
+        return $this->idProjetGp;
+    }
+
+    /**
+     * Add idUtilisateurUg
+     *
+     * @param Utilisateur $idUtilisateurUg
+     *
+     * @return Groupe
+     */
+    public function addIdUtilisateurUg(Utilisateur $idUtilisateurUg)
+    {
+        $this->idUtilisateurUg[] = $idUtilisateurUg;
+
+        return $this;
+    }
+
+    /**
+     * Remove idUtilisateurUg
+     *
+     * @param Utilisateur $idUtilisateurUg
+     */
+    public function removeIdUtilisateurUg(Utilisateur $idUtilisateurUg)
+    {
+        $this->idUtilisateurUg->removeElement($idUtilisateurUg);
+    }
+
+    /**
+     * Get idUtilisateurUg
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getIdUtilisateurUg()
+    {
+        return $this->idUtilisateurUg;
+    }
+}
