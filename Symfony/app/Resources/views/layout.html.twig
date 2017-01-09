@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block stylesheets %}
+        <!-- bootstrap css -->
+        <link href="{{ asset('lib/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <!-- bootstrap-table css -->
+        <link href="{{ asset('lib/bootstrap-table/dist/bootstrap-table.min.css') }}" rel="stylesheet">
+        <!-- animate css -->
+        <link rel="stylesheet" href="{{ asset('lib/animate.css') }}"/>
+        <!-- gedi css -->
+        <link rel="stylesheet" href="{{ asset('css/gedi.css') }}"/>
+    {% endblock %}
+    <!-- bloc de titre, contient les titres des autres pages -->
+    <title>GEDI - {% block app_titre %}{% endblock %}</title>
+</head>
+<body class="full">
+<div class="container">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#navbar-collapse-target">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ path('start') }}"><strong>GEDI</strong></a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-target">
+                <ul class="nav navbar-nav navbar-right">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <!-- la barre de recherche, elle n'apparait que lorsque quelqu'un est connecté -->
+                        <form class="navbar-form navbar-left">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Rechercher...">
+                            </div>
+                            <button type="submit" class="btn btn-default"><span
+                                        class="glyphicon glyphicon-search"></span></button>
+                        </form>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <!-- le menu déroulant, apparait lorsqu'un ADMIN est connecté -->
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-menu-hamburger"></span>
+                                    Bienvenue, {{ app.user.prenom }} <b
+                                            class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ path('home_admin') }}"><span
+                                                    class="glyphicon glyphicon-home"></span> Accueil</a></li>
+                                    <li><a href="{{ path('users_admin') }}"><span
+                                                    class="glyphicon glyphicon-user"></span> Utilisateurs</a></li>
+                                    <li><a href="{{ path('groups_admin') }}"><span
+                                                    class="glyphicon glyphicon-th"></span> Groupes</a></li>
+                                    <li><a href="{{ path('projects_admin') }}"><span
+                                                    class="glyphicon glyphicon-folder-close"></span> Projets</a></li>
+                                    <li><a href="{{ path('docs_admin') }}"><span
+                                                    class="glyphicon glyphicon-file"></span> Documents</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Paramètres</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ path('logout') }}"><span class="glyphicon glyphicon-log-out"></span>
+                                            Deconnexion</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <!-- le menu déroulant, apparait lorsqu'un USER est connecté -->
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-user"></span> Bienvenue, {#{{ app.user.prenom }}#}
+                                    <b
+                                            class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ path('home_user') }}"><span class="glyphicon glyphicon-home"></span>
+                                            Accueil</a></li>
+                                    <li><a href="{{ path('shared_user') }}"><span
+                                                    class="glyphicon glyphicon-globe"></span> Partagé</a></li>
+                                    <li><a href="{{ path('recent_user') }}"><span
+                                                    class="glyphicon glyphicon-time"></span> Recent</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ path('account_user') }}"><span
+                                                    class="glyphicon glyphicon-user"></span> Mon compte</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ path('logout') }}"> <span
+                                                    class="glyphicon glyphicon-log-out"></span>Deconnexion</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <!-- le menu déroulant, apparait lorsqu'un personne n'est connecté -->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-lock"></span> Non connecté <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ path('login') }}"><span
+                                                class="glyphicon glyphicon-log-in"></span> Connexion</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- bloc contenu, contient le code des autres pages -->
+    <div id="content">{% block app_contenu %}{% endblock %}</div>
+</div>
+
+{% block javascripts %}
+    <!-- jQuery -->
+    <script src="{{ asset('lib/jquery/jquery.min.js') }}"></script>
+    <!-- JavaScript Boostrap plugin -->
+    <script src="{{ asset('lib/bootstrap/js/bootstrap.min.js') }}"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="{{ asset('lib/bootstrap-table/dist/bootstrap-table.min.js') }}"></script>
+    <!-- Latest compiled and minified Locales -->
+    <script src="{{ asset('lib/bootstrap-table/dist/locale/bootstrap-table-fr-FR.min.js') }}"></script>
+    <!-- bootstrap-notify js -->
+    <script src="{{ asset('lib/bootstrap-notify-master/bootstrap-notify.js') }}"></script>
+    <!-- gedi js -->
+    <script src="{{ asset('lib/js/gedi.js') }}"></script>
+{% endblock %}
+
+</body>
+</html>

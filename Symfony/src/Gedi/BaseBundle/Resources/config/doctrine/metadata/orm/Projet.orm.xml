@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Projet" table="Projet">
+    <indexes>
+      <index name="fk_utilisateur_projet" columns="id_utilisateur_fk_projet"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="un_path_titre_type_doc" columns="path,nom"/>
+    </unique-constraints>
+    <id name="idProjet" type="integer" column="id_projet">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nom" type="string" column="nom" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">nom du projet</option>
+      </options>
+    </field>
+    <field name="path" type="string" column="path" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">chemin du projet</option>
+        <option name="default">/var/www/html/gedi/</option>
+      </options>
+    </field>
+    <field name="dateCreation" type="datetime" column="date_creation" nullable="false">
+      <options>
+        <option name="comment">date de création projet</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="dateModification" type="datetime" column="date_modification" nullable="true">
+      <options>
+        <option name="comment">date de modification projet</option>
+      </options>
+    </field>
+    <many-to-one field="idUtilisateurFkProjet" target-entity="Utilisateur" fetch="LAZY">
+      <join-columns>
+        <join-column name="id_utilisateur_fk_projet" referenced-column-name="id_utilisateur"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="idGroupeGp" target-entity="Groupe" mapped-by="idProjetGp" fetch="LAZY"/>
+  </entity>
+</doctrine-mapping>

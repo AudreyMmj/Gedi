@@ -1,0 +1,36 @@
+{% extends "GediBaseBundle::layout_base.html.twig" %}
+
+{% block base_titre %}Authentication{% endblock %}
+
+{% block base_contenu %}
+    <h2 class="text-center text-white">{{ block('base_titre') }}</h2>
+    {% if error %}
+        <div class="alert alert-danger">
+            <strong>Echec de login!</strong>
+        </div>
+    {% endif %}
+    <div class="well down-decale effect-transparent">
+        <form class="form-signin form-horizontal" role="form" action="{{ path('login_check') }}" method="post">
+            <div class="form-group">
+                <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+                    <input type="text" name="_username" value="{{ last_username }}" class="form-control"
+                           placeholder="Login" required autofocus>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+                    <input type="password" name="_password" class="form-control" placeholder="Mot de passe"
+                           required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+                    <button type="submit" class="btn btn-default btn-primary btn-lg">Connexion
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <p class="text-white">Pas encore de compte ? <a class="text-white" href="{{ path('register') }} ">Incrivez-vous
+            !</a></p>
+{% endblock %}

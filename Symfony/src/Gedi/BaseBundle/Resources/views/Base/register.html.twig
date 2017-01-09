@@ -1,0 +1,60 @@
+{% extends "GediBaseBundle::layout_base.html.twig" %}
+
+{% block base_titre %}Demande d'inscription{% endblock %}
+
+{% block base_contenu %}
+    <div class="center-pad">
+        <div class="panel panel-default effect-transparent">
+            {{ form_start(utilisateurForm) }}
+            <div class="panel-heading full-transparent">
+                <h2>Demande d'inscription</h2>
+                <p>Remplissez le formulaire d'inscription, tous les champs sont obligatoires.
+                    <br>Votre compte sera activé sous réserve de l'administrateur</p>
+            </div>
+            <div class="panel-body full-transparent">
+                <div class="form-group full-transparent">
+                    {{ form_errors(utilisateurForm.username) }}
+                    {{ form_widget(utilisateurForm.username, { 'attr':  {
+                        'rows': '1',
+                        'class': 'form-control',
+                        'placeholder': 'Email'
+                    }}) }}
+                    <br>
+                    {{ form_errors(utilisateurForm.password.first) }}
+                    {{ form_widget(utilisateurForm.password.first, { 'attr':  {
+                        'rows': '1',
+                        'class': 'form-control',
+                        'placeholder': 'Mot de passe'
+                    }}) }}
+                    <br>
+                    {{ form_errors(utilisateurForm.password.second) }}
+                    {{ form_widget(utilisateurForm.password.second, { 'attr':  {
+                        'rows': '1',
+                        'class': 'form-control',
+                        'placeholder': 'Confirmation de mot de passe'
+                    }}) }}
+                    <br>
+                    {{ form_errors(utilisateurForm.nom) }}
+                    {{ form_widget(utilisateurForm.nom, { 'attr':  {
+                        'rows': '1',
+                        'class': 'form-control',
+                        'placeholder': 'Nom'
+                    }}) }}
+                    <br>
+                    {{ form_errors(utilisateurForm.prenom) }}
+                    {{ form_widget(utilisateurForm.prenom, { 'attr':  {
+                        'rows': '1',
+                        'class': 'form-control',
+                        'placeholder': 'Prenom'
+                    }}) }}
+                    <br>
+                    {#<input type="submit" class="btn btn-success" value="Envoyer"/>#}
+                </div>
+            </div>
+            <div class="panel-footer full-transparent">
+                <input type="submit" class="btn btn-success" value="Envoyer"/>
+            </div>
+            {{ form_end(utilisateurForm) }}
+        </div>
+    </div>
+{% endblock %}

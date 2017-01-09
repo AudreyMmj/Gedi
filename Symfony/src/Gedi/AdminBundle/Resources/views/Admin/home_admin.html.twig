@@ -1,0 +1,17 @@
+{% extends "::layout.html.twig" %}
+
+{% block app_titre %}
+    Administration - Home
+{% endblock %}
+
+{% block app_contenu %}
+    <a href="{{ path('groups_admin') }} ">Gestion des groupes</a>
+    <br>
+    <a href="{{ path('docs_admin') }} ">Gestion des documents</a>
+    <br>
+    <a href="{{ path('users_admin') }} ">Gestion des utilisateurs</a>
+    <br>
+    <a href="{{ path('projects_admin') }} ">Gestion des projets</a>
+{% endblock %}
+
+

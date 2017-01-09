@@ -1,0 +1,87 @@
+{% extends "GediAdminBundle::layout_admin.html.twig" %}
+
+{% block titre_admin %}Groupes{% endblock %}
+{% block titre_admin_1 %}groupes{% endblock %}
+{% block tooltip_admin_1 %}des groupes{% endblock %}
+
+{% block boutons_admin_1 %}
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Créer</button>
+    <button type="button" class="btn btn-danger boutonDesactive" data-toggle="modal" data-target="#popup-delete"
+            onclick="majPopupDelete()">
+        Supprimer <span class="badge spanNbSel"></span>
+    </button>
+{% endblock %}
+
+{% block tableau_admin_1 %}
+    <thead>
+    <tr>
+        <th data-checkbox="true"></th>
+        <th>Id</th>
+        <th data-sortable="true">Nom du groupe</th>
+        <th data-sortable="true">Date de création</th>
+        <th data-sortable="true">Date de modification</th>
+        <th data-sortable="true">Propriétaire</th>
+        <th data-align="center">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for groupe in tab_objets %}
+        <article>
+            <tr>
+                <td></td>
+                <td>{{ groupe.idGroupe }}</td>
+                <td>{{ groupe.nom }}</td>
+                <td>{{ groupe.dateCreation|date('Y-m-d H:i:s') }}</td>
+                <td>{{ groupe.dateModification|date('Y-m-d H:i:s') }}</td>
+                <td>{{ groupe.idUtilisateurFkGroupe.nom }} {{ groupe.idUtilisateurFkGroupe.prenom }}</td>
+                <td data-align="center">
+    <span data-toggle="tooltip" data-placement="bottom"
+          title="Voir les membres">
+    <button type="button"
+            class="btn btn-default btn-primary round-button"><span
+                class="glyphicon glyphicon-user"></span>
+    </button>
+    </span>
+                    <span data-toggle="tooltip" data-placement="bottom"
+                          title="Editer le groupe">
+    <button type="button"
+            class="btn btn-default btn-warning round-button"  data-toggle="modal" data-target="#popup-add"><span
+                class="glyphicon glyphicon-pencil"></span>
+    </button>
+    </span>
+                </td>
+            </tr>
+        </article>
+    {% endfor %}
+    </tbody>
+{% endblock %}
+
+{% block breadcrumb_admin_1 %}Groupes{% endblock %}
+{% block popup_admin_del_titre %}de groupes{% endblock %}
+{% block popup_admin_del_1 %}groupes{% endblock %}
+{% block popup_admin_add_1 %}groupe{% endblock %}
+
+{% block popup_admin_add_2 %}
+    {% if groupeForm %}
+        {{ form_start(groupeForm) }}
+        <div class="form-group">
+            <br>
+            {{ form_errors(groupeForm.nom) }}
+            {{ form_widget(groupeForm.nom, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'placeholder': 'Nom du groupe'
+            }}) }}
+            <br>
+        </div>
+        <div class="modal-footer">
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Créer"/>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+        {{ form_end(groupeForm) }}
+    {% else %}
+        <a href="{{ path('login') }} ">Connectez-vous</a> pour créer un groupe.
+    {% endif %}
+{% endblock %}

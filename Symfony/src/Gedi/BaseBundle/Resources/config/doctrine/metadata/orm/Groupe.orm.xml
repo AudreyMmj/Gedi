@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Groupe" table="Groupe">
+    <indexes>
+      <index name="fk_utilisateur_groupe_1" columns="id_utilisateur_fk_groupe"/>
+    </indexes>
+    <id name="idGroupe" type="integer" column="id_groupe">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nom" type="string" column="nom" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">nom du groupe</option>
+      </options>
+    </field>
+    <field name="dateCreation" type="datetime" column="date_creation" nullable="false">
+      <options>
+        <option name="comment">date de création groupe</option>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="dateModification" type="datetime" column="date_modification" nullable="true">
+      <options>
+        <option name="comment">date de modification groupe</option>
+      </options>
+    </field>
+    <field name="idUtilisateurFkGroupe" type="integer" column="id_utilisateur_fk_groupe" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="comment">propriétaire du groupe</option>
+      </options>
+    </field>
+    <many-to-many field="idUtilisateurUg" target-entity="Utilisateur" mapped-by="idGroupeUg" fetch="LAZY"/>
+    <many-to-many field="idProjetGp" target-entity="Projet" inversed-by="idGroupeGp" fetch="LAZY">
+      <join-table name="groupe_projet">
+        <join-columns>
+          <join-column name="id_groupe_gp" referenced-column-name="id_groupe"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="id_projet_gp" referenced-column-name="id_projet"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+    <many-to-many field="idDocumentGd" target-entity="Document" inversed-by="idGroupeGd" fetch="LAZY">
+      <join-table name="groupe_document">
+        <join-columns>
+          <join-column name="id_groupe_gd" referenced-column-name="id_groupe"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="id_document_gd" referenced-column-name="id_document"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+  </entity>
+</doctrine-mapping>

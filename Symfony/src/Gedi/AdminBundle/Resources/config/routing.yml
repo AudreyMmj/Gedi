@@ -1,0 +1,19 @@
+home_admin:
+    path:     /home_admin
+    defaults: { _controller: GediAdminBundle:Admin:home }
+
+users_admin:
+    path:     /users_admin
+    defaults: { _controller: GediAdminBundle:Admin:users }
+
+groups_admin:
+    path:     /groups_admin
+    defaults: { _controller: GediAdminBundle:Admin:groups }
+
+projects_admin:
+    path:     /projects_admin
+    defaults: { _controller: GediAdminBundle:Admin:projects }
+
+docs_admin:
+    path:     /docs_admin
+    defaults: { _controller: GediAdminBundle:Admin:documents }

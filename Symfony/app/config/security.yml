@@ -1,0 +1,55 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/security.html
+security:
+    encoders:
+#        Symfony\Component\Security\Core\User\User: plaintext
+        Gedi\BaseBundle\Entity\Utilisateur: bcrypt
+
+    role_hierarchy:
+        # ROLE_ADMIN a les droits de ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH
+        ROLE_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        main:
+            entity:
+                class:    Gedi\BaseBundle\Entity\Utilisateur
+                property: username
+#        in_memory:
+#            memory:
+#                users:
+#                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+#                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main_start:
+            pattern:   ^/$
+            anonymous: true
+        main_login:
+            pattern:   ^/login$
+            anonymous: true
+        main_register:
+            pattern:   ^/register$
+            anonymous: true
+        main_contact:
+            pattern:   ^/contact$
+            anonymous: true
+        main:
+            pattern:   ^/
+            anonymous: false
+            provider:  main
+#            provider:  in_memory
+            form_login:
+                login_path: login
+                check_path: login_check
+                default_target_path: home
+                always_use_default_target_path: false
+            logout:
+                 path:      logout
+                 target:    /
+
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/user, roles: ROLE_USER }

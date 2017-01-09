@@ -1,0 +1,14 @@
+{% extends "::layout.html.twig" %}
+
+{% block app_titre %}
+    {% block base_titre %}
+    {% endblock %}
+{% endblock %}
+
+{% block app_contenu %}
+    {% block base_contenu %}
+    {% endblock %}
+    <footer class="footer text-white">
+        <p>Une question ? <a class="text-white" href="{{ path('contact') }} ">Contact</a></p>
+    </footer>
+{% endblock %}

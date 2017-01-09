@@ -1,0 +1,19 @@
+{% extends "GediBaseBundle::layout_base.html.twig" %}
+
+{% block base_titre %}Start{% endblock %}
+
+{% block base_contenu %}
+    <div class="jumbotron pad-space down-decale effect-transparent">
+        <h1 class="up-decale">Bienvenue sur Gedi !</h1>
+        <p>Gedi est un Gestionnaire Electronique de Documents Interractif qui<br>
+            vous permet de stocker vos documents en ligne et de collaborer <br>
+            avec d'autres personnes. </p>
+
+        {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+            <!-- le bouton de connexion n'apparait que lorqu'on est deconnecté -->
+            <p><a class="btn btn-primary btn-lg" href="{{ path('login') }}" role="button">Connexion</a></p>
+        {% endif %}
+    </div>
+    <p class="text-white">Pas encore de compte ? <a class="text-white" href="{{ path('register') }} ">Incrivez-vous
+            !</a></p>
+{% endblock %}

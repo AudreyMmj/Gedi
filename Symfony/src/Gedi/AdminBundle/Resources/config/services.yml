@@ -1,0 +1,4 @@
+services:
+#    gedi_admin.example:
+#        class: Gedi\AdminBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
