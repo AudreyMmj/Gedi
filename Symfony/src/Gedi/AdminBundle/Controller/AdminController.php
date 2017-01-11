@@ -53,20 +53,31 @@ class AdminController extends Controller
         // création du formulaire de suppression d'utilisateur
         $deleteForm = $this->createDeleteForm();
         $deleteForm->handleRequest($request);
-//        if ($deleteForm->isSubmitted() && $deleteForm->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
-//
-////            $sel = $_POST['sel'];
-//            $sel = $request->get('sel');
+        if ($deleteForm->isSubmitted() && $deleteForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            if(isset($_POST["data"]))
+            {
+                $data = json_decode($_POST["data"]);
+                $sel = $data->sel;
+                for ($i = 0; $i <= count($sel); $i++) {
+                    $temp = $sel[$i];
+                    $userToDel = $em->find('Gedi\BaseBundle\Entity\Utilisateur',  $temp[0]);
+                    $em->remove($userToDel);
+                }
+            }
+
+
+
+//            $sel = $_POST['sel'];
 //            for ($i = 1; $i <= count($sel); $i++) {
 //                $temp = $sel[$i];
-//                $userToDel = $em->find('Utilisateur',  $temp[0]);
+//                $userToDel = $em->find('Gedi\BaseBundle\Entity\Utilisateur',  $temp[0]);
 //                $em->remove($userToDel);
 //            }
-//
-//            $em->flush();
-//            return $this->redirectToRoute('users_admin');
-//        }
+
+            $em->flush();
+            return $this->redirectToRoute('users_admin');
+        }
 
         return $this->render('GediAdminBundle:Admin:users_admin.html.twig', array(
             'tab_objets' => $tab_objets,
@@ -84,13 +95,11 @@ class AdminController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request, $sel)
     {
-
             $em = $this->getDoctrine()->getManager();
-
 //            $sel = $_POST['sel'];
-            $sel = $request->get('sel');
+//            $sel = $request->get('sel');
             for ($i = 1; $i <= count($sel); $i++) {
                 $temp = $sel[$i];
                 $userToDel = $em->find('Utilisateur',  $temp[0]);

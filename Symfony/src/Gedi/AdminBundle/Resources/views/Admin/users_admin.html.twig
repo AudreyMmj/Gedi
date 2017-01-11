@@ -71,15 +71,12 @@
 {% block popup_admin_del_contenu %}
     {{ form_start(deleteForm) }}
     <input id="sel" type="hidden" name="sel"/>
-    {#<input type="submit" class="btn btn-danger" value="Supprimer">#}
-    <a href="{{ path('del_user') }}" class="btn btn-danger">
-    Supprimer
-    </a>
+    <input type="submit" class="btn btn-danger" value="Supprimer">
+    {#<a href="{{ path('del_user') }}" class="btn btn-danger">#}
+    {#Supprimer#}
+    {#</a>#}
     <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
     {{ form_end(deleteForm) }}
-    {#<button type="button" href="{{ path('delete_user') }}"#}
-    {#onclick="location.href=this.href+'?key='+sel;return false;" class="btn btn-danger">Supprimer#}
-    {#</button>#}
 {% endblock %}
 
 {% block popup_admin_add_titre %}utilisateur{% endblock %}

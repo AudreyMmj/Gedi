@@ -34,20 +34,27 @@ function majPopupDelete() {
         $('#table_admin').bootstrapTable('getSelections').length + ' ' + nom);
 
     // met la selection du tableau dans la variable sel
-    $.get("users_admin", function(){
+    $.get("users_admin", function () {
         sel = $('#table_admin').bootstrapTable('getSelections')
     });
-
-    // $.ajax({
-    //     url: 'AdminController.php',
-    //     data: 'sel='+ sel
-    // });
 }
 
 $(function () {
-    document.getElementById('popup-delete').addEventListener("mouseover", function(){
+    // envoi la selection dans le formulaire de suppression
+    document.getElementById('popup-delete').addEventListener("click", function () {
         if (typeof sel != 'undefined') {
-            document.getElementById('sel').setAttribute("value", sel);
+            // document.getElementById('sel').setAttribute("value", sel);
+
+            // var myarray = new Array();
+            var params = {sel: sel};
+            var paramJSON = JSON.stringify(params);
+
+            $.post(
+                'users_admin',
+                {data: paramJSON},
+                function (data) {
+                    var result = JSON.parse(data);
+                });
         }
     });
 });
