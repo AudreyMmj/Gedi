@@ -1,10 +1,10 @@
 {% extends "GediAdminBundle::layout_admin.html.twig" %}
 
 {% block titre_admin %}Groupes{% endblock %}
-{% block titre_admin_1 %}groupes{% endblock %}
-{% block tooltip_admin_1 %}des groupes{% endblock %}
+{% block titre_admin_2 %}groupes{% endblock %}
+{% block tooltip_admin %}des groupes{% endblock %}
 
-{% block boutons_admin_1 %}
+{% block boutons_admin %}
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Créer</button>
     <button type="button" class="btn btn-danger boutonDesactive" data-toggle="modal" data-target="#popup-delete"
             onclick="majPopupDelete()">
@@ -12,7 +12,7 @@
     </button>
 {% endblock %}
 
-{% block tableau_admin_1 %}
+{% block tableau_admin %}
     <thead>
     <tr>
         <th data-checkbox="true"></th>
@@ -56,12 +56,12 @@
     </tbody>
 {% endblock %}
 
-{% block breadcrumb_admin_1 %}Groupes{% endblock %}
+{% block breadcrumb_admin %}Groupes{% endblock %}
 {% block popup_admin_del_titre %}de groupes{% endblock %}
-{% block popup_admin_del_1 %}groupes{% endblock %}
-{% block popup_admin_add_1 %}groupe{% endblock %}
+{% block popup_admin_del_contenu %}groupes{% endblock %}
+{% block popup_admin_add_titre %}groupe{% endblock %}
 
-{% block popup_admin_add_2 %}
+{% block popup_admin_add_contenu %}
     {% if groupeForm %}
         {{ form_start(groupeForm) }}
         <div class="form-group">

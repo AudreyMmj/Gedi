@@ -1,10 +1,10 @@
 {% extends "GediAdminBundle::layout_admin.html.twig" %}
 
 {% block titre_admin %}Utilisateurs{% endblock %}
-{% block titre_admin_1 %}utilisateurs{% endblock %}
-{% block tooltip_admin_1 %}d'utilisateur{% endblock %}
+{% block titre_admin_2 %}utilisateurs{% endblock %}
+{% block tooltip_admin %}d'utilisateur{% endblock %}
 
-{% block boutons_admin_1 %}
+{% block boutons_admin %}
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Ajouter</button>
     <button type="button" class="btn btn-danger boutonDesactive" data-toggle="modal" data-target="#popup-delete"
             onclick="majPopupDelete()">
@@ -15,7 +15,7 @@
     </button>
 {% endblock %}
 
-{% block tableau_admin_1 %}
+{% block tableau_admin %}
     <thead>
     <tr>
         <th data-checkbox="true"></th>
@@ -65,12 +65,25 @@
     </tbody>
 {% endblock %}
 
-{% block breadcrumb_admin_1 %}Utilisateurs{% endblock %}
-{% block popup_admin_del_titre %}d'utilisateurs{% endblock %}
-{% block popup_admin_del_1 %}utilisateurs{% endblock %}
-{% block popup_admin_add_1 %}utilisateur{% endblock %}
+{% block breadcrumb_admin %}Utilisateurs{% endblock %}
 
-{% block popup_admin_add_2 %}
+{% block popup_admin_del_titre %}d'utilisateurs{% endblock %}
+{% block popup_admin_del_contenu %}
+    {{ form_start(deleteForm) }}
+    <input id="sel" type="hidden" name="sel"/>
+    {#<input type="submit" class="btn btn-danger" value="Supprimer">#}
+    <a href="{{ path('del_user') }}" class="btn btn-danger">
+    Supprimer
+    </a>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+    {{ form_end(deleteForm) }}
+    {#<button type="button" href="{{ path('delete_user') }}"#}
+    {#onclick="location.href=this.href+'?key='+sel;return false;" class="btn btn-danger">Supprimer#}
+    {#</button>#}
+{% endblock %}
+
+{% block popup_admin_add_titre %}utilisateur{% endblock %}
+{% block popup_admin_add_contenu %}
     {% if utilisateurForm %}
         {{ form_start(utilisateurForm) }}
         <div class="form-group">
@@ -86,42 +99,42 @@
             <br>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">2</span>
-            {{ form_errors(utilisateurForm.password.first) }}
-            {{ form_widget(utilisateurForm.password.first, { 'attr':  {
-                'rows': '1',
-                'class': 'form-control',
-                'placeholder': 'Mot de passe'
-            }}) }}
+                {{ form_errors(utilisateurForm.password.first) }}
+                {{ form_widget(utilisateurForm.password.first, { 'attr':  {
+                    'rows': '1',
+                    'class': 'form-control',
+                    'placeholder': 'Mot de passe'
+                }}) }}
             </div>
             <br>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">3</span>
-            {{ form_errors(utilisateurForm.password.second) }}
-            {{ form_widget(utilisateurForm.password.second, { 'attr':  {
-                'rows': '1',
-                'class': 'form-control',
-                'placeholder': 'Confirmation'
-            }}) }}
+                {{ form_errors(utilisateurForm.password.second) }}
+                {{ form_widget(utilisateurForm.password.second, { 'attr':  {
+                    'rows': '1',
+                    'class': 'form-control',
+                    'placeholder': 'Confirmation'
+                }}) }}
             </div>
             <br>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">4</span>
-            {{ form_errors(utilisateurForm.nom) }}
-            {{ form_widget(utilisateurForm.nom, { 'attr':  {
-                'rows': '1',
-                'class': 'form-control',
-                'placeholder': 'Nom'
-            }}) }}
+                {{ form_errors(utilisateurForm.nom) }}
+                {{ form_widget(utilisateurForm.nom, { 'attr':  {
+                    'rows': '1',
+                    'class': 'form-control',
+                    'placeholder': 'Nom'
+                }}) }}
             </div>
             <br>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">5</span>
-            {{ form_errors(utilisateurForm.prenom) }}
-            {{ form_widget(utilisateurForm.prenom, { 'attr':  {
-                'rows': '1',
-                'class': 'form-control',
-                'placeholder': 'Prenom'
-            }}) }}
+                {{ form_errors(utilisateurForm.prenom) }}
+                {{ form_widget(utilisateurForm.prenom, { 'attr':  {
+                    'rows': '1',
+                    'class': 'form-control',
+                    'placeholder': 'Prenom'
+                }}) }}
             </div>
         </div>
         <div class="modal-footer">

@@ -1,17 +1,17 @@
 {% extends "GediAdminBundle::layout_admin.html.twig" %}
 
 {% block titre_admin %}Projets{% endblock %}
-{% block titre_admin_1 %}projets{% endblock %}
-{% block tooltip_admin_1 %}des projets{% endblock %}
+{% block titre_admin_2 %}projets{% endblock %}
+{% block tooltip_admin %}des projets{% endblock %}
 
-{% block boutons_admin_1 %}
+{% block boutons_admin %}
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Créer</button>
     <button type="button" class="btn btn-danger boutonDesactive" data-toggle="modal" data-target="#popup-delete"
             onclick="majPopupDelete()">Supprimer <span class="badge spanNbSel"></span>
     </button>
 {% endblock %}
 
-{% block tableau_admin_1 %}
+{% block tableau_admin %}
     <thead>
     <tr>
         <th data-checkbox="true"></th>
@@ -55,12 +55,12 @@
     </tbody>
 {% endblock %}
 
-{% block breadcrumb_admin_1 %}Projets{% endblock %}
+{% block breadcrumb_admin %}Projets{% endblock %}
 {% block popup_admin_del_titre %}de projets{% endblock %}
-{% block popup_admin_del_1 %}projets{% endblock %}
-{% block popup_admin_add_1 %}projet{% endblock %}
+{% block popup_admin_del_contenu %}projets{% endblock %}
+{% block popup_admin_add_titre %}projet{% endblock %}
 
-{% block popup_admin_add_2 %}
+{% block popup_admin_add_contenu %}
     {% if projetForm %}
         {{ form_start(projetForm) }}
         <div class="form-group">

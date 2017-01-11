@@ -11,7 +11,7 @@ gedi_base_projet:
     type:     annotation
 
 gedi_base_utilisateur:
-    resource: "@GediBaseBundle/Controller/UtilisateurController.php"
+    resource: "@GediAdminBundle/Controller/UtilisateurController.php"
     type:     annotation
 
 gedi_base:

@@ -10,7 +10,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-11">
-                    <h2>Liste des {% block titre_admin_1 %}{% endblock %}</h2>
+                    <h2>Liste des {% block titre_admin_2 %}{% endblock %}</h2>
                     {% for flashMessage in app.session.flashbag.get('success') %}
                         <script type="text/javascript">
                             showNotifyUser("{{ flashMessage }}");
@@ -19,20 +19,20 @@
                 </div>
                 <div class="col-md-1">
                     <h2><span class="label label-default" data-toggle="tooltip" data-placement="bottom"
-                              title="Nombre {% block tooltip_admin_1 %}{% endblock %}">{{ tab_objets|length }}</span>
+                              title="Nombre {% block tooltip_admin %}{% endblock %}">{{ tab_objets|length }}</span>
                     </h2>
                 </div>
             </div>
         </div>
         <div class="panel-body">
             <div class="btn-group" role="group" aria-label="...">
-                {% block boutons_admin_1 %}{% endblock %}
+                {% block boutons_admin %}{% endblock %}
             </div>
             <div class="table-responsive">
                 <table class="table" data-toggle="table" data-search="true" data-striped="true" data-pagination="true"
                        data-classes="table-no-bordered table-hover" data-page-list="[5, 10, 15, 20, 50]"
                        id="table_admin">
-                    {% block tableau_admin_1 %}{% endblock %}
+                    {% block tableau_admin %}{% endblock %}
                 </table>
             </div>
         </div>
@@ -40,7 +40,7 @@
     <ol class="breadcrumb">
         <li><a href="{{ path('start') }}">Home</a></li>
         <li><a href="{{ path('home_admin') }}">Administration</a></li>
-        <li class="active">{% block breadcrumb_admin_1 %}{% endblock %}</li>
+        <li class="active">{% block breadcrumb_admin %}{% endblock %}</li>
     </ol>
 
     <!-- Popup fenetre de suppression d'entité -->
@@ -59,8 +59,9 @@
                     <p>Valider la suppression ?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Valider</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                    <div class="form-group">
+                        {% block popup_admin_del_contenu %}{% endblock %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,10 +74,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Créer un {% block popup_admin_add_1 %}{% endblock %}</h4>
+                    <h4 class="modal-title">Créer un {% block popup_admin_add_titre %}{% endblock %}</h4>
                 </div>
                 <div class="modal-body">
-                    {% block popup_admin_add_2 %}{% endblock %}
+                    {% block popup_admin_add_contenu %}{% endblock %}
                 </div>
             </div>
         </div>

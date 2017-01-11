@@ -6,6 +6,10 @@ users_admin:
     path:     /users_admin
     defaults: { _controller: GediAdminBundle:Admin:users }
 
+del_user:
+    path:     /users_admin/del_user
+    defaults: { _controller: GediAdminBundle:Admin:delete }
+
 groups_admin:
     path:     /groups_admin
     defaults: { _controller: GediAdminBundle:Admin:groups }

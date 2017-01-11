@@ -1,10 +1,10 @@
 {% extends "GediAdminBundle::layout_admin.html.twig" %}
 
 {% block title_admin %}Documents{% endblock %}
-{% block titre_admin_1 %}documents{% endblock %}
-{% block tooltip_admin_1 %}des documents{% endblock %}
+{% block titre_admin_2 %}documents{% endblock %}
+{% block tooltip_admin %}des documents{% endblock %}
 
-{% block boutons_admin_1 %}
+{% block boutons_admin %}
     {#<label class="btn btn-success"><span#}
                 {#class="glyphicon glyphicon-cloud-upload"></span>#}
         {#Uploader <input type="file" style="display: none">#}
@@ -19,7 +19,7 @@
     </button>
 {% endblock %}
 
-{% block tableau_admin_1 %}
+{% block tableau_admin %}
     <thead>
     <tr>
         <th data-checkbox="true"></th>
@@ -67,12 +67,12 @@
     </tbody>
 {% endblock %}
 
-{% block breadcrumb_admin_1 %}Documents{% endblock %}
+{% block breadcrumb_admin %}Documents{% endblock %}
 {% block popup_admin_del_titre %}de documents{% endblock %}
-{% block popup_admin_del_1 %}documents{% endblock %}
-{% block popup_admin_add_1 %}document{% endblock %}
+{% block popup_admin_del_contenu %}documents{% endblock %}
+{% block popup_admin_add_titre %}document{% endblock %}
 
-{% block popup_admin_add_2 %}
+{% block popup_admin_add_contenu %}
     {% if documentForm %}
         {{ form_start(documentForm) }}
         <div class="form-group">
