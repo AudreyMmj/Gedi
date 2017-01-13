@@ -57,7 +57,7 @@ class Groupe
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Document", inversedBy="idGroupeGd")
-     * @ORM\JoinTable(name="groupe_document",
+     * @ORM\JoinTable(name="Groupe_Document",
      *   joinColumns={
      *     @ORM\JoinColumn(name="id_groupe_gd", referencedColumnName="id_groupe")
      *   },
@@ -72,7 +72,7 @@ class Groupe
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Projet", inversedBy="idGroupeGp")
-     * @ORM\JoinTable(name="groupe_projet",
+     * @ORM\JoinTable(name="Groupe_Projet",
      *   joinColumns={
      *     @ORM\JoinColumn(name="id_groupe_gp", referencedColumnName="id_groupe")
      *   },
@@ -101,7 +101,6 @@ class Groupe
         $this->dateCreation = new \DateTime();
         $this->dateModification = new \DateTime();
     }
-
 
     /**
      * Get idGroupe

@@ -32,7 +32,7 @@
     </field>
     <many-to-many field="idUtilisateurUg" target-entity="Utilisateur" mapped-by="idGroupeUg" fetch="LAZY"/>
     <many-to-many field="idProjetGp" target-entity="Projet" inversed-by="idGroupeGp" fetch="LAZY">
-      <join-table name="groupe_projet">
+      <join-table name="Groupe_Projet">
         <join-columns>
           <join-column name="id_groupe_gp" referenced-column-name="id_groupe"/>
         </join-columns>
@@ -42,7 +42,7 @@
       </join-table>
     </many-to-many>
     <many-to-many field="idDocumentGd" target-entity="Document" inversed-by="idGroupeGd" fetch="LAZY">
-      <join-table name="groupe_document">
+      <join-table name="Groupe_Document">
         <join-columns>
           <join-column name="id_groupe_gd" referenced-column-name="id_groupe"/>
         </join-columns>

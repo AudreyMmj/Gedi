@@ -11,11 +11,6 @@
             <div class="row">
                 <div class="col-md-11">
                     <h2>Liste des {% block titre_admin_2 %}{% endblock %}</h2>
-                    {% for flashMessage in app.session.flashbag.get('success') %}
-                        <script type="text/javascript">
-                            showNotifyUser("{{ flashMessage }}");
-                        </script>
-                    {% endfor %}
                 </div>
                 <div class="col-md-1">
                     <h2><span class="label label-default" data-toggle="tooltip" data-placement="bottom"
@@ -46,21 +41,21 @@
     <!-- Popup fenetre de suppression d'entité -->
     <div class="modal fade" id="popup-delete" role="dialog">
         <div class="modal-dialog">
-            <!-- contenu -->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Suppression {% block popup_admin_del_titre %}{% endblock %}</h4>
                 </div>
+                <!-- contenu mis à jour dans majPopupDelete de gedi.js -->
                 <div class="modal-body">
-                    <p id="nbSel">
-                        <!-- contenu mis à jour dans majPopupDelete de gedi.js -->
-                    </p>
+                    <p id="nbSel"></p>
                     <p>Valider la suppression ?</p>
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        {% block popup_admin_del_contenu %}{% endblock %}
+                        <button id="delete-entity" type="button" class="btn btn-danger" data-dismiss="modal">Supprimer
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                     </div>
                 </div>
             </div>
@@ -70,7 +65,6 @@
     <!-- Popup fenetre d'ajout d'entité -->
     <div class="modal fade" id="popup-add" role="dialog">
         <div class="modal-dialog">
-            <!-- contenu-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>

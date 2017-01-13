@@ -77,7 +77,6 @@ class Projet
         $this->dateModification = new \DateTime();
     }
 
-
     /**
      * Get idProjet
      *

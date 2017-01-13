@@ -66,18 +66,7 @@
 {% endblock %}
 
 {% block breadcrumb_admin %}Utilisateurs{% endblock %}
-
 {% block popup_admin_del_titre %}d'utilisateurs{% endblock %}
-{% block popup_admin_del_contenu %}
-    {{ form_start(deleteForm) }}
-    <input id="sel" type="hidden" name="sel"/>
-    <input type="submit" class="btn btn-danger" value="Supprimer">
-    {#<a href="{{ path('del_user') }}" class="btn btn-danger">#}
-    {#Supprimer#}
-    {#</a>#}
-    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-    {{ form_end(deleteForm) }}
-{% endblock %}
 
 {% block popup_admin_add_titre %}utilisateur{% endblock %}
 {% block popup_admin_add_contenu %}

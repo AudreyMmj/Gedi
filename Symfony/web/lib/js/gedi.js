@@ -1,7 +1,9 @@
 /**
  * Created by explorer on 30/12/16.
  */
-var sel;
+
+var sel; // variable de selection
+var nom; // nom de l'entité affiché sur la page
 
 // =======================================================================
 // script permettant de jouer les tooltips
@@ -12,50 +14,65 @@ $(document).ready(function () {
 // =======================================================================
 // mise à jour du popup de suppression
 function majPopupDelete() {
-    var nom;
-    // change le nom en fonction de la page ou l'on est
-    if (window.location.href.indexOf("users_admin") > -1) {
-        nom = 'utilisateur';
-    } else if (window.location.href.indexOf("groups_admin") > -1) {
-        nom = 'groupe';
-    } else if (window.location.href.indexOf("projects_admin") > -1) {
-        nom = 'projet';
-    } else if (window.location.href.indexOf("docs_admin") > -1) {
-        nom = 'document';
-    }
-
-    // ajoute un 's' si la selection contient plusieurs élements
-    if ($('#table_admin').bootstrapTable('getSelections').length > 1) {
-        nom = nom + 's';
-    }
-
-    // écrit le texte dans le popup
-    $('#nbSel').html('Vous êtes sur le point de supprimer définitivement ' +
-        $('#table_admin').bootstrapTable('getSelections').length + ' ' + nom);
-
     // met la selection du tableau dans la variable sel
-    $.get("users_admin", function () {
-        sel = $('#table_admin').bootstrapTable('getSelections')
-    });
+    sel = $('#table_admin').bootstrapTable('getSelections');
+
+    if (typeof sel != 'undefined') {
+
+        // change le texte du popup de suppression en fonction de la page
+        if (window.location.href.indexOf("users_admin") > -1) {
+            nom = 'utilisateur';
+        } else if (window.location.href.indexOf("groups_admin") > -1) {
+            nom = 'groupe';
+        } else if (window.location.href.indexOf("projects_admin") > -1) {
+            nom = 'projet';
+        } else if (window.location.href.indexOf("docs_admin") > -1) {
+            nom = 'document';
+        }
+
+        // ajoute un 's' si la selection contient plusieurs élements
+        // dans le popup de suppression
+        if (sel.length > 1) {
+            nom = nom + 's';
+        }
+
+        // écrit le texte dans le popup indiquant le nombre d'entités dans le tableau
+        $('#nbSel').html('Vous êtes sur le point de supprimer définitivement ' +
+            sel.length + ' ' + nom);
+    }
 }
 
+// =======================================================================
+// listener sur le bouton supprimer du popup de suppression
+// envoi la selection dans le formulaire de suppression
 $(function () {
-    // envoi la selection dans le formulaire de suppression
-    document.getElementById('popup-delete').addEventListener("click", function () {
-        if (typeof sel != 'undefined') {
-            // document.getElementById('sel').setAttribute("value", sel);
-
-            // var myarray = new Array();
-            var params = {sel: sel};
-            var paramJSON = JSON.stringify(params);
-
-            $.post(
-                'users_admin',
-                {data: paramJSON},
-                function (data) {
-                    var result = JSON.parse(data);
-                });
+    document.getElementById('delete-entity').addEventListener("click", function () {
+        // enregistre les id des utilisateurs à supprimer
+        var selection = [];
+        for (var i = 0; i < sel.length; i++) {
+            selection[i] = sel[i][1];
         }
+
+        // envoi de la requete de suppression en POST et rechargement
+        // de la page actualisée
+        $.ajax({
+            type: 'POST',
+            url: window.location,
+            data: {data: selection},
+            success: function (data) {
+                showNotifyUser('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
+                    ((sel.length > 1) ? 's bien supprimés' : ' bien supprimé') + '</strong>',
+                    'glyphicon glyphicon-ok', 'success');
+
+                $('#content').load(window.location + '#content', function () {
+                    sel = null;
+                });
+            },
+            error: function () {
+                showNotifyUser('<strong>' + 'La requête n\'a pas abouti' + '</strong>',
+                    'glyphicon glyphicon-remove', 'danger');
+            }
+        });
     });
 });
 
@@ -64,11 +81,11 @@ $(function () {
 // selectionnés dans le span
 $(function () {
     $(document).ready(
-        hideOuShow(),
-        showNotifyUser("")
+        hideOuShow()
     );
 });
 
+// fonction pour afficher ou cacher le span des boutons de controle
 function hideOuShow() {
     if ($('#table_admin').bootstrapTable('getSelections').length < 1) {
         $('.spanNbSel').hide();
@@ -79,6 +96,8 @@ function hideOuShow() {
     }
 }
 
+// listener sur les cases à cocher du tableau pour mettre à jour
+// les boutons et les spans
 $(function () {
     $('#table_admin').on({
         'check.bs.table': function () {
@@ -93,13 +112,20 @@ $(function () {
         }, 'uncheck-all.bs.table': function () {
             $('.spanNbSel').html($('#table_admin').bootstrapTable('getSelections').length);
             hideOuShow();
+        }, 'refresh.bs.table': function () {
+            // $('#table_admin').bootstrapTable('refresh', {url: window.location});
         }
     });
 });
 
-function showNotifyUser($texte) {
-    if ($texte.length > 1) {
-        $.notify($texte, {
+// fonction d'affichage de popups
+function showNotifyUser(texte, icon, type) {
+    if (texte.length > 1) {
+        $.notify({
+            icon: icon,
+            message: texte
+        }, {
+            type: type,
             animate: {
                 enter: 'animated bounceInDown',
                 exit: 'animated bounceOutUp'

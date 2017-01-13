@@ -83,3 +83,9 @@ body {
     cursor: inherit;
     display: block;
 }
+
+.alert {
+    padding-left: 3%;
+    background-color: #52c441;
+    color: white;
+}

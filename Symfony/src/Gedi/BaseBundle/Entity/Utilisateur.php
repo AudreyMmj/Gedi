@@ -90,7 +90,7 @@ class Utilisateur implements UserInterface
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Document", inversedBy="idUtilisateurDu")
-     * @ORM\JoinTable(name="document_utilisateur",
+     * @ORM\JoinTable(name="Document_Utilisateur",
      *   joinColumns={
      *     @ORM\JoinColumn(name="id_utilisateur_du", referencedColumnName="id_utilisateur")
      *   },
@@ -105,7 +105,7 @@ class Utilisateur implements UserInterface
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Groupe", inversedBy="idUtilisateurUg")
-     * @ORM\JoinTable(name="utilisateur_groupe",
+     * @ORM\JoinTable(name="Utilisateur_Groupe",
      *   joinColumns={
      *     @ORM\JoinColumn(name="id_utilisateur_ug", referencedColumnName="id_utilisateur")
      *   },
@@ -126,7 +126,6 @@ class Utilisateur implements UserInterface
         $this->dateCreation = new \DateTime();
         $this->dateModification = new \DateTime();
     }
-
 
     /**
      * Get idUtilisateur

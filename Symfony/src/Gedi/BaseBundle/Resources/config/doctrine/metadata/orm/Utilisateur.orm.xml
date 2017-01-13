@@ -62,7 +62,7 @@
       </options>
     </field>
     <many-to-many field="idGroupeUg" target-entity="Groupe" inversed-by="idUtilisateurUg" fetch="LAZY">
-      <join-table name="utilisateur_groupe">
+      <join-table name="Utilisateur_Groupe">
         <join-columns>
           <join-column name="id_utilisateur_ug" referenced-column-name="id_utilisateur"/>
         </join-columns>
@@ -72,7 +72,7 @@
       </join-table>
     </many-to-many>
     <many-to-many field="idDocumentDu" target-entity="Document" inversed-by="idUtilisateurDu" fetch="LAZY">
-      <join-table name="document_utilisateur">
+      <join-table name="Document_Utilisateur">
         <join-columns>
           <join-column name="id_utilisateur_du" referenced-column-name="id_utilisateur"/>
         </join-columns>

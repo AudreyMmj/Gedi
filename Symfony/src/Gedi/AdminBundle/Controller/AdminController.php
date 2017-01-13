@@ -2,6 +2,7 @@
 
 namespace Gedi\AdminBundle\Controller;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Gedi\BaseBundle\Entity\Document;
 use Gedi\BaseBundle\Entity\Groupe;
 use Gedi\BaseBundle\Entity\Projet;
@@ -12,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 
 class AdminController extends Controller
@@ -29,7 +31,7 @@ class AdminController extends Controller
      * Page d'administration des utilisateurs de l'application
      * @Route("/users_admin")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response|array
      */
     public function usersAction(Request $request)
     {
@@ -46,69 +48,27 @@ class AdminController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($utilisateur);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'Utilisateur bien enregistré');
             return $this->redirectToRoute('users_admin');
         }
 
-        // création du formulaire de suppression d'utilisateur
-        $deleteForm = $this->createDeleteForm();
-        $deleteForm->handleRequest($request);
-        if ($deleteForm->isSubmitted() && $deleteForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            if(isset($_POST["data"]))
-            {
-                $data = json_decode($_POST["data"]);
-                $sel = $data->sel;
-                for ($i = 0; $i <= count($sel); $i++) {
-                    $temp = $sel[$i];
-                    $userToDel = $em->find('Gedi\BaseBundle\Entity\Utilisateur',  $temp[0]);
+        // suppression d'utilisateur
+        if ($request->isMethod('POST')) {
+            $sel = $_POST["data"];
+
+            if ($sel != null) {
+                for ($i = 0; $i <= count($sel) - 1; $i++) {
+                    $userToDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]);
                     $em->remove($userToDel);
                 }
+                $em->flush();
             }
-
-
-
-//            $sel = $_POST['sel'];
-//            for ($i = 1; $i <= count($sel); $i++) {
-//                $temp = $sel[$i];
-//                $userToDel = $em->find('Gedi\BaseBundle\Entity\Utilisateur',  $temp[0]);
-//                $em->remove($userToDel);
-//            }
-
-            $em->flush();
-            return $this->redirectToRoute('users_admin');
         }
 
         return $this->render('GediAdminBundle:Admin:users_admin.html.twig', array(
             'tab_objets' => $tab_objets,
             'utilisateur' => $utilisateur,
             'utilisateurForm' => $utilisateurForm->createView(),
-            'deleteForm' => $deleteForm->createView(),
         ));
-    }
-
-    /**
-     * Deletes a utilisateur entity.
-     *
-     * @Route("/users_admin/del_user", name="del_user")
-     * @Method("DELETE")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteAction(Request $request, $sel)
-    {
-            $em = $this->getDoctrine()->getManager();
-//            $sel = $_POST['sel'];
-//            $sel = $request->get('sel');
-            for ($i = 1; $i <= count($sel); $i++) {
-                $temp = $sel[$i];
-                $userToDel = $em->find('Utilisateur',  $temp[0]);
-                $em->remove($userToDel);
-            }
-
-            $em->flush();
-            return $this->redirectToRoute('users_admin');
-
     }
 
     /**
@@ -132,7 +92,6 @@ class AdminController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($groupe);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'Groupe bien enregistré');
             return $this->redirectToRoute('groups_admin');
         }
 
@@ -164,7 +123,6 @@ class AdminController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($projet);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'Projet bien enregistré');
             return $this->redirectToRoute('projects_admin');
         }
 
@@ -196,7 +154,6 @@ class AdminController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($document);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'Document bien enregistré');
             return $this->redirectToRoute('docs_admin');
         }
 
@@ -205,20 +162,5 @@ class AdminController extends Controller
             'document' => $document,
             'documentForm' => $documentForm->createView(),
         ));
-    }
-
-    /**
-     * Creates a form to delete a utilisateur entity.
-     *
-     * @param Utilisateur $utilisateur The utilisateur entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm()
-    {
-        return $this->createFormBuilder()
-//            ->setAction($this->generateUrl('users_admin_delete'))
-            ->setMethod('DELETE')
-            ->getForm();
     }
 }
