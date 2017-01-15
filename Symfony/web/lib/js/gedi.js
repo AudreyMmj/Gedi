@@ -2,51 +2,103 @@
  * Created by explorer on 30/12/16.
  */
 
-var sel; // variable de selection
+var sel; // variable de selection d'entité
 var nom; // nom de l'entité affiché sur la page
 
 // =======================================================================
-// script permettant de jouer les tooltips
+// elements lancés au chargement de la page
 $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip(); // script permettant de jouer les tooltips
+    $('.bouton-submit-entity').prop('disabled', true); // désactive par défaut les boutons de type bouton-submit-entity
+    $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de type bouton-desactive
 });
 
 // =======================================================================
-// mise à jour du popup de suppression
-function majPopupDelete() {
-    // met la selection du tableau dans la variable sel
-    sel = $('#table_admin').bootstrapTable('getSelections');
-
-    if (typeof sel != 'undefined') {
-
-        // change le texte du popup de suppression en fonction de la page
-        if (window.location.href.indexOf("users_admin") > -1) {
-            nom = 'utilisateur';
-        } else if (window.location.href.indexOf("groups_admin") > -1) {
-            nom = 'groupe';
-        } else if (window.location.href.indexOf("projects_admin") > -1) {
-            nom = 'projet';
-        } else if (window.location.href.indexOf("docs_admin") > -1) {
-            nom = 'document';
-        }
-
-        // ajoute un 's' si la selection contient plusieurs élements
-        // dans le popup de suppression
-        if (sel.length > 1) {
-            nom = nom + 's';
-        }
-
-        // écrit le texte dans le popup indiquant le nombre d'entités dans le tableau
-        $('#nbSel').html('Vous êtes sur le point de supprimer définitivement ' +
-            sel.length + ' ' + nom);
+// fonction pour afficher ou cacher le span des boutons de controle
+function hideOuShow(nbSel) {
+    if (nbSel < 1) {
+        $('.spanNbSel').hide();
+        $('.bouton-desactive').prop('disabled', true);
+    } else {
+        $('.spanNbSel').show();
+        $('.bouton-desactive').prop('disabled', false);
     }
 }
 
 // =======================================================================
-// listener sur le bouton supprimer du popup de suppression
-// envoi la selection dans le formulaire de suppression
+// fonction d'affichage de popups
+function showNotifyUser(texte, icon, type) {
+    if (texte.length > 1) {
+        $.notify({
+            icon: icon,
+            message: texte
+        }, {
+            type: type,
+            animate: {
+                enter: 'animated bounceInDown',
+                exit: 'animated bounceOutUp'
+            }
+        });
+    }
+}
+
+// =======================================================================
+// block jquery
 $(function () {
-    document.getElementById('delete-entity').addEventListener("click", function () {
+
+    // listener sur les cases à cocher du tableau pour mettre à jour
+    // les boutons et les spans
+    $('#table_admin').on({
+        'check.bs.table': function () {
+            sel = $('#table_admin').bootstrapTable('getSelections');
+            $('.spanNbSel').html(sel.length);
+            hideOuShow(sel.length);
+        }, 'uncheck.bs.table': function () {
+            sel = $('#table_admin').bootstrapTable('getSelections');
+            $('.spanNbSel').html(sel.length);
+            hideOuShow(sel.length);
+        }, 'check-all.bs.table': function () {
+            sel = $('#table_admin').bootstrapTable('getSelections');
+            $('.spanNbSel').html(sel.length);
+            hideOuShow(sel.length);
+        }, 'uncheck-all.bs.table': function () {
+            sel = $('#table_admin').bootstrapTable('getSelections');
+            $('.spanNbSel').html(sel.length);
+            hideOuShow(sel.length);
+        }
+    });
+
+    // listener sur les elements de classe bouton-desactive
+    // mise à jour du popup de suppression
+    $('.bouton-desactive').click(function () {
+
+        if (typeof sel != 'undefined') {
+            // change le texte du popup de suppression en fonction de la page
+            if (window.location.href.indexOf("users_admin") > -1) {
+                nom = 'utilisateur';
+            } else if (window.location.href.indexOf("groups_admin") > -1) {
+                nom = 'groupe';
+            } else if (window.location.href.indexOf("projects_admin") > -1) {
+                nom = 'projet';
+            } else if (window.location.href.indexOf("docs_admin") > -1) {
+                nom = 'document';
+            }
+
+            // ajoute un 's' si la selection contient plusieurs élements
+            // dans le popup de suppression
+            if (sel.length > 1) {
+                nom = nom + 's';
+            }
+
+            // écrit le texte dans le popup indiquant le nombre d'entités dans le tableau
+            $('#nbSel').html('Vous êtes sur le point de supprimer définitivement ' +
+                sel.length + ' ' + nom);
+        }
+    });
+
+    // listener sur le bouton supprimer du popup de suppression
+    // envoi la selection dans le formulaire de suppression
+    $('#delete-entity').click(function () {
         // enregistre les id des utilisateurs à supprimer
         var selection = [];
         for (var i = 0; i < sel.length; i++) {
@@ -74,62 +126,43 @@ $(function () {
             }
         });
     });
-});
 
-// =======================================================================
-// script permettant de mettre à jour le nombre d'élements
-// selectionnés dans le span
-$(function () {
-    $(document).ready(
-        hideOuShow()
-    );
-});
+    // listener sur le formulaire d'ajout d'utilisateur
+    // permet de valider les champs coté client
+    // tous les champs doivent être rempli et le mot de passe
+    // et la confirmatin de mot de passe doivent concorder
+    $('#popup-add').keyup(function () {
+        var pass1 = document.getElementById("gedi_basebundle_utilisateur_password_first").value;
+        var pass2 = document.getElementById("gedi_basebundle_utilisateur_password_second").value;
+        var username = document.getElementById("gedi_basebundle_utilisateur_username").value;
+        var nom = document.getElementById("gedi_basebundle_utilisateur_nom").value;
+        var prenom = document.getElementById("gedi_basebundle_utilisateur_prenom").value;
 
-// fonction pour afficher ou cacher le span des boutons de controle
-function hideOuShow() {
-    if ($('#table_admin').bootstrapTable('getSelections').length < 1) {
-        $('.spanNbSel').hide();
-        $('.boutonDesactive').prop('disabled', true);
-    } else {
-        $('.spanNbSel').show();
-        $('.boutonDesactive').prop('disabled', false);
-    }
-}
+        if (pass1 != pass2 && (pass1 != "" && pass2 != "")) {
+            $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-error)');
+        } else if (pass1 == pass2 && (pass1 != "" && pass2 != "")) {
+            $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-success)');
+        } else {
+            $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+        }
 
-// listener sur les cases à cocher du tableau pour mettre à jour
-// les boutons et les spans
-$(function () {
-    $('#table_admin').on({
-        'check.bs.table': function () {
-            $('.spanNbSel').html($('#table_admin').bootstrapTable('getSelections').length);
-            hideOuShow();
-        }, 'uncheck.bs.table': function () {
-            $('.spanNbSel').html($('#table_admin').bootstrapTable('getSelections').length);
-            hideOuShow();
-        }, 'check-all.bs.table': function () {
-            $('.spanNbSel').html($('#table_admin').bootstrapTable('getSelections').length);
-            hideOuShow();
-        }, 'uncheck-all.bs.table': function () {
-            $('.spanNbSel').html($('#table_admin').bootstrapTable('getSelections').length);
-            hideOuShow();
-        }, 'refresh.bs.table': function () {
-            // $('#table_admin').bootstrapTable('refresh', {url: window.location});
+        if (username == "" || pass1 == "" || pass2 == "" || nom == "" || prenom == "") {
+            $('.bouton-submit-entity').prop('disabled', true);
+        } else {
+            if (pass1 != pass2) {
+                $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-error)');
+                $('.bouton-submit-entity').prop('disabled', true);
+            } else {
+                $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-success)');
+                $('.bouton-submit-entity').prop('disabled', false);
+            }
         }
     });
-});
 
-// fonction d'affichage de popups
-function showNotifyUser(texte, icon, type) {
-    if (texte.length > 1) {
-        $.notify({
-            icon: icon,
-            message: texte
-        }, {
-            type: type,
-            animate: {
-                enter: 'animated bounceInDown',
-                exit: 'animated bounceOutUp'
-            }
-        });
-    }
-}
+    // listener sur les elements de classe bouton-dismiss-entity
+    // vide le formulaire de son contenu
+    $(".bouton-dismiss-entity").click(function() {
+        $('form').trigger("reset");
+        $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+    });
+});

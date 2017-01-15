@@ -6,8 +6,7 @@
 
 {% block boutons_admin %}
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Ajouter</button>
-    <button type="button" class="btn btn-danger boutonDesactive" data-toggle="modal" data-target="#popup-delete"
-            onclick="majPopupDelete()">
+    <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal" data-target="#popup-delete">
         Supprimer <span class="badge spanNbSel"></span>
     </button>
     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#popup-add">Demandes d'ajout <span
@@ -84,7 +83,7 @@
             </div>
             <br>
             <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">2</span>
+                <span class="input-group-addon" id="basic-addon2">2</span>
                 {{ form_errors(utilisateurForm.password.first) }}
                 {{ form_widget(utilisateurForm.password.first, { 'attr':  {
                     'rows': '1',
@@ -94,7 +93,7 @@
             </div>
             <br>
             <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">3</span>
+                <span class="input-group-addon" id="basic-addon3">3</span>
                 {{ form_errors(utilisateurForm.password.second) }}
                 {{ form_widget(utilisateurForm.password.second, { 'attr':  {
                     'rows': '1',
@@ -104,7 +103,7 @@
             </div>
             <br>
             <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">4</span>
+                <span class="input-group-addon" id="basic-addon4">4</span>
                 {{ form_errors(utilisateurForm.nom) }}
                 {{ form_widget(utilisateurForm.nom, { 'attr':  {
                     'rows': '1',
@@ -114,7 +113,7 @@
             </div>
             <br>
             <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">5</span>
+                <span class="input-group-addon" id="basic-addon5">5</span>
                 {{ form_errors(utilisateurForm.prenom) }}
                 {{ form_widget(utilisateurForm.prenom, { 'attr':  {
                     'rows': '1',
@@ -125,8 +124,8 @@
         </div>
         <div class="modal-footer">
             <div class="form-group">
-                <input type="submit" class="btn btn-success" value="Créer"/>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                <input type="submit" class="btn btn-success bouton-submit-entity" value="Créer"/>
+                <button type="button" class="btn btn-danger bouton-dismiss-entity" data-dismiss="modal">Annuler</button>
             </div>
         </div>
         {{ form_end(utilisateurForm) }}

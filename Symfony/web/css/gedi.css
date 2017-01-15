@@ -86,6 +86,11 @@ body {
 
 .alert {
     padding-left: 3%;
-    background-color: #52c441;
-    color: white;
+}
+
+/* classe de couleurs personnalisée */
+:root {
+    --color-error: #eea096;
+    --color-default: #ffffff;
+    --color-success: #97d58c;
 }

@@ -20,6 +20,9 @@ class UtilisateurType extends AbstractType
         $builder->add('username', EmailType::class);
         $builder->add('password', RepeatedType::class, array(
             'type' => PasswordType::class,
+            'invalid_message' => 'Les mots de passe ne concordent pas',
+            'options' => array('attr' => array('class' => 'password-field')),
+            'required' => true,
             'first_options' => array('label' => 'Mot de passe'),
             'second_options' => array('label' => 'Confirmation de mot de passe'),
         ));

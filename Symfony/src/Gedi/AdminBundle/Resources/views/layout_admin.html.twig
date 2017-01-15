@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="panel-body">
-            <div class="btn-group" role="group" aria-label="...">
+            <div class="btn-group" role="group">
                 {% block boutons_admin %}{% endblock %}
             </div>
             <div class="table-responsive">
@@ -43,7 +43,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close bouton-dismiss-entity" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Suppression {% block popup_admin_del_titre %}{% endblock %}</h4>
                 </div>
                 <!-- contenu mis à jour dans majPopupDelete de gedi.js -->
@@ -67,7 +67,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close bouton-dismiss-entity" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Créer un {% block popup_admin_add_titre %}{% endblock %}</h4>
                 </div>
                 <div class="modal-body">

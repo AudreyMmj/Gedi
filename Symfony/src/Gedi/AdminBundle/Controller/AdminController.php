@@ -44,6 +44,7 @@ class AdminController extends Controller
         $utilisateur->setActif(1);
         $utilisateurForm = $this->createForm('Gedi\BaseBundle\Form\UtilisateurType', $utilisateur);
         $utilisateurForm->handleRequest($request);
+
         if ($utilisateurForm->isSubmitted() && $utilisateurForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($utilisateur);
