@@ -41,7 +41,6 @@ class AdminController extends Controller
 
         // création du formulaire pour créer un nouvel utilisateur
         $utilisateur = new Utilisateur();
-        $utilisateur->setActif(1);
         $utilisateurForm = $this->createForm('Gedi\BaseBundle\Form\UtilisateurType', $utilisateur);
         $utilisateurForm->handleRequest($request);
 

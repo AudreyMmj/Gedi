@@ -70,7 +70,7 @@ class Utilisateur implements UserInterface
      *
      * @ORM\Column(name="actif", type="boolean", nullable=false)
      */
-    private $actif = '0';
+    private $actif = false;
 
     /**
      * @var \DateTime

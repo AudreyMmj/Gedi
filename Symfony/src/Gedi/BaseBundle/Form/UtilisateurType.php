@@ -3,6 +3,7 @@
 namespace Gedi\BaseBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -28,6 +29,7 @@ class UtilisateurType extends AbstractType
         ));
         $builder->add('nom', TextType::class);
         $builder->add('prenom', TextType::class);
+        $builder->add('actif', CheckboxType::class, array('required' => false));
     }
 
     /**

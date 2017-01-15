@@ -5,12 +5,20 @@
 {% block tooltip_admin %}d'utilisateur{% endblock %}
 
 {% block boutons_admin %}
+    {% set nbUserInactif = 0 %}
+    {% for utilisateur in tab_objets %}
+        {% if (utilisateur.actif == '0') %}
+            {% set nbUserInactif = nbUserInactif + 1 %}
+        {% endif %}
+    {% endfor %}
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Ajouter</button>
-    <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal" data-target="#popup-delete">
+    <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal"
+            data-target="#popup-delete">
         Supprimer <span class="badge spanNbSel"></span>
     </button>
-    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#popup-add">Demandes d'ajout <span
-                class="badge">3</span>
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#popup-add">Demandes d'ajout
+        <span
+                class="badge">{{ nbUserInactif }}</span>
     </button>
 {% endblock %}
 
@@ -29,20 +37,21 @@
     </thead>
     <tbody>
     {% for utilisateur in tab_objets %}
-        <article>
-            {% if (utilisateur.role == 'ROLE_ADMIN') %}
-            <tr class="info">
-                {% else %}
-            <tr>
-                {% endif %}
-                <td></td>
-                <td>{{ utilisateur.idUtilisateur }}</td>
-                <td>{{ utilisateur.nom }}</td>
-                <td>{{ utilisateur.prenom }}</td>
-                <td>{{ utilisateur.username }}</td>
-                <td>{{ utilisateur.dateCreation|date('Y-m-d H:i:s') }}</td>
-                <td>{{ utilisateur.dateModification|date('Y-m-d H:i:s') }}</td>
-                <td data-align="center">
+        {% if (utilisateur.actif == '1') %}
+            <article>
+                {% if (utilisateur.role == 'ROLE_ADMIN') %}
+                <tr class="info">
+                    {% else %}
+                <tr>
+                    {% endif %}
+                    <td></td>
+                    <td>{{ utilisateur.idUtilisateur }}</td>
+                    <td>{{ utilisateur.nom }}</td>
+                    <td>{{ utilisateur.prenom }}</td>
+                    <td>{{ utilisateur.username }}</td>
+                    <td>{{ utilisateur.dateCreation|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ utilisateur.dateModification|date('Y-m-d H:i:s') }}</td>
+                    <td data-align="center">
     <span data-toggle="tooltip" data-placement="bottom"
           title="Accéder à l'espace utilisateur">
     <button type="button"
@@ -50,16 +59,17 @@
                 class="glyphicon glyphicon-dashboard"></span>
     </button>
     </span>
-                    <span data-toggle="tooltip" data-placement="bottom"
-                          title="Editer la fiche utilisateur">
+                        <span data-toggle="tooltip" data-placement="bottom"
+                              title="Editer la fiche utilisateur">
     <button type="button"
             class="btn btn-default btn-warning round-button" data-toggle="modal" data-target="#popup-add"><span
                 class="glyphicon glyphicon-pencil"></span>
     </button>
     </span>
-                </td>
-            </tr>
-        </article>
+                    </td>
+                </tr>
+            </article>
+        {% endif %}
     {% endfor %}
     </tbody>
 {% endblock %}
@@ -121,6 +131,7 @@
                     'placeholder': 'Prenom'
                 }}) }}
             </div>
+            {{ form_row(utilisateurForm.actif) }}
         </div>
         <div class="modal-footer">
             <div class="form-group">
