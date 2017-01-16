@@ -27,7 +27,7 @@ function hideOuShow(nbSel) {
 
 // =======================================================================
 // fonction d'affichage de popups
-function showNotifyUser(texte, icon, type) {
+function showNotify(texte, icon, type) {
     if (texte.length > 1) {
         $.notify({
             icon: icon,
@@ -40,6 +40,17 @@ function showNotifyUser(texte, icon, type) {
             }
         });
     }
+}
+
+// =======================================================================
+// fonction d'édition d'entité
+function edit(js_object_arg) {
+    alert(js_object_arg.idUtilisateur);
+
+
+
+
+
 }
 
 // =======================================================================
@@ -112,7 +123,7 @@ $(function () {
             url: window.location,
             data: {data: selection},
             success: function (data) {
-                showNotifyUser('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
+                showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
                     ((sel.length > 1) ? 's bien supprimés' : ' bien supprimé') + '</strong>',
                     'glyphicon glyphicon-ok', 'success');
 
@@ -121,7 +132,7 @@ $(function () {
                 });
             },
             error: function () {
-                showNotifyUser('<strong>' + 'La requête n\'a pas abouti' + '</strong>',
+                showNotify('<strong>' + 'La requête n\'a pas abouti' + '</strong>',
                     'glyphicon glyphicon-remove', 'danger');
             }
         });

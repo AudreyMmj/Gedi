@@ -14,12 +14,10 @@
     {% endfor %}
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Ajouter</button>
     <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal"
-            data-target="#popup-delete">
-        Supprimer <span class="badge spanNbSel"></span>
+            data-target="#popup-delete">Supprimer <span class="badge spanNbSel"></span>
     </button>
     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#popup-add">Demandes d'ajout
-        <span
-                class="badge">{{ nbUserInactif }}</span>
+        <span class="badge">{{ nbUserInactif }}</span>
     </button>
 {% endblock %}
 
@@ -53,20 +51,27 @@
                     <td>{{ utilisateur.dateCreation|date('Y-m-d H:i:s') }}</td>
                     <td>{{ utilisateur.dateModification|date('Y-m-d H:i:s') }}</td>
                     <td data-align="center">
-    <span data-toggle="tooltip" data-placement="bottom"
-          title="Accéder à l'espace utilisateur">
-    <button type="button"
-            class="btn btn-default btn-primary round-button"><span
-                class="glyphicon glyphicon-dashboard"></span>
-    </button>
-    </span>
                         <span data-toggle="tooltip" data-placement="bottom"
-                              title="Editer la fiche utilisateur">
-    <button type="button"
-            class="btn btn-default btn-warning round-button" data-toggle="modal" data-target="#popup-add"><span
-                class="glyphicon glyphicon-pencil"></span>
-    </button>
-    </span>
+                              title="Accéder à l'espace utilisateur">
+                            <button type="button" class="btn btn-default btn-primary round-button">
+                                <span class="glyphicon glyphicon-dashboard"></span>
+                            </button>
+                        </span>
+                        <span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche utilisateur">
+                            {#<script type="text/javascript">#}
+                                {#var js_utilisateur = {#}
+                                    {#idUtilisateur: '{{ utilisateur.idUtilisateur }}',#}
+                                    {#nom: '{{ utilisateur.nom }}',#}
+                                    {#prenom: '{{ utilisateur.prenom }}',#}
+                                    {#username: '{{ utilisateur.username}}',#}
+                                    {#password: '{{ utilisateur.password}}'#}
+                                {#};#}
+                            {#</script>#}
+                        <button type="button" class="btn btn-default btn-warning round-button"
+                                data-toggle="modal" data-target="#popup-add" {#onclick="edit(js_utilisateur);"#}>
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        </span>
                     </td>
                 </tr>
             </article>
