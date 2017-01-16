@@ -5,6 +5,7 @@
 {% block tooltip_admin %}d'utilisateur{% endblock %}
 
 {% block boutons_admin %}
+    <!-- affichage du nombre d'utilisateurs inactifs -->
     {% set nbUserInactif = 0 %}
     {% for utilisateur in tab_objets %}
         {% if (utilisateur.actif == '0') %}

@@ -13,14 +13,22 @@
                     <h2>Liste des {% block titre_admin_2 %}{% endblock %}</h2>
                 </div>
                 <div class="col-md-1">
-                    {% set nbUserActif = 0 %}
-                    {% for utilisateur in tab_objets %}
-                        {% if (utilisateur.actif == '1') %}
-                            {% set nbUserActif = nbUserActif + 1 %}
-                        {% endif %}
-                    {% endfor %}
                     <h2><span class="label label-default" data-toggle="tooltip" data-placement="bottom"
-                              title="Nombre {% block tooltip_admin %}{% endblock %}">{{ nbUserActif }}</span>
+                              title="Nombre {% block tooltip_admin %}{% endblock %}">
+                            <!-- affichage du nombre d'utilisateurs actifs si on est sur la page users_admin -->
+                            <!-- sinon affichage du tableau entier d'objets -->
+                    {% if (app.request.get('_route') == 'users_admin') %}
+                        {% set nbUserActif = 0 %}
+                        {% for utilisateur in tab_objets %}
+                            {% if (utilisateur.actif == '1') %}
+                                {% set nbUserActif = nbUserActif + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ nbUserActif }}
+                    {% else %}
+                        {{ tab_objets|length }}
+                    {% endif %}
+                    </span>
                     </h2>
                 </div>
             </div>

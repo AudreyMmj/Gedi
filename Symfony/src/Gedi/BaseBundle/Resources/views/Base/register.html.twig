@@ -47,8 +47,9 @@
                         'class': 'form-control',
                         'placeholder': 'Prenom'
                     }}) }}
-                    <br>
-                    {#<input type="submit" class="btn btn-success" value="Envoyer"/>#}
+                    <div class="hidden">
+                        {{ form_row(utilisateurForm.actif) }}
+                    </div>
                 </div>
             </div>
             <div class="panel-footer full-transparent">
