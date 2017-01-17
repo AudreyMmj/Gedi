@@ -58,17 +58,8 @@
                             </button>
                         </span>
                         <span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche utilisateur">
-                            {#<script type="text/javascript">#}
-                                {#var js_utilisateur = {#}
-                                    {#idUtilisateur: '{{ utilisateur.idUtilisateur }}',#}
-                                    {#nom: '{{ utilisateur.nom }}',#}
-                                    {#prenom: '{{ utilisateur.prenom }}',#}
-                                    {#username: '{{ utilisateur.username}}',#}
-                                    {#password: '{{ utilisateur.password}}'#}
-                                {#};#}
-                            {#</script>#}
                         <button type="button" class="btn btn-default btn-warning round-button"
-                                data-toggle="modal" data-target="#popup-add" {#onclick="edit(js_utilisateur);"#}>
+                                data-toggle="modal" data-target="#popup-add" onclick="edit('{{ utilisateur.toArray|json_encode }}');">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </button>
                         </span>

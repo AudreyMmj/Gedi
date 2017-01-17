@@ -11,6 +11,17 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip(); // script permettant de jouer les tooltips
     $('.bouton-submit-entity').prop('disabled', true); // désactive par défaut les boutons de type bouton-submit-entity
     $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de type bouton-desactive
+
+    // change le texte du popup de suppression en fonction de la page
+    if (window.location.href.indexOf("users_admin") > -1) {
+        nom = 'utilisateur';
+    } else if (window.location.href.indexOf("groups_admin") > -1) {
+        nom = 'groupe';
+    } else if (window.location.href.indexOf("projects_admin") > -1) {
+        nom = 'projet';
+    } else if (window.location.href.indexOf("docs_admin") > -1) {
+        nom = 'document';
+    }
 });
 
 // =======================================================================
@@ -45,12 +56,15 @@ function showNotify(texte, icon, type) {
 // =======================================================================
 // fonction d'édition d'entité
 function edit(js_object_arg) {
-    alert(js_object_arg.idUtilisateur);
+    var js_object = JSON.parse(js_object_arg);
 
-
-
-
-
+    for (var key in js_object) {
+        if (key == 'actif' && js_object[key] == '1') {
+                $('#gedi_basebundle_' + nom + '_' + key).prop("checked", true);
+        } else {
+            $('#gedi_basebundle_' + nom + '_' + key).val(js_object[key]);
+        }
+    }
 }
 
 // =======================================================================
@@ -84,17 +98,6 @@ $(function () {
     $('.bouton-desactive').click(function () {
 
         if (typeof sel != 'undefined') {
-            // change le texte du popup de suppression en fonction de la page
-            if (window.location.href.indexOf("users_admin") > -1) {
-                nom = 'utilisateur';
-            } else if (window.location.href.indexOf("groups_admin") > -1) {
-                nom = 'groupe';
-            } else if (window.location.href.indexOf("projects_admin") > -1) {
-                nom = 'projet';
-            } else if (window.location.href.indexOf("docs_admin") > -1) {
-                nom = 'document';
-            }
-
             // ajoute un 's' si la selection contient plusieurs élements
             // dans le popup de suppression
             if (sel.length > 1) {
@@ -172,7 +175,7 @@ $(function () {
 
     // listener sur les elements de classe bouton-dismiss-entity
     // vide le formulaire de son contenu
-    $(".bouton-dismiss-entity").click(function() {
+    $(".bouton-dismiss-entity").click(function () {
         $('form').trigger("reset");
         $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
     });

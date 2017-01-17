@@ -451,4 +451,18 @@ class Utilisateur implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    /**
+     * Transforme l'utilisateur en tableau associatif
+     * @return array
+     */
+    public function toArray() {
+        $array = array(
+            "username" => $this->username,
+            "nom" => $this->nom,
+            "prenom" => $this->prenom,
+            "actif" => $this->actif
+        );
+        return $array;
+    }
 }
