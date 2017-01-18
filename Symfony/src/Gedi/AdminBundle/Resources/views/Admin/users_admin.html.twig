@@ -13,7 +13,8 @@
         {% endif %}
     {% endfor %}
     <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
-            data-target="#popup-add">Ajouter</button>
+            data-target="#popup-add">Ajouter
+    </button>
     <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal"
             data-target="#popup-delete">Supprimer <span class="badge spanNbSel"></span>
     </button>
@@ -37,10 +38,12 @@
     </thead>
     <tbody>
     {% for utilisateur in tab_objets %}
-        {% if (utilisateur.actif == '1') %}
+        {#{% if (utilisateur.actif == '1') %}#}
             <article>
                 {% if (utilisateur.role == 'ROLE_ADMIN') %}
-                <tr class="info">
+                <tr class="text-danger">
+                    {% elseif (utilisateur.actif == '0') %}
+                <tr class="info text-info">
                     {% else %}
                 <tr>
                     {% endif %}
@@ -60,14 +63,15 @@
                         </span>
                         <span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche utilisateur">
                         <button type="button" class="btn btn-default btn-warning round-button"
-                                data-toggle="modal" data-target="#popup-add" onclick="edit('{{ utilisateur.toArray|json_encode }}');">
+                                data-toggle="modal" data-target="#popup-add"
+                                onclick="edit('{{ utilisateur.toArray|json_encode }}');">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </button>
                         </span>
                     </td>
                 </tr>
             </article>
-        {% endif %}
+        {#{% endif %}#}
     {% endfor %}
     </tbody>
 {% endblock %}
