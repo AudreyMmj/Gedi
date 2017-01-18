@@ -12,7 +12,8 @@
             {% set nbUserInactif = nbUserInactif + 1 %}
         {% endif %}
     {% endfor %}
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Ajouter</button>
+    <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
+            data-target="#popup-add">Ajouter</button>
     <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal"
             data-target="#popup-delete">Supprimer <span class="badge spanNbSel"></span>
     </button>
@@ -74,7 +75,6 @@
 {% block breadcrumb_admin %}Utilisateurs{% endblock %}
 {% block popup_admin_del_titre %}d'utilisateurs{% endblock %}
 
-{% block popup_admin_add_titre %}utilisateur{% endblock %}
 {% block popup_admin_add_contenu %}
     {% if utilisateurForm %}
         {{ form_start(utilisateurForm) }}
@@ -129,10 +129,11 @@
                 }}) }}
             </div>
             {{ form_row(utilisateurForm.actif) }}
+            {{ form_row(utilisateurForm.idUtilisateur) }}
         </div>
         <div class="modal-footer">
             <div class="form-group">
-                <input type="submit" class="btn btn-success bouton-submit-entity" value="Créer"/>
+                <input type="submit" class="btn btn-success bouton-submit-admin-entity"/>
                 <button type="button" class="btn btn-danger bouton-dismiss-entity" data-dismiss="modal">Annuler</button>
             </div>
         </div>

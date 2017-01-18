@@ -39,14 +39,14 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
 
-        // création du formulaire pour créer un nouvel utilisateur
+        // création du formulaire pour créer ou modifier un utilisateur
         $utilisateur = new Utilisateur();
         $utilisateurForm = $this->createForm('Gedi\BaseBundle\Form\UtilisateurType', $utilisateur);
         $utilisateurForm->handleRequest($request);
 
         if ($utilisateurForm->isSubmitted() && $utilisateurForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($utilisateur);
+            $em->merge($utilisateur);
             $em->flush();
             return $this->redirectToRoute('users_admin');
         }

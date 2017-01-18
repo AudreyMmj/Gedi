@@ -9,7 +9,7 @@ var nom; // nom de l'entité affiché sur la page
 // elements lancés au chargement de la page
 $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip(); // script permettant de jouer les tooltips
-    $('.bouton-submit-entity').prop('disabled', true); // désactive par défaut les boutons de type bouton-submit-entity
+    $('.bouton-submit-admin-entity').prop('disabled', true); // désactive par défaut les boutons de type bouton-submit-admin-entity
     $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de type bouton-desactive
 
     // change le texte du popup de suppression en fonction de la page
@@ -56,15 +56,23 @@ function showNotify(texte, icon, type) {
 // =======================================================================
 // fonction d'édition d'entité
 function edit(js_object_arg) {
+
+    // récupération de l'entité au format json et transformation
+    // en tableau javascript
     var js_object = JSON.parse(js_object_arg);
 
+    // remplissages de champs des formulaires
     for (var key in js_object) {
         if (key == 'actif' && js_object[key] == '1') {
-                $('#gedi_basebundle_' + nom + '_' + key).prop("checked", true);
+            $('#gedi_basebundle_' + nom + '_' + key).prop("checked", true);
         } else {
             $('#gedi_basebundle_' + nom + '_' + key).val(js_object[key]);
         }
     }
+
+    // modification du popup ajout / edition
+    $('#popup-admin-add-titre').html('Modifier un ' + nom);
+    $('.bouton-submit-admin-entity').val('Appliquer');
 }
 
 // =======================================================================
@@ -96,17 +104,15 @@ $(function () {
     // listener sur les elements de classe bouton-desactive
     // mise à jour du popup de suppression
     $('.bouton-desactive').click(function () {
-
+        var nom_temp = null;
         if (typeof sel != 'undefined') {
             // ajoute un 's' si la selection contient plusieurs élements
             // dans le popup de suppression
-            if (sel.length > 1) {
-                nom = nom + 's';
-            }
+            (sel.length > 1) ? nom_temp = nom + 's' : nom_temp = nom;
 
             // écrit le texte dans le popup indiquant le nombre d'entités dans le tableau
             $('#nbSel').html('Vous êtes sur le point de supprimer définitivement ' +
-                sel.length + ' ' + nom);
+                sel.length + ' ' + nom_temp);
         }
     });
 
@@ -161,14 +167,14 @@ $(function () {
         }
 
         if (username == "" || pass1 == "" || pass2 == "" || nom == "" || prenom == "") {
-            $('.bouton-submit-entity').prop('disabled', true);
+            $('.bouton-submit-admin-entity').prop('disabled', true);
         } else {
             if (pass1 != pass2) {
                 $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-error)');
-                $('.bouton-submit-entity').prop('disabled', true);
+                $('.bouton-submit-admin-entity').prop('disabled', true);
             } else {
                 $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-success)');
-                $('.bouton-submit-entity').prop('disabled', false);
+                $('.bouton-submit-admin-entity').prop('disabled', false);
             }
         }
     });
@@ -178,5 +184,13 @@ $(function () {
     $(".bouton-dismiss-entity").click(function () {
         $('form').trigger("reset");
         $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+    });
+
+    // listener sur le bouton créer une entité
+    // vide le formulaire de son contenu
+    $(".bouton-admin-popup-add").click(function () {
+        // modification du popup ajout / edition
+        $('#popup-admin-add-titre').html('Créer un ' + nom);
+        $('.bouton-submit-admin-entity').val('Créer');
     });
 });

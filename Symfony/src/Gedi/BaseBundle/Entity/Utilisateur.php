@@ -138,6 +138,14 @@ class Utilisateur implements UserInterface
     }
 
     /**
+     * @param int $idUtilisateur
+     */
+    public function setIdUtilisateur($idUtilisateur)
+    {
+        $this->idUtilisateur = $idUtilisateur;
+    }
+
+    /**
      * Set username
      *
      * @param string $username
@@ -458,6 +466,7 @@ class Utilisateur implements UserInterface
      */
     public function toArray() {
         $array = array(
+            "idUtilisateur" => $this->idUtilisateur,
             "username" => $this->username,
             "nom" => $this->nom,
             "prenom" => $this->prenom,

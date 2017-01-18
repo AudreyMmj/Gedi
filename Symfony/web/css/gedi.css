@@ -86,6 +86,7 @@ body {
 
 .alert {
     padding-left: 3%;
+    max-width: 25%;
 }
 
 /* classe de couleurs personnalisée */
