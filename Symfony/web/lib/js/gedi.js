@@ -79,6 +79,28 @@ function edit(js_object_arg) {
 // block jquery
 $(function () {
 
+    // fonction d'envoi de la requete en POST et rechargement de la page actualisée
+    function ajaxSend(selection, typeAction) {
+        $.ajax({
+            type: 'POST',
+            url: window.location,
+            data: {data: selection, typeaction: typeAction},
+            success: function (data) {
+                showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
+                    ((sel.length > 1) ? 's bien supprimés' : ' bien supprimé') + '</strong>',
+                    'glyphicon glyphicon-ok', 'success');
+
+                $('#content').load(window.location + '#content', function () {
+                    sel = null;
+                });
+            },
+            error: function () {
+                showNotify('<strong>' + 'La requête n\'a pas abouti' + '</strong>',
+                    'glyphicon glyphicon-remove', 'danger');
+            }
+        });
+    }
+
     // listener sur les cases à cocher du tableau pour mettre à jour
     // les boutons et les spans
     $('#table_admin').on({
@@ -117,7 +139,7 @@ $(function () {
     });
 
     // listener sur le bouton supprimer du popup de suppression
-    // envoi la selection dans le formulaire de suppression
+    // envoi la selection à supprimer au controller
     $('#delete-entity').click(function () {
         // enregistre les id des utilisateurs à supprimer
         var selection = [];
@@ -125,26 +147,13 @@ $(function () {
             selection[i] = sel[i][1];
         }
 
-        // envoi de la requete de suppression en POST et rechargement
-        // de la page actualisée
-        $.ajax({
-            type: 'POST',
-            url: window.location,
-            data: {data: selection},
-            success: function (data) {
-                showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
-                    ((sel.length > 1) ? 's bien supprimés' : ' bien supprimé') + '</strong>',
-                    'glyphicon glyphicon-ok', 'success');
+        ajaxSend(selection, "delete");
+    });
 
-                $('#content').load(window.location + '#content', function () {
-                    sel = null;
-                });
-            },
-            error: function () {
-                showNotify('<strong>' + 'La requête n\'a pas abouti' + '</strong>',
-                    'glyphicon glyphicon-remove', 'danger');
-            }
-        });
+    // listener sur le bouton créer ou modifier du popup de d'ajout et de modification
+    // envoi l'entité à traiter au controller
+    $('.bouton-submit-admin-entity').click(function () {
+        ajaxSend(JSON.stringify($('[name=gedi_basebundle_utilisateur]').serializeArray()), "createandmodify");
     });
 
     // listener sur le formulaire d'ajout d'utilisateur

@@ -37,32 +37,33 @@ class AdminController extends Controller
     {
         // importation de tous les utilisateurs
         $em = $this->getDoctrine()->getManager();
-        $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
 
         // création du formulaire pour créer ou modifier un utilisateur
         $utilisateur = new Utilisateur();
         $utilisateurForm = $this->createForm('Gedi\BaseBundle\Form\UtilisateurType', $utilisateur);
         $utilisateurForm->handleRequest($request);
 
-        if ($utilisateurForm->isSubmitted() && $utilisateurForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->merge($utilisateur);
-            $em->flush();
-            return $this->redirectToRoute('users_admin');
-        }
-
-        // suppression d'utilisateur
         if ($request->isMethod('POST')) {
-            $sel = $_POST["data"];
+            if ($_POST["typeaction"] == "delete") {
+                // suppression d'utilisateur
+                $sel = $_POST["data"];
 
-            if ($sel != null) {
-                for ($i = 0; $i <= count($sel) - 1; $i++) {
-                    $userToDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]);
-                    $em->remove($userToDel);
+                if ($sel != null) {
+                    for ($i = 0; $i <= count($sel) - 1; $i++) {
+                        $userToDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]);
+                        $em->remove($userToDel);
+                    }
+
                 }
+            } else if ($_POST["typeaction"] == "createandmodify") {
+                // création ou modification d'utilisateur
+                $em->merge($utilisateur);
                 $em->flush();
             }
+            $em->flush();
         }
+
+        $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
 
         return $this->render('GediAdminBundle:Admin:users_admin.html.twig', array(
             'tab_objets' => $tab_objets,
