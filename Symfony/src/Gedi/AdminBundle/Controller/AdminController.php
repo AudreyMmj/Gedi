@@ -44,21 +44,25 @@ class AdminController extends Controller
         $utilisateurForm->handleRequest($request);
 
         if ($request->isMethod('POST')) {
-            if ($_POST["typeaction"] == "delete") {
-                // suppression d'utilisateur
-                $sel = $_POST["data"];
+            $sel = $_POST["data"];
 
-                if ($sel != null) {
+            if ($sel != null) {
+                if ($_POST["typeaction"] == "supprimé") {
+                    // suppression d'utilisateur
+
                     for ($i = 0; $i <= count($sel) - 1; $i++) {
                         $userToDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]);
                         $em->remove($userToDel);
                     }
-
+                } else if ($_POST["typeaction"] == "enregistré") {
+                    // création ou modification d'utilisateur
+                    $utilisateur->setIdUtilisateur($sel['gedi_basebundle_utilisateur[idUtilisateur]']);
+                    $utilisateur->setUsername($sel['gedi_basebundle_utilisateur[username]']);
+                    $utilisateur->setPassword($sel['gedi_basebundle_utilisateur[password][first]']);
+                    $utilisateur->setNom($sel['gedi_basebundle_utilisateur[nom]']);
+                    $utilisateur->setPrenom($sel['gedi_basebundle_utilisateur[prenom]']);
+                    $em->merge($utilisateur);
                 }
-            } else if ($_POST["typeaction"] == "createandmodify") {
-                // création ou modification d'utilisateur
-                $em->merge($utilisateur);
-                $em->flush();
             }
             $em->flush();
         }

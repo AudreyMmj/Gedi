@@ -87,7 +87,7 @@ $(function () {
             data: {data: selection, typeaction: typeAction},
             success: function (data) {
                 showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
-                    ((sel.length > 1) ? 's bien supprimés' : ' bien supprimé') + '</strong>',
+                    ((sel.length > 1) ? 's bien ' + typeAction + 's' : ' bien ' + typeAction) + '</strong>',
                     'glyphicon glyphicon-ok', 'success');
 
                 $('#content').load(window.location + '#content', function () {
@@ -146,14 +146,13 @@ $(function () {
         for (var i = 0; i < sel.length; i++) {
             selection[i] = sel[i][1];
         }
-
-        ajaxSend(selection, "delete");
+        ajaxSend(selection, "supprimé");
     });
 
     // listener sur le bouton créer ou modifier du popup de d'ajout et de modification
     // envoi l'entité à traiter au controller
-    $('.bouton-submit-admin-entity').click(function () {
-        ajaxSend(JSON.stringify($('[name=gedi_basebundle_utilisateur]').serializeArray()), "createandmodify");
+    $('form').submit(function () {
+        ajaxSend(JSON.stringify($('form').serializeArray()), "enregistré");
     });
 
     // listener sur le formulaire d'ajout d'utilisateur
