@@ -44,27 +44,29 @@ class AdminController extends Controller
         $utilisateurForm->handleRequest($request);
 
         if ($request->isMethod('POST')) {
-            $sel = $_POST["data"];
+            //            if (isset($_POST['data'])) {
+            $sel = $_POST['data'];
 
             if ($sel != null) {
-                if ($_POST["typeaction"] == "supprimé") {
+                if ($_POST['typeaction'] == "supprimé") {
                     // suppression d'utilisateur
-
                     for ($i = 0; $i <= count($sel) - 1; $i++) {
                         $userToDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]);
                         $em->remove($userToDel);
                     }
-                } else if ($_POST["typeaction"] == "enregistré") {
+                } else if ($_POST['typeaction'] == "enregistré") {
                     // création ou modification d'utilisateur
-                    $utilisateur->setIdUtilisateur($sel['gedi_basebundle_utilisateur[idUtilisateur]']);
-                    $utilisateur->setUsername($sel['gedi_basebundle_utilisateur[username]']);
-                    $utilisateur->setPassword($sel['gedi_basebundle_utilisateur[password][first]']);
-                    $utilisateur->setNom($sel['gedi_basebundle_utilisateur[nom]']);
-                    $utilisateur->setPrenom($sel['gedi_basebundle_utilisateur[prenom]']);
+                    $utilisateur->setIdUtilisateur($sel[0]['gedi_basebundle_utilisateur[idUtilisateur]']);
+                    $utilisateur->setUsername($sel[0]['gedi_basebundle_utilisateur[username]']);
+                    $utilisateur->setPassword($sel[0]['gedi_basebundle_utilisateur[password][first]']);
+                    $utilisateur->setNom($sel[0]['gedi_basebundle_utilisateur[nom]']);
+                    $utilisateur->setPrenom($sel[0]['gedi_basebundle_utilisateur[prenom]']);
+                    $utilisateur->setActif($sel[0]['gedi_basebundle_utilisateur[actif]']);
                     $em->merge($utilisateur);
                 }
             }
             $em->flush();
+//        }
         }
 
         $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
