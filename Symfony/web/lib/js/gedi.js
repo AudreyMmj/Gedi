@@ -141,6 +141,10 @@ $(function () {
         }
     });
 
+    $('#bouton-dm-ajout').click(function () {
+        $('#table_admin').bootstrapTable('filterBy', {Nom: 'Gumb'});
+    });
+
     // listener sur le bouton supprimer du popup de suppression
     // envoi la selection à supprimer au controller
     $('#delete-entity').click(function () {
