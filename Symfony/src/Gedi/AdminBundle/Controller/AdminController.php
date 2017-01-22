@@ -3,6 +3,7 @@
 namespace Gedi\AdminBundle\Controller;
 
 use Doctrine\Common\Annotations\AnnotationException;
+use Exception;
 use Gedi\BaseBundle\Entity\Document;
 use Gedi\BaseBundle\Entity\Groupe;
 use Gedi\BaseBundle\Entity\Projet;
@@ -31,20 +32,17 @@ class AdminController extends Controller
      * Page d'administration des utilisateurs de l'application
      * @Route("/users_admin")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response|array
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws Exception
      */
     public function usersAction(Request $request)
     {
-        // importation de tous les utilisateurs
         $em = $this->getDoctrine()->getManager();
-
-        // création du formulaire pour créer ou modifier un utilisateur
         $utilisateur = new Utilisateur();
         $utilisateurForm = $this->createForm('Gedi\BaseBundle\Form\UtilisateurType', $utilisateur);
         $utilisateurForm->handleRequest($request);
 
-        if ($request->isMethod('POST')) {
-            //            if (isset($_POST['data'])) {
+        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeaction'])) {
             $sel = $_POST['data'];
 
             if ($sel != null) {
@@ -56,19 +54,23 @@ class AdminController extends Controller
                     }
                 } else if ($_POST['typeaction'] == "enregistré") {
                     // création ou modification d'utilisateur
-                    $utilisateur->setIdUtilisateur($sel[0]['gedi_basebundle_utilisateur[idUtilisateur]']);
-                    $utilisateur->setUsername($sel[0]['gedi_basebundle_utilisateur[username]']);
-                    $utilisateur->setPassword($sel[0]['gedi_basebundle_utilisateur[password][first]']);
-                    $utilisateur->setNom($sel[0]['gedi_basebundle_utilisateur[nom]']);
-                    $utilisateur->setPrenom($sel[0]['gedi_basebundle_utilisateur[prenom]']);
-                    $utilisateur->setActif($sel[0]['gedi_basebundle_utilisateur[actif]']);
+                    $utilisateur->setUsername($sel[0]['value']);
+                    $utilisateur->setPassword($sel[1]['value']);
+                    $utilisateur->setNom($sel[3]['value']);
+                    $utilisateur->setPrenom($sel[4]['value']);
+                    $utilisateur->setActif(($sel[5]['value'] == "false") ? false : true);
+                    $utilisateur->setIdUtilisateur(($sel[6]['value'] != "") ? $sel[6]['value'] : null);
                     $em->merge($utilisateur);
+                } else {
+                    throw new Exception('typeaction n\'est pas défini');
                 }
+            } else {
+                throw new Exception('La selection est nulle');
             }
             $em->flush();
-//        }
         }
 
+        // importation de tous les utilisateurs
         $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
 
         return $this->render('GediAdminBundle:Admin:users_admin.html.twig', array(

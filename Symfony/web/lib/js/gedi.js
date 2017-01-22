@@ -86,13 +86,16 @@ $(function () {
             url: window.location,
             data: {'data': selection, 'typeaction': typeAction},
             success: function (data) {
-                showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
-                    ((sel.length > 1) ? 's bien ' + typeAction + 's' : ' bien ' + typeAction) + '</strong>',
-                    'glyphicon glyphicon-ok', 'success');
+                $('#content').load(window.location + '#content');
+                $('form').trigger("reset");
+                $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+                $('.modal').modal('hide');
+                $('.modal-backdrop').remove();
+                sel = null;
 
-                $('#content').load(window.location + '#content', function () {
-                    sel = null;
-                });
+                showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
+                    ((typeAction == "supprimé" && selection.length > 1) ? 's bien ' + typeAction + 's' :
+                        ' bien ' + typeAction) + '</strong>', 'glyphicon glyphicon-ok', 'success');
             },
             error: function () {
                 showNotify('<strong>' + 'La requête n\'a pas abouti' + '</strong>',
@@ -151,28 +154,28 @@ $(function () {
 
     // listener sur le bouton créer ou modifier du popup de d'ajout et de modification
     // envoi l'entité à traiter au controller
-    $('.bouton-submit-admin-entity').click(function () {
+    $('form').submit(function (event) {
+        // Eviter le comportement par défaut (soumettre le formulaire)
+        event.preventDefault();
 
         // récupération des données du formulaire
-        var tmp = $('form').serializeArray();
-        // var selection = [];
+        var selection = $('form').serializeArray();
 
         // une checkbox non cochée dans un formulaire n'est n'apparait pas dans
         // le tableau après un serializeArray. On doit donc dire à la main qu'elle
         // n'est pas cochée
-        if (!$('#gedi_basebundle_utilisateur_actif').checked) {
-            tmp.push({
+        if (!$('#gedi_basebundle_utilisateur_actif').prop('checked')) {
+            selection.splice(5, 0, {
                 name: "gedi_basebundle_utilisateur[actif]",
                 value: false
-            })
+            });
+        } else {
+            selection.splice(5, 1, {
+                name: "gedi_basebundle_utilisateur[actif]",
+                value: true
+            });
         }
-
-        // conversion du tableau serializeArray en tableau
-        // for (var i = 0; i < tmp.length; i++) {
-        //     selection[i] = tmp[i].value;
-        // }
-
-        ajaxSend(tmp, "enregistré");
+        ajaxSend(selection, "enregistré");
     });
 
     // listener sur le formulaire d'ajout d'utilisateur
