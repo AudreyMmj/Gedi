@@ -142,7 +142,13 @@ $(function () {
     });
 
     $('#bouton-dm-ajout').click(function () {
-        $('#table_admin').bootstrapTable('filterBy', {Nom: 'Gumb'});
+        if ($('#bouton-dm-ajout').text().indexOf('Demandes') >= 0) {
+            $('#table_admin').bootstrapTable('filterBy', {actif: ""});
+            $('#bouton-dm-ajout').text("Voir tous");
+        } else {
+            $('#table_admin').bootstrapTable('filterBy', {});
+            $('#bouton-dm-ajout').text("Demande d\'ajout");
+        }
     });
 
     // listener sur le bouton supprimer du popup de suppression

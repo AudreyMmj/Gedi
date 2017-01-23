@@ -27,12 +27,13 @@
     <thead>
     <tr>
         <th data-checkbox="true"></th>
-        <th>Id</th>
+        <th data-sortable="true">Id</th>
         <th data-sortable="true">Nom</th>
         <th data-sortable="true">Prenom</th>
         <th data-sortable="true">Login</th>
         <th data-sortable="true">Date de création</th>
         <th data-sortable="true">Date de modification</th>
+        <th data-field="actif" data-visible="false">Actif</th>
         <th data-align="center">Actions</th>
     </tr>
     </thead>
@@ -53,6 +54,7 @@
                 <td>{{ utilisateur.username }}</td>
                 <td>{{ utilisateur.dateCreation|date('Y-m-d H:i:s') }}</td>
                 <td>{{ utilisateur.dateModification|date('Y-m-d H:i:s') }}</td>
+                <td>{{ utilisateur.actif }}</td>
                 <td data-align="center">
                         <span data-toggle="tooltip" data-placement="bottom"
                               title="Accéder à l'espace utilisateur">
