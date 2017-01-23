@@ -78,7 +78,9 @@
 {% block popup_admin_del_titre %}d'utilisateurs{% endblock %}
 
 {% block popup_admin_add_contenu %}
-    {{ form_start(utilisateurForm) }}
+    {{ form_start(utilisateurForm, { 'attr':  {
+        'class': 'form-admin',
+    }}) }}
     <div class="form-group">
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">1</span>

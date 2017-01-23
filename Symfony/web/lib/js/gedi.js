@@ -158,7 +158,7 @@ $(function () {
 
     // listener sur le bouton créer ou modifier du popup de d'ajout et de modification
     // envoi l'entité à traiter au controller
-    $('form').submit(function (event) {
+    $('.form-admin').submit(function (event) {
         // Eviter le comportement par défaut (soumettre le formulaire)
         event.preventDefault();
 
