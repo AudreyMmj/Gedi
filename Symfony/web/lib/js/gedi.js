@@ -87,11 +87,13 @@ $(function () {
             url: window.location,
             data: {'data': selection, 'typeaction': typeAction},
             success: function (data) {
-                $('#content').load(window.location + '#content');
-                $('form').trigger("reset");
-                $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
-                $('.modal-backdrop').remove();
-                sel = null;
+                $('#content').load(window.location + '#content', function () {
+                    $('form').trigger("reset");
+                    $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+                    $('.modal-backdrop').remove();
+                    $('.dropdown-toggle').dropdown();
+                    sel = null;
+                });
 
                 showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
                     ((typeAction == "supprimé" && selection.length > 1) ? 's bien ' + typeAction + 's' :
