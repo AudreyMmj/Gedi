@@ -64,7 +64,8 @@ function edit(js_object_arg) {
     // remplissages de champs des formulaires
     for (var key in js_object) {
         if (key == 'actif' && js_object[key] == '1') {
-            $('#gedi_basebundle_' + nom + '_' + key).prop("checked", true);
+            // $('#gedi_basebundle_' + nom + '_' + key).prop("checked", true);
+            $('#gedi_basebundle_' + nom + '_' + key).bootstrapToggle('on');
         } else {
             $('#gedi_basebundle_' + nom + '_' + key).val(js_object[key]);
         }
@@ -89,7 +90,6 @@ $(function () {
                 $('#content').load(window.location + '#content');
                 $('form').trigger("reset");
                 $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
-                $('.modal').modal('hide');
                 $('.modal-backdrop').remove();
                 sel = null;
 
@@ -141,13 +141,12 @@ $(function () {
         }
     });
 
-    $('#bouton-dm-ajout').click(function () {
-        if ($('#bouton-dm-ajout').text().indexOf('Demandes') >= 0) {
+    // listener sur le toggle de filtre des demandes d'ajout
+    $('#toggle-new-users').change(function () {
+        if (!$('#toggle-new-users').prop('checked')) {
             $('#table_admin').bootstrapTable('filterBy', {actif: ""});
-            $('#bouton-dm-ajout').text("Voir tous");
         } else {
             $('#table_admin').bootstrapTable('filterBy', {});
-            $('#bouton-dm-ajout').text("Demande d\'ajout");
         }
     });
 

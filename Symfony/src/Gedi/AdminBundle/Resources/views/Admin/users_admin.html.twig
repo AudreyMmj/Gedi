@@ -5,22 +5,28 @@
 {% block tooltip_admin %}d'utilisateur{% endblock %}
 
 {% block boutons_admin %}
-    <!-- affichage du nombre d'utilisateurs inactifs -->
-    {% set nbUserInactif = 0 %}
-    {% for utilisateur in tab_objets %}
-        {% if (utilisateur.actif == '0') %}
-            {% set nbUserInactif = nbUserInactif + 1 %}
-        {% endif %}
-    {% endfor %}
-    <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
-            data-target="#popup-add">Ajouter
-    </button>
-    <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal"
-            data-target="#popup-delete">Supprimer <span class="badge spanNbSel"></span>
-    </button>
-    <button type="button" class="btn btn-info" id="bouton-dm-ajout">Demandes d'ajout
-        <span class="badge">{{ nbUserInactif }}</span>
-    </button>
+    <div class="btn-group" role="group" style="display: block">
+        <!-- affichage du nombre d'utilisateurs inactifs -->
+        {% set nbUserInactif = 0 %}
+        {% for utilisateur in tab_objets %}
+            {% if (utilisateur.actif == '0') %}
+                {% set nbUserInactif = nbUserInactif + 1 %}
+            {% endif %}
+        {% endfor %}
+        <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
+                data-target="#popup-add">Ajouter
+        </button>
+        <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal"
+                data-target="#popup-delete">Supprimer <span class="badge spanNbSel"></span>
+        </button>
+    </div>
+    <div>
+        <label class="checkbox-inline">
+            <input id="toggle-new-users" type="checkbox" checked data-toggle="toggle" data-on="Nouveaux" data-off="Tous"
+                   data-size="large" data-width="100" data-height="35">
+            <span class="badge">{{ nbUserInactif }}</span>
+        </label>
+    </div>
 {% endblock %}
 
 {% block tableau_admin %}
@@ -133,7 +139,20 @@
                 'placeholder': 'Prenom'
             }}) }}
         </div>
-        {{ form_row(utilisateurForm.actif) }}
+        <br>
+        <div class="input-group" style="margin-top: -10px; margin-left: -20px;">
+            {{ form_widget(utilisateurForm.actif, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'data-toggle': 'toggle',
+                'data-on': 'Actif',
+                'data-off': 'Inactif',
+                'data-size': 'large',
+                'data-width': '100',
+                'data-height': '35',
+            }}) }}
+        </div>
+        {#{{ form_row(utilisateurForm.actif) }}#}
         {{ form_row(utilisateurForm.idUtilisateur) }}
     </div>
     <div class="modal-footer">
