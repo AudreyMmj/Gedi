@@ -70,7 +70,6 @@ class AdminController extends Controller
             }
             $em->flush();
             $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
-//            json_encode($tab_objets);
             $response = new JsonResponse();
             $response->setData(array('tab_objets' => $tab_objets));
             return $response;

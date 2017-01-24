@@ -87,14 +87,21 @@ $(function () {
             url: window.location,
             data: {'data': selection, 'typeaction': typeAction},
             success: function (data) {
-                var tmp = JSON.parse(data);
-                alert(tmp);
+                // console.log(data);
+                // $('#table_admin').bootstrapTable({
+                //     data: data
+                // });
+                // $('#table_admin').bootstrapTable('load', data);
+                // $('#table_admin').bootstrapTable('refresh', {silent: true});
+                // $.each(data, function(name, value){
+                //     $("#nav").html('<a href="' + topic.link_src + '">' + topic.link_text + "</a>");
+                // });
                 // $('#content').load(window.location + '#content', function () {
                 //     $('form').trigger("reset");
                 //     $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
-                //     $('.modal-backdrop').remove();
-                //     $('.dropdown-toggle').dropdown();
-                //     sel = null;
+                    // $('.modal-backdrop').remove();
+                    // $('.dropdown-toggle').dropdown();
+                    // sel = null;
                 // });
 
                 showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
