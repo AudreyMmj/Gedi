@@ -11,6 +11,7 @@ use Gedi\BaseBundle\Entity\Utilisateur;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -68,6 +69,11 @@ class AdminController extends Controller
                 throw new Exception('La selection est nulle');
             }
             $em->flush();
+            $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
+//            json_encode($tab_objets);
+            $response = new JsonResponse();
+            $response->setData(array('tab_objets' => $tab_objets));
+            return $response;
         }
 
         // importation de tous les utilisateurs
