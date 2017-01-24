@@ -36,3 +36,8 @@ gedi_admin:
 gedi_user:
     resource: "@GediUserBundle/Resources/config/routing.yml"
     prefix:   /user
+
+gedi_contact:
+    resource: "@GediUserBundle/Resources/config/routing.yml"
+    prefix:   /contact
+

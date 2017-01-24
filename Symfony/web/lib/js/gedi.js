@@ -1,6 +1,7 @@
 /**
  * Created by explorer on 30/12/16.
  */
+var sel;
 
 // =======================================================================
 // script permettant de jouer les tooltips
@@ -31,7 +32,32 @@ function majPopupDelete() {
     // écrit le texte dans le popup
     $('#nbSel').html('Vous êtes sur le point de supprimer définitivement ' +
         $('#table_admin').bootstrapTable('getSelections').length + ' ' + nom);
+
+    // met la selection du tableau dans la variable sel
+    $.get("users_admin", function () {
+        sel = $('#table_admin').bootstrapTable('getSelections')
+    });
 }
+
+$(function () {
+    // envoi la selection dans le formulaire de suppression
+    document.getElementById('popup-delete').addEventListener("click", function () {
+        if (typeof sel != 'undefined') {
+            // document.getElementById('sel').setAttribute("value", sel);
+
+            // var myarray = new Array();
+            var params = {sel: sel};
+            var paramJSON = JSON.stringify(params);
+
+            $.post(
+                'users_admin',
+                {data: paramJSON},
+                function (data) {
+                    var result = JSON.parse(data);
+                });
+        }
+    });
+});
 
 // =======================================================================
 // script permettant de mettre à jour le nombre d'élements
