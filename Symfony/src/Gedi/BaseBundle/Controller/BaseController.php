@@ -3,6 +3,8 @@
 namespace Gedi\BaseBundle\Controller;
 
 use Gedi\BaseBundle\Entity\Utilisateur;
+use Gedi\BaseBundle\Entity\Contact;
+use Gedi\BaseBundle\Form\ContactType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -67,10 +69,23 @@ class BaseController extends Controller
     /**
      * @Route("/contact")
      */
-    public function contactAction()
+    public function contactAction(Request $request)
     {
+        $contact = new Contact();
+        $contactForm = $this->createForm('Gedi\BaseBundle\Form\ContactType', $contact);
+        $contactForm->handleRequest($request);
+
+        if ($contactForm->isValid() && $contactForm->isSubmitted()) {
+            // Ajouter l'action pour envoyer un e-mail
+
+            // Envoyer un e-mail de confirmation
+            // the form if they refresh the page
+            return $this->redirectToRoute ('start');
+        }
+
         return $this->render('GediBaseBundle:Base:contact.html.twig', array(
-            // ...
+            'contact' => $contact,
+            'contactForm' => $contactForm->createView(),
         ));
     }
 }

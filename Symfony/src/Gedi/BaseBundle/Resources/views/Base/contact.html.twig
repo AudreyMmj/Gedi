@@ -3,7 +3,56 @@
 {% block base_titre %}Contact{% endblock %}
 
 {% block base_contenu %}
-    contactez moi
+
+    <header>
+        <h1 class="text-white"> Contact</h1>
+    </header>
+
+    <p class="text-white">Pour envoyer un mail à l'administrateur, remplissez tous les champs.</p>
+
+
+    {{ form_start(contactForm) }}
+
+    <div class="form-group full-transparent">
+
+        {{ form_errors(contactForm.name) }}
+        {{ form_widget(contactForm.name, { 'attr':  {
+            'rows': '1',
+            'class': 'form-control',
+            'placeholder': 'Nom'
+        }}) }}
+        <br>
+        {{ form_errors(contactForm.email) }}
+        {{ form_widget(contactForm.email, { 'attr':  {
+            'rows': '1',
+            'class': 'form-control',
+            'placeholder': 'azerty@abc.com'
+        }}) }}
+        <br>
+        {{ form_errors(contactForm.object) }}
+        {{ form_widget(contactForm.object, { 'attr':  {
+            'rows': '1',
+            'class': 'form-control',
+            'placeholder': 'Objet du mail'
+        }}) }}
+        <br>
+        {{ form_errors(contactForm.text) }}
+        {{ form_widget(contactForm.text, { 'attr':  {
+            'rows': '10',
+            'class': 'form-control',
+            'placeholder': 'Contenu du mail',
+            'style' : 'resize : none'
+        }}) }}
+    </div>
+
+
+    {{ form_rest(contactForm) }}
+
+
+    <div class="panel-footer full-transparent">
+        <input type="submit" class="btn btn-success" value="Envoyer"/>
+    </div>
+    {{ form_end(contactForm) }}
 {% endblock %}
 
 
