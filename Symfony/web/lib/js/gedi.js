@@ -87,22 +87,30 @@ $(function () {
             url: window.location,
             data: {'data': selection, 'typeaction': typeAction},
             success: function (data) {
-                // console.log(data);
                 // $('#table_admin').bootstrapTable({
                 //     data: data
                 // });
-                // $('#table_admin').bootstrapTable('load', data);
-                // $('#table_admin').bootstrapTable('refresh', {silent: true});
-                // $.each(data, function(name, value){
-                //     $("#nav").html('<a href="' + topic.link_src + '">' + topic.link_text + "</a>");
+                // $.each(data, function (name, value) {
+                    // console.log(name + ' : ' + value);
+                    // $.each(value, function (name2, value2) {
+                    //     $('#table_admin').bootstrapTable('load', JSON.stringify(value2));
+                //         $('#table_admin').bootstrapTable('removeAll');
+                // $('#table_admin').bootstrapTable('destroy');
+                        // console.log(name2 + ' : ' + value2);
+                        // $.each(value2, function (name3, value3) {
+                            // $('#table_admin').bootstrapTable('load', value3);
+                            // console.log(name3 + ' : ' + value3);
+                        // });
+                    // });
                 // });
-                // $('#content').load(window.location + '#content', function () {
-                //     $('form').trigger("reset");
-                //     $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
-                    // $('.modal-backdrop').remove();
-                    // $('.dropdown-toggle').dropdown();
-                    // sel = null;
-                // });
+                $('#content').load(window.location + '#content', function () {
+                $('form').trigger("reset");
+                $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+                $('.modal-backdrop').remove();
+                $('.dropdown-toggle').dropdown();
+                sel = null;
+                });
+                $('#popup-add').modal('toggle');
 
                 showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
                     ((typeAction == "supprimé" && selection.length > 1) ? 's bien ' + typeAction + 's' :

@@ -69,10 +69,14 @@ class AdminController extends Controller
                 throw new Exception('La selection est nulle');
             }
             $em->flush();
-            $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
-            $response = new JsonResponse();
-            $response->setData(array('tab_objets' => $tab_objets));
-            return $response;
+//            $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
+//            $tab = [];
+//            foreach ($tab_objets as $item) {
+//                array_push($tab,(array) $item);
+//            }
+//            $response = new JsonResponse();
+//            $response->setData(array('tab_objets' => $tab));
+//            return $response;
         }
 
         // importation de tous les utilisateurs
