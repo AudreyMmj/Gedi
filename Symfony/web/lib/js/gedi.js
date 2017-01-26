@@ -103,14 +103,21 @@ $(function () {
                         // });
                     // });
                 // });
-                $('#content').load(window.location + '#content', function () {
-                $('form').trigger("reset");
-                $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
-                $('.modal-backdrop').remove();
-                $('.dropdown-toggle').dropdown();
+
+                if (typeAction == "supprimé") {
+                    console.log(selection);
+                    $('#table_admin').bootstrapTable('remove', {field: 'id', values: selection});
+                } else {
+                    $('form').trigger("reset");
+                    $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+                    $('.modal-backdrop').remove();
+                    $('#popup-add').modal('toggle');
+                }
                 sel = null;
-                });
-                $('#popup-add').modal('toggle');
+
+                // $('#content').load(window.location + '#content', function () {
+                // $('.dropdown-toggle').dropdown();
+                // });
 
                 showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
                     ((typeAction == "supprimé" && selection.length > 1) ? 's bien ' + typeAction + 's' :
