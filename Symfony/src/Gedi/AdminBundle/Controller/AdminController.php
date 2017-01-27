@@ -50,9 +50,12 @@ class AdminController extends Controller
                 if ($_POST['typeaction'] == "supprimé") {
                     // suppression d'utilisateur
                     for ($i = 0; $i <= count($sel) - 1; $i++) {
-                        $userToDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]);
+                        $userToDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]['id']);
                         $em->remove($userToDel);
                     }
+                    $em->flush();
+                    $response = new JsonResponse();
+                    $response->setData(array('reponse' => "OK"));
                 } else if ($_POST['typeaction'] == "enregistré") {
                     // création ou modification d'utilisateur
                     $utilisateur->setUsername($sel[0]['value']);
@@ -60,22 +63,21 @@ class AdminController extends Controller
                     $utilisateur->setNom($sel[3]['value']);
                     $utilisateur->setPrenom($sel[4]['value']);
                     $utilisateur->setActif(($sel[5]['value'] == "false") ? false : true);
-                    $utilisateur->setIdUtilisateur(($sel[6]['value'] != "") ? $sel[6]['value'] : null);
-                    $em->merge($utilisateur);
+                    if ($sel[6]['value'] != "") {
+                        $utilisateur->setIdUtilisateur($sel[6]['value']);
+                        $em->merge($utilisateur);
+                    } else {
+                        $em->persist($utilisateur);
+                    }
+                    $em->flush();
+                    $response = new JsonResponse();
+                    $response->setData(array('reponse' => (array) $utilisateur));
                 } else {
                     throw new Exception('typeaction n\'est pas défini');
                 }
             } else {
                 throw new Exception('La selection est nulle');
             }
-            $em->flush();
-            $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
-//            $tab = [];
-//            foreach ($tab_objets as $item) {
-//                array_push($tab,(array) $item);
-//            }
-            $response = new JsonResponse();
-            $response->setData(array('tab_objets' => $tab_objets));
             return $response;
         }
 

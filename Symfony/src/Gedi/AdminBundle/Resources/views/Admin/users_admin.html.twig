@@ -32,15 +32,15 @@
 {% block tableau_admin %}
     <thead>
     <tr>
-        <th data-checkbox="true"></th>
-        <th data-sortable="true" data-visible="false">Id</th>
-        <th data-sortable="true">Nom</th>
-        <th data-sortable="true">Prenom</th>
-        <th data-sortable="true">Login</th>
-        <th data-sortable="true">Date de création</th>
-        <th data-sortable="true">Date de modification</th>
+        <th data-field="ck" data-checkbox="true"></th>
+        <th data-field="id" data-sortable="true" data-visible="true">Id</th>
+        <th data-field="nom" data-sortable="true">Nom</th>
+        <th data-field="prenom" data-sortable="true">Prenom</th>
+        <th data-field="login" data-sortable="true">Login</th>
+        <th data-field="datec" data-sortable="true">Date de création</th>
+        <th data-field="datem" data-sortable="true">Date de modification</th>
         <th data-field="actif" data-visible="false">Actif</th>
-        <th data-align="center">Actions</th>
+        <th data-field="ctrl" data-align="center">Actions</th>
     </tr>
     </thead>
     <tbody>
