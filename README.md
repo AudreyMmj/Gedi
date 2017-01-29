@@ -6,7 +6,7 @@ Projet d'année de 3ème année de licence informatique MIAGE année 2016 - 2017
 <ul>
 <li>anthonygmb</li>
 <li>sofianeabi</li>
-<li>audrey</li>
+<li>AudreyMmj</li>
 <li>yasmine</li>
 </ul>
 
