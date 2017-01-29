@@ -7,7 +7,7 @@ Projet d'année de 3ème année de licence informatique MIAGE année 2016 - 2017
 <li>anthonygmb</li>
 <li>sofianeabi</li>
 <li>AudreyMmj</li>
-<li>yasmine</li>
+<li>Neezy1234</li>
 </ul>
 
 <h3>Languages et frameworks partie client</h3>
