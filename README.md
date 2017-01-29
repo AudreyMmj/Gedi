@@ -3,14 +3,9 @@ Gestionnaire Electronique de Documents Interractif<br>
 Projet d'année de 3ème année de licence informatique MIAGE année 2016 - 2017
 
 <h3>Team dev</h3>
-<ul>
-<li>anthonygmb</li>
-<li>sofianeabi</li>
-<li>AudreyMmj</li>
-<li>Neezy1234</li>
-</ul>
+@anthonygmb, @sofianeabi, @AudreyMmj, @Neezy1234
 
-<h3>Languages et frameworks partie client</h3>
+<h3>Langages et frameworks partie client</h3>
 <ul>
 <li>html 5</li>
 <li>css 3</li>
@@ -22,7 +17,7 @@ Projet d'année de 3ème année de licence informatique MIAGE année 2016 - 2017
 <li>bootstrap-toggle</li>
 </ul>
 
-<h3>Languages et frameworks partie serveur</h3>
+<h3>Langages et frameworks partie serveur</h3>
 <ul>
 <li>php</li>
 <li>Symfony</li>
