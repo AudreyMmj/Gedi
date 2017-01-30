@@ -6,13 +6,6 @@
 
 {% block boutons_admin %}
     <div class="btn-group" role="group" style="display: block">
-        <!-- affichage du nombre d'utilisateurs inactifs -->
-        {% set nbUserInactif = 0 %}
-        {% for utilisateur in tab_objets %}
-            {% if (utilisateur.actif == '0') %}
-                {% set nbUserInactif = nbUserInactif + 1 %}
-            {% endif %}
-        {% endfor %}
         <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
                 data-target="#popup-add">Ajouter
         </button>
@@ -24,7 +17,7 @@
         <label class="checkbox-inline">
             <input id="toggle-new-users" type="checkbox" checked data-toggle="toggle" data-on="Nouveaux" data-off="Tous"
                    data-size="large" data-width="100" data-height="35">
-            <span class="badge">{{ nbUserInactif }}</span>
+            <span id="span-nb-inactifs" class="badge"></span>
         </label>
     </div>
 {% endblock %}
@@ -33,7 +26,7 @@
     <thead>
     <tr>
         <th data-field="ck" data-checkbox="true"></th>
-        <th data-field="id" data-sortable="true" data-visible="true">Id</th>
+        <th data-field="id" data-sortable="true" data-visible="false">Id</th>
         <th data-field="nom" data-sortable="true">Nom</th>
         <th data-field="prenom" data-sortable="true">Prenom</th>
         <th data-field="login" data-sortable="true">Login</th>

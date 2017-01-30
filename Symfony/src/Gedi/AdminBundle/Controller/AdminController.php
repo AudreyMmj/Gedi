@@ -56,7 +56,7 @@ class AdminController extends Controller
                     $em->flush();
                     $response = new JsonResponse();
                     $response->setData(array('reponse' => "OK"));
-                } else if ($_POST['typeaction'] == "enregistré") {
+                } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
                     // création ou modification d'utilisateur
                     $utilisateur->setUsername($sel[0]['value']);
                     $utilisateur->setPassword($sel[1]['value']);
@@ -70,8 +70,31 @@ class AdminController extends Controller
                         $em->persist($utilisateur);
                     }
                     $em->flush();
+
+                    $rows = [
+                        "ck" => 'data-checkbox="true"',
+                        "id" => $utilisateur->getIdUtilisateur(),
+                        "nom" => $utilisateur->getNom(),
+                        "prenom" => $utilisateur->getPrenom(),
+                        "login" => $utilisateur->getUsername(),
+                        "datec" => date_format($utilisateur->getDateCreation(), 'Y-m-d H:i:s'),
+                        "datem" => date_format($utilisateur->getDateModification(), 'Y-m-d H:i:s'),
+                        "actif" => (($utilisateur->getActif() == false) ? "" : "1"),
+                        "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Accéder à l\'espace utilisateur">' .
+                            '<button type="button" class="btn btn-default btn-primary round-button">' .
+                            '<span class="glyphicon glyphicon-dashboard"></span></button></span>' .
+                            '<span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche utilisateur">' .
+                            '<button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"' .
+                            'data-target="#popup-add" onclick="edit(\'{&quot;idUtilisateur&quot;:' . $utilisateur->getIdUtilisateur() .
+                            ',&quot;username&quot;:&quot;' . $utilisateur->getUsername() .
+                            '&quot;,&quot;nom&quot;:&quot;' . $utilisateur->getNom() .
+                            '&quot;,&quot;prenom&quot;:&quot;' . $utilisateur->getPrenom() .
+                            '&quot;,&quot;actif&quot;:' . (($utilisateur->getActif() == false) ? "false" : "true") . '}\');">' .
+                            '<span class="glyphicon glyphicon-pencil"></span></button></span>',
+                    ];
+
                     $response = new JsonResponse();
-                    $response->setData(array('reponse' => (array) $utilisateur));
+                    $response->setData(array('reponse' => (array)$rows));
                 } else {
                     throw new Exception('typeaction n\'est pas défini');
                 }
