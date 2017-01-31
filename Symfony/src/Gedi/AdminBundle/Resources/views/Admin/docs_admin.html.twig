@@ -5,18 +5,16 @@
 {% block tooltip_admin %}des documents{% endblock %}
 
 {% block boutons_admin %}
-    {#<label class="btn btn-success"><span#}
-                {#class="glyphicon glyphicon-cloud-upload"></span>#}
-        {#Uploader <input type="file" style="display: none">#}
-    {#</label>#}
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Créer</button>
-    <button type="button" class="btn btn-info bouton-desactive"><span
-                class="glyphicon glyphicon-cloud-download"></span> Downloader <span
-                class="badge spanNbSel"></span>
-    </button>
-    <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal" data-target="#popup-delete"
-            onclick="majPopupDelete()">Supprimer <span class="badge spanNbSel"></span>
-    </button>
+    <div class="btn-group bs-bars pull-left" role="group" style="display: block">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Créer</button>
+        <button type="button" class="btn btn-info bouton-desactive"><span
+                    class="glyphicon glyphicon-cloud-download"></span> Downloader <span
+                    class="badge spanNbSel"></span>
+        </button>
+        <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal" data-target="#popup-delete"
+                onclick="majPopupDelete()">Supprimer <span class="badge spanNbSel"></span>
+        </button>
+    </div>
 {% endblock %}
 
 {% block tableau_admin %}
