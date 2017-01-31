@@ -9,7 +9,6 @@ var nom; // nom de l'entité affiché sur la page
 // elements lancés au chargement de la page
 $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip(); // script permettant de jouer les tooltips
-    $('.bouton-submit-admin-entity').prop('disabled', true); // désactive par défaut les boutons de type bouton-submit-admin-entity
     $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de type bouton-desactive
 
     // change le texte du popup de suppression en fonction de la page
@@ -33,7 +32,8 @@ function updateNbEntity() {
     if (window.location.href.indexOf("users_admin") > -1) {
         var nbInactifs = 0;
         // nombre d'utilisateurs actifs
-        var inactifs = $.map($('#table_admin').bootstrapTable('getData'), function (rows) {
+        var $table = $('#table_admin');
+        var inactifs = $.map($table.bootstrapTable('getData'), function (rows) {
             return rows.actif;
         });
         for (var i = 0; i < inactifs.length; i++) {
@@ -51,7 +51,7 @@ function updateNbEntity() {
     }
 
     // nombre d'entités
-    $('#span-nb-entity').html($('#table_admin').bootstrapTable('getData').length);
+    $('#span-nb-entity').html($table.bootstrapTable('getData').length);
 }
 
 // =======================================================================
@@ -94,8 +94,10 @@ function edit(js_object_arg) {
     // remplissages de champs des formulaires
     for (var key in js_object) {
         if (key == 'actif' && js_object[key] == '1') {
-            // $('#gedi_basebundle_' + nom + '_' + key).prop("checked", true);
             $('#gedi_basebundle_' + nom + '_' + key).bootstrapToggle('on');
+        } else if (key == 'password') {
+            $('#gedi_basebundle_' + nom + '_' + key + '_first').val(js_object[key]);
+            $('#gedi_basebundle_' + nom + '_' + key + '_second').val(js_object[key]);
         } else {
             $('#gedi_basebundle_' + nom + '_' + key).val(js_object[key]);
         }
@@ -103,7 +105,9 @@ function edit(js_object_arg) {
 
     // modification du popup ajout / edition
     $('#popup-admin-add-titre').html('Modifier un ' + nom);
-    $('.bouton-submit-admin-entity').val('Appliquer');
+    var $bsae = $('.bouton-submit-admin-entity');
+    $bsae.val('Appliquer');
+    $bsae.prop('disabled', false);
 }
 
 // =======================================================================
@@ -208,12 +212,6 @@ $(function () {
     // listener sur le bouton supprimer du popup de suppression
     // envoi la selection à supprimer au controller
     $('#delete-entity').click(function () {
-        // enregistre les id des utilisateurs à supprimer
-        // var selection = [];
-        // for (var i = 0; i < sel.length; i++) {
-        //     selection[i] = sel[i][1];
-        // }
-        // ajaxSend(selection, "supprimé");
         ajaxSend(sel, "supprimé");
     });
 
@@ -291,6 +289,8 @@ $(function () {
     $(".bouton-admin-popup-add").click(function () {
         // modification du popup ajout / edition
         $('#popup-admin-add-titre').html('Créer un ' + nom);
-        $('.bouton-submit-admin-entity').val('Créer');
+        var $bsae = $('.bouton-submit-admin-entity');
+        $bsae.val('Créer');
+        $bsae.prop('disabled', true);
     });
 });

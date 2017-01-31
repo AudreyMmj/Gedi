@@ -87,6 +87,7 @@ class AdminController extends Controller
                             '<button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"' .
                             'data-target="#popup-add" onclick="edit(\'{&quot;idUtilisateur&quot;:' . $utilisateur->getIdUtilisateur() .
                             ',&quot;username&quot;:&quot;' . $utilisateur->getUsername() .
+                            '&quot;,&quot;password&quot;:&quot;' . $utilisateur->getPassword() .
                             '&quot;,&quot;nom&quot;:&quot;' . $utilisateur->getNom() .
                             '&quot;,&quot;prenom&quot;:&quot;' . $utilisateur->getPrenom() .
                             '&quot;,&quot;actif&quot;:' . (($utilisateur->getActif() == false) ? "false" : "true") . '}\');">' .

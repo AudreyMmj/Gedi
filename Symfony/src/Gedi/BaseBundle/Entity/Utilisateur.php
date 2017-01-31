@@ -464,10 +464,12 @@ class Utilisateur implements UserInterface
      * Transforme l'utilisateur en tableau associatif
      * @return array
      */
-    public function toArray() {
+    public function toArray()
+    {
         $array = array(
             "idUtilisateur" => $this->idUtilisateur,
             "username" => $this->username,
+            "password" => $this->password,
             "nom" => $this->nom,
             "prenom" => $this->prenom,
             "actif" => $this->actif
