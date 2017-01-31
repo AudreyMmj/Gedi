@@ -5,7 +5,7 @@
 {% block tooltip_admin %}d'utilisateur{% endblock %}
 
 {% block boutons_admin %}
-    <div class="btn-group" role="group" style="display: block">
+    <div class="btn-group bs-bars pull-left" role="group" style="display: block">
         <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
                 data-target="#popup-add">Ajouter
         </button>
@@ -13,7 +13,7 @@
                 data-target="#popup-delete">Supprimer <span class="badge spanNbSel"></span>
         </button>
     </div>
-    <div>
+    <div class="bs-bars pull-left">
         <label class="checkbox-inline">
             <input id="toggle-new-users" type="checkbox" checked data-toggle="toggle" data-on="Nouveaux" data-off="Tous"
                    data-size="large" data-width="100" data-height="35">

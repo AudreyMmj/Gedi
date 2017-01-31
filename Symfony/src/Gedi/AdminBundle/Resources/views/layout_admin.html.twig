@@ -22,11 +22,11 @@
             </div>
         </div>
         <div class="panel-body">
-            {% block boutons_admin %}{% endblock %}
             <div class="table-responsive">
                 <table class="table" data-toggle="table" data-search="true" data-striped="true" data-pagination="true"
                        data-classes="table-no-bordered table-hover" data-page-list="[5, 10, 15, 20, 50]"
                        id="table_admin" data-unique-id="id">
+                    {% block boutons_admin %}{% endblock %}
                     {% block tableau_admin %}{% endblock %}
                 </table>
             </div>
