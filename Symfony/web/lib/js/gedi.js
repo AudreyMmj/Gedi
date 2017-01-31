@@ -4,6 +4,7 @@
 
 var sel; // variable de selection d'entité
 var nom; // nom de l'entité affiché sur la page
+var logins; // tableau des logins
 
 // =======================================================================
 // elements lancés au chargement de la page
@@ -29,6 +30,7 @@ $(document).ready(function () {
 // et le nombre d'entités total
 function updateNbEntity() {
 
+    // ne s'execute que si on est sur la page users_admin
     if (window.location.href.indexOf("users_admin") > -1) {
         var nbInactifs = 0;
         // nombre d'utilisateurs actifs
@@ -108,6 +110,45 @@ function edit(js_object_arg) {
     var $bsae = $('.bouton-submit-admin-entity');
     $bsae.val('Appliquer');
     $bsae.prop('disabled', false);
+}
+
+// =======================================================================
+// fonction de vérification de formulaire
+// permet de valider les champs coté client
+function validForm() {
+    var pass1 = document.getElementById("gedi_basebundle_utilisateur_password_first").value;
+    var pass2 = document.getElementById("gedi_basebundle_utilisateur_password_second").value;
+    var username = document.getElementById("gedi_basebundle_utilisateur_username").value;
+    var nom = document.getElementById("gedi_basebundle_utilisateur_nom").value;
+    var prenom = document.getElementById("gedi_basebundle_utilisateur_prenom").value;
+
+    // test si le mot de passe concorde avec la confirmation
+    if (pass1 != pass2 && (pass1 != "" && pass2 != "")) {
+        $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-error)');
+        $('.bouton-submit-admin-entity').prop('disabled', true);
+    } else if (pass1 == pass2 && (pass1 != "" && pass2 != "")) {
+        $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-success)');
+        $('.bouton-submit-admin-entity').prop('disabled', false);
+    } else {
+        $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+        $('.bouton-submit-admin-entity').prop('disabled', true);
+    }
+
+    // test si le login n'est pas déjà utilisé
+    if (window.location.href.indexOf("users_admin") > -1) {
+        if (logins != null && logins.includes(username)) {
+            $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-error)');
+            $('.bouton-submit-admin-entity').prop('disabled', true);
+        } else {
+            $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-default)');
+            $('.bouton-submit-admin-entity').prop('disabled', false);
+        }
+    }
+
+    // test si tous les champs sont remplis
+    if (username == "" || pass1 == "" || pass2 == "" || nom == "" || prenom == "") {
+        $('.bouton-submit-admin-entity').prop('disabled', true);
+    }
 }
 
 // =======================================================================
@@ -246,34 +287,11 @@ $(function () {
     });
 
     // listener sur le formulaire d'ajout d'utilisateur
-    // permet de valider les champs coté client
-    // tous les champs doivent être rempli et le mot de passe
-    // et la confirmatin de mot de passe doivent concorder
-    $('#popup-add').keyup(function () {
-        var pass1 = document.getElementById("gedi_basebundle_utilisateur_password_first").value;
-        var pass2 = document.getElementById("gedi_basebundle_utilisateur_password_second").value;
-        var username = document.getElementById("gedi_basebundle_utilisateur_username").value;
-        var nom = document.getElementById("gedi_basebundle_utilisateur_nom").value;
-        var prenom = document.getElementById("gedi_basebundle_utilisateur_prenom").value;
-
-        if (pass1 != pass2 && (pass1 != "" && pass2 != "")) {
-            $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-error)');
-        } else if (pass1 == pass2 && (pass1 != "" && pass2 != "")) {
-            $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-success)');
-        } else {
-            $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
-        }
-
-        if (username == "" || pass1 == "" || pass2 == "" || nom == "" || prenom == "") {
-            $('.bouton-submit-admin-entity').prop('disabled', true);
-        } else {
-            if (pass1 != pass2) {
-                $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-error)');
-                $('.bouton-submit-admin-entity').prop('disabled', true);
-            } else {
-                $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-success)');
-                $('.bouton-submit-admin-entity').prop('disabled', false);
-            }
+    $('#popup-add').on({
+        'keyup': function () {
+            validForm();
+        }, 'focusout': function () {
+            validForm();
         }
     });
 
@@ -282,6 +300,8 @@ $(function () {
     $(".bouton-dismiss-entity").click(function () {
         $('form').trigger("reset");
         $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+        $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-default)');
+        logins = null;
     });
 
     // listener sur le bouton créer une entité
@@ -292,5 +312,14 @@ $(function () {
         var $bsae = $('.bouton-submit-admin-entity');
         $bsae.val('Créer');
         $bsae.prop('disabled', true);
+
+        // ne s'execute que si on est sur la page users_admin
+        // récupère tous les login pour vérifier coté client si
+        // on a pas un doublon de login
+        if (window.location.href.indexOf("users_admin") > -1) {
+            logins = $.map($('#table_admin').bootstrapTable('getData'), function (rows) {
+                return rows.login;
+            });
+        }
     });
 });
