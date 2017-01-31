@@ -59,7 +59,11 @@ class AdminController extends Controller
                 } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
                     // création ou modification d'utilisateur
                     $utilisateur->setUsername($sel[0]['value']);
-                    $utilisateur->setPassword($sel[1]['value']);
+                    $utilisateur->setSalt(substr(md5(time()), 0, 23));
+                    $encoderFactory = $this->get('security.encoder_factory');
+                    $encoder = $encoderFactory->getEncoder($utilisateur);
+                    $password = $encoder->encodePassword($sel[1]['value'], $utilisateur->getSalt());
+                    $utilisateur->setPassword($password);
                     $utilisateur->setNom($sel[3]['value']);
                     $utilisateur->setPrenom($sel[4]['value']);
                     $utilisateur->setActif(($sel[5]['value'] == "false") ? false : true);
