@@ -26,7 +26,7 @@
     <thead>
     <tr>
         <th data-field="ck" data-checkbox="true"></th>
-        <th data-field="id" data-sortable="true" data-visible="false">Id</th>
+        <th data-field="id" data-visible="false">Id</th>
         <th data-field="nom" data-sortable="true">Nom</th>
         <th data-field="prenom" data-sortable="true">Prenom</th>
         <th data-field="login" data-sortable="true">Login</th>
@@ -83,6 +83,7 @@
         'class': 'form-admin',
     }}) }}
     <div class="form-group">
+        {{ form_row(utilisateurForm.idUtilisateur) }}
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">1</span>
             {{ form_errors(utilisateurForm.username) }}
@@ -145,7 +146,6 @@
                 'data-height': '35',
             }}) }}
         </div>
-        {{ form_row(utilisateurForm.idUtilisateur) }}
     </div>
     <div class="modal-footer">
         <div class="form-group">

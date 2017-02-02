@@ -21,6 +21,13 @@ $(document).ready(function () {
         nom = 'projet';
     } else if (window.location.href.indexOf("docs_admin") > -1) {
         nom = 'document';
+    } else if (window.location.href.indexOf("home_admin") > -1) {
+        // if (nbNewUsers != null && nbNewUsers > 0) {
+        var nbNewUsers = 3;
+        showNotify('<strong>' + 'Vous avez ' + nbNewUsers +
+            ((nbNewUsers > 1) ? ' demandes' : ' demande') + 'd\'ajout' +
+            '</strong>', 'glyphicon glyphicon-info-sign', 'info');
+        // }
     }
     updateNbEntity();
 });
@@ -29,12 +36,12 @@ $(document).ready(function () {
 // fonction pour mettre à jour le nombre d'utilisateurs inactifs
 // et le nombre d'entités total
 function updateNbEntity() {
+    var $table = $('#table_admin');
 
     // ne s'execute que si on est sur la page users_admin
     if (window.location.href.indexOf("users_admin") > -1) {
         var nbInactifs = 0;
         // nombre d'utilisateurs actifs
-        var $table = $('#table_admin');
         var inactifs = $.map($table.bootstrapTable('getData'), function (rows) {
             return rows.actif;
         });
@@ -54,6 +61,12 @@ function updateNbEntity() {
 
     // nombre d'entités
     $('#span-nb-entity').html($table.bootstrapTable('getData').length);
+}
+
+// =======================================================================
+// fonction pour ajouter un utilisateurs en temps que propriétaire
+function addUser(js_arg) {
+    $('#gedi_basebundle_groupe_idUtilisateurFkGroupe').val(js_arg);
 }
 
 // =======================================================================
@@ -110,12 +123,13 @@ function edit(js_object_arg) {
     var $bsae = $('.bouton-submit-admin-entity');
     $bsae.val('Appliquer');
     $bsae.prop('disabled', false);
+    $('.assign-user').hide();
 }
 
 // =======================================================================
 // fonction de vérification de formulaire
 // permet de valider les champs coté client
-function validForm() {
+function validFormUtilisateur() {
     var pass1 = document.getElementById("gedi_basebundle_utilisateur_password_first").value;
     var pass2 = document.getElementById("gedi_basebundle_utilisateur_password_second").value;
     var username = document.getElementById("gedi_basebundle_utilisateur_username").value;
@@ -179,13 +193,15 @@ $(function () {
                     }
                     $table.bootstrapTable('filterBy', {});
                     $table.bootstrapTable('scrollTo', 'bottom');
-                    if (data.reponse.actif != "1") {
-                        $('tr[data-uniqueid=' + data.reponse.id + ']').addClass('info text-info'); //BUG #2
-                    } else {
-                        $('tr[data-uniqueid=' + data.reponse.id + ']').removeClass('info text-info');
+                    if (window.location.href.indexOf("users_admin") > -1) {
+                        if (data.reponse.actif != "1") {
+                            $('tr[data-uniqueid=' + data.reponse.id + ']').addClass('info text-info'); //BUG #2
+                        } else {
+                            $('tr[data-uniqueid=' + data.reponse.id + ']').removeClass('info text-info');
+                        }
+                        $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
                     }
                     $('form').trigger("reset");
-                    $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
                     $('.modal-backdrop').remove();
                     $('#popup-add').modal('toggle');
                 }
@@ -265,21 +281,24 @@ $(function () {
         // récupération des données du formulaire
         var selection = $('form').serializeArray();
 
-        // une checkbox non cochée dans un formulaire n'est n'apparait pas dans
-        // le tableau après un serializeArray. On doit donc dire à la main qu'elle
-        // n'est pas cochée
-        if (!$('#gedi_basebundle_utilisateur_actif').prop('checked')) {
-            selection.splice(5, 0, {
-                name: "gedi_basebundle_utilisateur[actif]",
-                value: false
-            });
-        } else {
-            selection.splice(5, 1, {
-                name: "gedi_basebundle_utilisateur[actif]",
-                value: true
-            });
+        if (window.location.href.indexOf("users_admin") > -1) {
+            // une checkbox non cochée dans un formulaire n'est n'apparait pas dans
+            // le tableau après un serializeArray. On doit donc dire à la main qu'elle
+            // n'est pas cochée
+            if (!$('#gedi_basebundle_utilisateur_actif').prop('checked')) {
+                selection.splice(6, 0, {
+                    name: "gedi_basebundle_utilisateur[actif]",
+                    value: false
+                });
+            } else {
+                selection.splice(6, 1, {
+                    name: "gedi_basebundle_utilisateur[actif]",
+                    value: true
+                });
+            }
         }
-        if (selection[6].value == "") {
+
+        if (selection[0].value == "") {
             ajaxSend(selection, "enregistré");
         } else {
             ajaxSend(selection, "modifié");
@@ -289,9 +308,13 @@ $(function () {
     // listener sur le formulaire d'ajout d'utilisateur
     $('#popup-add').on({
         'keyup': function () {
-            validForm();
+            if (window.location.href.indexOf("users_admin") > -1) {
+                validFormUtilisateur();
+            }
         }, 'focusout': function () {
-            validForm();
+            if (window.location.href.indexOf("users_admin") > -1) {
+                validFormUtilisateur();
+            }
         }
     });
 
@@ -311,12 +334,13 @@ $(function () {
         $('#popup-admin-add-titre').html('Créer un ' + nom);
         var $bsae = $('.bouton-submit-admin-entity');
         $bsae.val('Créer');
-        $bsae.prop('disabled', true);
+        $('.assign-user').show();
 
         // ne s'execute que si on est sur la page users_admin
         // récupère tous les login pour vérifier coté client si
         // on a pas un doublon de login
         if (window.location.href.indexOf("users_admin") > -1) {
+            $bsae.prop('disabled', true);
             logins = $.map($('#table_admin').bootstrapTable('getData'), function (rows) {
                 return rows.login;
             });
