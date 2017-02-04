@@ -53,9 +53,9 @@ class AdminController extends Controller
     public function usersAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $utilisateur = new Utilisateur();
-        $utilisateurForm = $this->createForm('Gedi\BaseBundle\Form\UtilisateurType', $utilisateur);
-        $utilisateurForm->handleRequest($request);
+        $objet = new Utilisateur();
+        $form = $this->createForm('Gedi\BaseBundle\Form\UtilisateurType', $objet);
+        $form->handleRequest($request);
 
         if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeaction'])) {
             $sel = $_POST['data'];
@@ -65,54 +65,54 @@ class AdminController extends Controller
             }
 
             if ($_POST['typeaction'] == "supprimé") {
-                // suppression d'utilisateur
+                // suppression
                 for ($i = 0; $i <= count($sel) - 1; $i++) {
-                    $userToDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]['id']);
-                    $em->remove($userToDel);
+                    $toDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]['id']);
+                    $em->remove($toDel);
                 }
                 $em->flush();
                 $response = new JsonResponse();
                 $response->setData(array('reponse' => "OK"));
 
             } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
-                // création ou modification d'utilisateur
-                $utilisateur->setUsername($sel[1]['value']);
-                $utilisateur->setSalt(substr(md5(time()), 0, 23));
+                // création ou modification
+                $objet->setUsername($sel[1]['value']);
+                $objet->setSalt(substr(md5(time()), 0, 23));
                 $encoderFactory = $this->get('security.encoder_factory');
-                $encoder = $encoderFactory->getEncoder($utilisateur);
-                $password = $encoder->encodePassword($sel[2]['value'], $utilisateur->getSalt());
-                $utilisateur->setPassword($password);
-                $utilisateur->setNom($sel[4]['value']);
-                $utilisateur->setPrenom($sel[5]['value']);
-                $utilisateur->setActif(($sel[6]['value'] == "false") ? false : true);
+                $encoder = $encoderFactory->getEncoder($objet);
+                $password = $encoder->encodePassword($sel[2]['value'], $objet->getSalt());
+                $objet->setPassword($password);
+                $objet->setNom($sel[4]['value']);
+                $objet->setPrenom($sel[5]['value']);
+                $objet->setActif(($sel[6]['value'] == "false") ? false : true);
                 if ($sel[0]['value'] != "") {
-                    $utilisateur->setIdUtilisateur($sel[0]['value']);
-                    $em->merge($utilisateur);
+                    $objet->setIdUtilisateur($sel[0]['value']);
+                    $em->merge($objet);
                 } else {
-                    $em->persist($utilisateur);
+                    $em->persist($objet);
                 }
                 $em->flush();
 
                 $rows = [
                     "ck" => 'data-checkbox="true"',
-                    "id" => $utilisateur->getIdUtilisateur(),
-                    "nom" => $utilisateur->getNom(),
-                    "prenom" => $utilisateur->getPrenom(),
-                    "login" => $utilisateur->getUsername(),
-                    "datec" => date_format($utilisateur->getDateCreation(), 'Y-m-d H:i:s'),
-                    "datem" => date_format($utilisateur->getDateModification(), 'Y-m-d H:i:s'),
-                    "actif" => (($utilisateur->getActif() == false) ? "" : "1"),
+                    "id" => $objet->getIdUtilisateur(),
+                    "nom" => $objet->getNom(),
+                    "prenom" => $objet->getPrenom(),
+                    "login" => $objet->getUsername(),
+                    "datec" => date_format($objet->getDateCreation(), 'Y-m-d H:i:s'),
+                    "datem" => date_format($objet->getDateModification(), 'Y-m-d H:i:s'),
+                    "actif" => (($objet->getActif() == false) ? "" : "1"),
                     "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Accéder à l\'espace utilisateur">' .
                         '<button type="button" class="btn btn-default btn-primary round-button">' .
                         '<span class="glyphicon glyphicon-dashboard"></span></button></span>' .
                         '<span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche utilisateur">' .
                         '<button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"' .
-                        'data-target="#popup-add" onclick="edit(\'{&quot;idUtilisateur&quot;:' . $utilisateur->getIdUtilisateur() .
-                        ',&quot;username&quot;:&quot;' . $utilisateur->getUsername() .
-                        '&quot;,&quot;password&quot;:&quot;' . $utilisateur->getPassword() .
-                        '&quot;,&quot;nom&quot;:&quot;' . $utilisateur->getNom() .
-                        '&quot;,&quot;prenom&quot;:&quot;' . $utilisateur->getPrenom() .
-                        '&quot;,&quot;actif&quot;:' . (($utilisateur->getActif() == false) ? "false" : "true") . '}\');">' .
+                        'data-target="#popup-add" onclick="edit(\'{&quot;idUtilisateur&quot;:' . $objet->getIdUtilisateur() .
+                        ',&quot;username&quot;:&quot;' . $objet->getUsername() .
+                        '&quot;,&quot;password&quot;:&quot;' . $objet->getPassword() .
+                        '&quot;,&quot;nom&quot;:&quot;' . $objet->getNom() .
+                        '&quot;,&quot;prenom&quot;:&quot;' . $objet->getPrenom() .
+                        '&quot;,&quot;actif&quot;:' . (($objet->getActif() == false) ? "false" : "true") . '}\');">' .
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
 
@@ -129,8 +129,8 @@ class AdminController extends Controller
 
         return $this->render('GediAdminBundle:Admin:users_admin.html.twig', array(
             'tab_objets' => $tab_objets,
-            'utilisateur' => $utilisateur,
-            'utilisateurForm' => $utilisateurForm->createView(),
+            'utilisateur' => $objet,
+            'utilisateurForm' => $form->createView(),
         ));
     }
 
@@ -144,9 +144,9 @@ class AdminController extends Controller
     public function groupsAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $groupe = new Groupe();
-        $groupeForm = $this->createForm('Gedi\BaseBundle\Form\GroupeType', $groupe);
-        $groupeForm->handleRequest($request);
+        $objet = new Groupe();
+        $form = $this->createForm('Gedi\BaseBundle\Form\GroupeType', $objet);
+        $form->handleRequest($request);
 
         if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeaction'])) {
             $sel = $_POST['data'];
@@ -158,54 +158,55 @@ class AdminController extends Controller
             $response = new JsonResponse();
 
             if ($_POST['typeaction'] == "supprimé") {
-                // suppression de groupes
+                // suppression
                 for ($i = 0; $i <= count($sel) - 1; $i++) {
-                    $groupToDel = $em->find('GediBaseBundle:Groupe', $sel[$i]['id']);
-                    $em->remove($groupToDel);
+                    $toDel = $em->find('GediBaseBundle:Groupe', $sel[$i]['id']);
+                    $em->remove($toDel);
                 }
                 $em->flush();
                 $response->setData(array('reponse' => "OK"));
             } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
                 if ($_POST['typeaction'] == "enregistré") {
-                    // création de groupes
-                    $groupe->setNom($sel[1]['value']);
+                    // création
+                    $objet->setNom($sel[1]['value']);
                     $utilisateur = $em->find('GediBaseBundle:Utilisateur', $sel[2]['value']);
-                    $utilisateur->addIdGroupeUg($groupe);
-                    $groupe->addIdUtilisateurUg($utilisateur);
-                    $groupe->setIdUtilisateurFkGroupe($utilisateur);
-                    $em->persist($groupe);
+                    $utilisateur->addIdGroupeUg($objet);
+                    $objet->addIdUtilisateurUg($utilisateur);
+                    $objet->setIdUtilisateurFkGroupe($utilisateur);
+                    $em->persist($objet);
 
                 } else if ($_POST['typeaction'] == "modifié") {
-                    // modification de groupes
-                    $groupe = $em->find('GediBaseBundle:Groupe', $sel[0]['value']);
-                    $groupe->setNom($sel[1]['value']);
-                    $em->merge($groupe);
+                    // modification
+                    $objet = $em->find('GediBaseBundle:Groupe', $sel[0]['value']);
+                    $objet->setNom($sel[1]['value']);
+                    $em->merge($objet);
                 }
 
                 $em->flush();
                 $rows = [
                     "ck" => 'data-checkbox="true"',
-                    "id" => $groupe->getIdGroupe(),
-                    "nom" => $groupe->getNom(),
-                    "datec" => date_format($groupe->getDateCreation(), 'Y-m-d H:i:s'),
-                    "datem" => date_format($groupe->getDateModification(), 'Y-m-d H:i:s'),
-                    "propio" => $groupe->getIdUtilisateurFkGroupe()->getNom() . " " . $groupe->getIdUtilisateurFkGroupe()->getPrenom(),
+                    "id" => $objet->getIdGroupe(),
+                    "nom" => $objet->getNom(),
+                    "datec" => date_format($objet->getDateCreation(), 'Y-m-d H:i:s'),
+                    "datem" => date_format($objet->getDateModification(), 'Y-m-d H:i:s'),
+                    "propio" => $objet->getIdUtilisateurFkGroupe()->getNom() . " " . $objet->getIdUtilisateurFkGroupe()->getPrenom(),
                     "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Voir les membres">' .
-                        '<button type="button" class="btn btn-default btn-primary round-button">' .
+                        '<button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
+                                data-toggle="modal" data-target="#popup-view">' .
                         '<span class="glyphicon glyphicon-user"></span></button></span>' .
                         '<span data-toggle="tooltip" data-placement="bottom" title="Editer le groupe">' .
                         '<button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"' .
-                        'data-target="#popup-add" onclick="edit(\'{&quot;idGroupe&quot;:' . $groupe->getIdGroupe() .
-                        ',&quot;nom&quot;:&quot;' . $groupe->getNom() . '&quot;}\');">' .
+                        'data-target="#popup-add" onclick="edit(\'{&quot;idGroupe&quot;:' . $objet->getIdGroupe() .
+                        ',&quot;nom&quot;:&quot;' . $objet->getNom() . '&quot;}\');">' .
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
                 $response->setData(array('reponse' => (array)$rows));
 
             } else if ($_POST['typeaction'] == "children") {
-                $groupe = $em->find('GediBaseBundle:Groupe', $sel);
+                $objet = $em->find('GediBaseBundle:Groupe', $sel);
                 $rows = [];
-                foreach ($groupe->getIdUtilisateurUg() as $membre) {
-                    array_push($rows, $membre->getNom() . " " . $membre->getPrenom() . " - " . $membre->getUsername());
+                foreach ($objet->getIdUtilisateurUg() as $child) {
+                    array_push($rows, $child->getNom() . " " . $child->getPrenom() . " - " . $child->getUsername());
                 }
                 $response->setData(array('reponse' => (array)$rows));
 
@@ -222,8 +223,8 @@ class AdminController extends Controller
 
         return $this->render('GediAdminBundle:Admin:groups_admin.html.twig', array(
             'tab_objets' => $tab_objets,
-            'groupe' => $groupe,
-            'groupeForm' => $groupeForm->createView(),
+            'groupe' => $objet,
+            'groupeForm' => $form->createView(),
             'tab_users' => $tab_users,
         ));
     }
@@ -233,29 +234,91 @@ class AdminController extends Controller
      * @Route("/projects_admin")
      * @param Request $request
      * @return Response
+     * @throws Exception
      */
     public function projectsAction(Request $request)
     {
-        // importation de tous les projets
         $em = $this->getDoctrine()->getManager();
-        $tab_objets = $em->getRepository('GediBaseBundle:Projet')->findAll();
+        $objet = new Projet();
+        $form = $this->createForm('Gedi\BaseBundle\Form\ProjetType', $objet);
+        $form->handleRequest($request);
 
-        // création du formulaire pour créer un nouveau projet
-        $projet = new Projet();
-        $projetForm = $this->createForm('Gedi\BaseBundle\Form\ProjetType', $projet);
-        $projetForm->handleRequest($request);
+        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeaction'])) {
+            $sel = $_POST['data'];
 
-        if ($projetForm->isSubmitted() && $projetForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($projet);
-            $em->flush();
-            return $this->redirectToRoute('projects_admin');
+            if ($sel == null || $sel == "") {
+                throw new Exception('La selection est nulle');
+            }
+            $rows = null;
+            $response = new JsonResponse();
+
+            if ($_POST['typeaction'] == "supprimé") {
+                // suppression
+                for ($i = 0; $i <= count($sel) - 1; $i++) {
+                    $toDel = $em->find('GediBaseBundle:Projet', $sel[$i]['id']);
+                    $em->remove($toDel);
+                }
+                $em->flush();
+                $response->setData(array('reponse' => "OK"));
+            } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
+                if ($_POST['typeaction'] == "enregistré") {
+                    // création
+                    $objet->setNom($sel[1]['value']);
+                    $utilisateur = $em->find('GediBaseBundle:Utilisateur', $sel[2]['value']);
+                    $objet->setIdUtilisateurFkProjet($utilisateur);
+                    $em->persist($objet);
+
+                } else if ($_POST['typeaction'] == "modifié") {
+                    // modification
+                    $objet = $em->find('GediBaseBundle:Projet', $sel[0]['value']);
+                    $objet->setNom($sel[1]['value']);
+                    $em->merge($objet);
+                }
+
+                $em->flush();
+                $rows = [
+                    "ck" => 'data-checkbox="true"',
+                    "id" => $objet->getIdProjet(),
+                    "nom" => $objet->getNom(),
+                    "datec" => date_format($objet->getDateCreation(), 'Y-m-d H:i:s'),
+                    "datem" => date_format($objet->getDateModification(), 'Y-m-d H:i:s'),
+                    "propio" => $objet->getIdUtilisateurFkProjet()->getNom() . " " . $objet->getIdUtilisateurFkProjet()->getPrenom(),
+                    "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Voir les documents">' .
+                        '<button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
+                                data-toggle="modal" data-target="#popup-view"">' .
+                        '<span class="glyphicon glyphicon-user"></span></button></span>' .
+                        '<span data-toggle="tooltip" data-placement="bottom" title="Editer le projet">' .
+                        '<button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"' .
+                        'data-target="#popup-add" onclick="edit(\'{&quot;idProjet   &quot;:' . $objet->getIdProjet() .
+                        ',&quot;nom&quot;:&quot;' . $objet->getNom() . '&quot;}\');">' .
+                        '<span class="glyphicon glyphicon-pencil"></span></button></span>',
+                ];
+                $response->setData(array('reponse' => (array)$rows));
+
+            } else if ($_POST['typeaction'] == "children") {
+                $objet = $em->find('GediBaseBundle:Projet', $sel);
+                $rows = [];
+                foreach ($objet->getIdUtilisateurUg() as $child) {
+                    array_push($rows, $child->getNom() . " " . $child->getPrenom() . " - " . $child->getUsername());
+                }
+                $response->setData(array('reponse' => (array)$rows));
+
+            } else {
+                throw new Exception('typeaction n\'est pas défini');
+            }
+            return $response;
         }
+
+        // importation de tous les projets
+        $tab_objets = $em->getRepository('GediBaseBundle:Projet')->findAll();
+        // importation de tous les utilisateurs
+        $tab_users = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
 
         return $this->render('GediAdminBundle:Admin:projects_admin.html.twig', array(
             'tab_objets' => $tab_objets,
-            'projet' => $projet,
-            'projetForm' => $projetForm->createView(),
+            'projet' => $objet,
+            'projetForm' => $form->createView(),
+            'tab_users' => $tab_users,
         ));
     }
 

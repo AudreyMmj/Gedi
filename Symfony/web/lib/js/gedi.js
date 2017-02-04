@@ -172,6 +172,7 @@ $(function () {
 
     // fonction d'envoi de la requete en POST et rechargement de la page actualisée
     function ajaxSend(selection, typeAction) {
+        console.log(selection);
         $.ajax({
             type: 'POST',
             url: window.location,
@@ -351,6 +352,7 @@ $(function () {
     // listener sur le bouton créer une entité
     // vide le formulaire de son contenu
     $(".bouton-admin-popup-add").click(function () {
+        $('form').trigger("reset");
         // modification du popup ajout / edition
         $('#popup-admin-add-titre').html('Créer un ' + nom);
         var $bsae = $('.bouton-submit-admin-entity');

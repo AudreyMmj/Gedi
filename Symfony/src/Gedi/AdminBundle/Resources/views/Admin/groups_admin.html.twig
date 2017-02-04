@@ -7,8 +7,7 @@
 {% block boutons_admin %}
     <div class="btn-group bs-bars pull-left" role="group" style="display: block">
         <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
-                data-target="#popup-add">Créer
-        </button>
+                data-target="#popup-add">Créer</button>
         <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal" data-target="#popup-delete">
             Supprimer <span class="badge spanNbSel"></span>
         </button>
@@ -46,8 +45,7 @@
                     </span>
                     <span data-toggle="tooltip" data-placement="bottom" title="Editer le groupe">
                         <button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"
-                                data-target="#popup-add"
-                                onclick="edit('{{ groupe.toArray|json_encode }}');">
+                                data-target="#popup-add" onclick="edit('{{ groupe.toArray|json_encode }}');">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </button>
                     </span>
