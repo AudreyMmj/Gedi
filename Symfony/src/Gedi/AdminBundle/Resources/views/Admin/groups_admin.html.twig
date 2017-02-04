@@ -39,7 +39,8 @@
                 <td>{{ groupe.idUtilisateurFkGroupe.nom }} {{ groupe.idUtilisateurFkGroupe.prenom }}</td>
                 <td data-align="center">
                     <span data-toggle="tooltip" data-placement="bottom" title="Voir les membres">
-                        <button type="button" class="btn btn-default btn-primary round-button">
+                        <button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
+                                data-toggle="modal" data-target="#popup-view">
                             <span class="glyphicon glyphicon-user"></span>
                         </button>
                     </span>
@@ -100,4 +101,9 @@
         </div>
     </div>
     {{ form_end(groupeForm) }}
+{% endblock %}
+
+{% block popup_admin_view_contenu %}
+    <ul id="liste-membres" class="list-group">
+    </ul>
 {% endblock %}

@@ -186,11 +186,11 @@ class Projet
     /**
      * Set idUtilisateurFkProjet
      *
-     * @param Utilisateur $idUtilisateurFkProjet
+     * @param $idUtilisateurFkProjet
      *
      * @return Projet
      */
-    public function setIdUtilisateurFkProjet(Utilisateur $idUtilisateurFkProjet = null)
+    public function setIdUtilisateurFkProjet($idUtilisateurFkProjet = null)
     {
         $this->idUtilisateurFkProjet = $idUtilisateurFkProjet;
 
@@ -210,11 +210,11 @@ class Projet
     /**
      * Add idGroupeGp
      *
-     * @param Groupe $idGroupeGp
+     * @param $idGroupeGp
      *
      * @return Projet
      */
-    public function addIdGroupeGp(Groupe $idGroupeGp)
+    public function addIdGroupeGp($idGroupeGp)
     {
         $this->idGroupeGp[] = $idGroupeGp;
 
@@ -224,9 +224,9 @@ class Projet
     /**
      * Remove idGroupeGp
      *
-     * @param Groupe $idGroupeGp
+     * @param $idGroupeGp
      */
-    public function removeIdGroupeGp(Groupe $idGroupeGp)
+    public function removeIdGroupeGp($idGroupeGp)
     {
         $this->idGroupeGp->removeElement($idGroupeGp);
     }

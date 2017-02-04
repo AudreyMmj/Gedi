@@ -168,6 +168,7 @@ function validFormUtilisateur() {
 // =======================================================================
 // block jquery
 $(function () {
+    var $table = $('#table_admin');
 
     // fonction d'envoi de la requete en POST et rechargement de la page actualisée
     function ajaxSend(selection, typeAction) {
@@ -176,42 +177,53 @@ $(function () {
             url: window.location,
             data: {'data': selection, 'typeaction': typeAction},
             success: function (data) {
-                var $table = $('#table_admin');
-                if (typeAction == "supprimé" && data['reponse'] == "OK") {
-                    var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
-                        return row.id;
-                    });
-                    $table.bootstrapTable('remove', {
-                        field: 'id',
-                        values: ids
-                    });
-                } else {
-                    if (typeAction == "enregistré") {
-                        $table.bootstrapTable('append', data.reponse);
-                    } else if (typeAction == "modifié") {
-                        $table.bootstrapTable('updateByUniqueId', {id: data.reponse.id, row: data.reponse});
-                    }
-                    $table.bootstrapTable('filterBy', {});
-                    $table.bootstrapTable('scrollTo', 'bottom');
-                    if (window.location.href.indexOf("users_admin") > -1) {
-                        if (data.reponse.actif != "1") {
-                            $('tr[data-uniqueid=' + data.reponse.id + ']').addClass('info text-info'); //BUG #2
-                        } else {
-                            $('tr[data-uniqueid=' + data.reponse.id + ']').removeClass('info text-info');
+                if (typeAction == "children") {
+                    if (data.reponse.length > 0) {
+                        $('#empty-list').hide();
+                        for (var i = 0; i < data.reponse.length; i++) {
+                            $('#liste-membres').prepend('<li class="list-group-item">' + data.reponse[i] + '</li>');
                         }
-                        $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+                    } else {
+                        $('#view-entity-modal-body').prepend('<p id="empty-list"><span class="glyphicon glyphicon-remove-sign"></span>' +
+                            ' La liste est vide</p>');
                     }
-                    $('form').trigger("reset");
-                    $('.modal-backdrop').remove();
-                    $('#popup-add').modal('toggle');
-                }
-                sel = null;
-                hideOuShow(0);
-                updateNbEntity();
+                } else {
+                    if (typeAction == "supprimé" && data['reponse'] == "OK") {
+                        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+                            return row.id;
+                        });
+                        $table.bootstrapTable('remove', {
+                            field: 'id',
+                            values: ids
+                        });
+                    } else {
+                        if (typeAction == "enregistré") {
+                            $table.bootstrapTable('append', data.reponse);
+                        } else if (typeAction == "modifié") {
+                            $table.bootstrapTable('updateByUniqueId', {id: data.reponse.id, row: data.reponse});
+                        }
+                        $table.bootstrapTable('filterBy', {});
+                        $table.bootstrapTable('scrollTo', 'bottom');
+                        if (window.location.href.indexOf("users_admin") > -1) {
+                            if (data.reponse.actif != "1") {
+                                $('tr[data-uniqueid=' + data.reponse.id + ']').addClass('info text-info'); //BUG #2
+                            } else {
+                                $('tr[data-uniqueid=' + data.reponse.id + ']').removeClass('info text-info');
+                            }
+                            $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+                        }
+                        $('form').trigger("reset");
+                        $('.modal-backdrop').remove();
+                        $('#popup-add').modal('toggle');
+                    }
+                    sel = null;
+                    hideOuShow(0);
+                    updateNbEntity();
 
-                showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
-                    ((typeAction == "supprimé" && selection.length > 1) ? 's bien ' + typeAction + 's' :
-                        ' bien ' + typeAction) + '</strong>', 'glyphicon glyphicon-ok', 'success');
+                    showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
+                        ((typeAction == "supprimé" && selection.length > 1) ? 's bien ' + typeAction + 's' :
+                            ' bien ' + typeAction) + '</strong>', 'glyphicon glyphicon-ok', 'success');
+                }
             },
             error: function () {
                 showNotify('<strong>' + 'La requête n\'a pas abouti' + '</strong>',
@@ -222,7 +234,7 @@ $(function () {
 
     // listener sur les cases à cocher du tableau pour mettre à jour
     // les boutons et les spans
-    $('#table_admin').on({
+    $table.on({
         'check.bs.table': function () {
             sel = $('#table_admin').bootstrapTable('getSelections');
             $('.spanNbSel').html(sel.length);
@@ -242,14 +254,23 @@ $(function () {
         }
     });
 
+    // listener pour voir les entités contenus par une entité parente
+    $table.on('click', '.btn-view-entity', function () {
+        var id = $(this).closest("tr").attr('data-uniqueid');
+        var nomEntite = $(this).closest("tr").find('td:eq(1)').text();
+        $('#liste-membres').empty();
+        $('#popup-admin-view-titre').html('Membres de ' + nomEntite);
+        ajaxSend(id, "children");
+    });
+
     // listener sur les elements de classe bouton-desactive
     // mise à jour du popup de suppression
     $('.bouton-desactive').click(function () {
-        var nom_temp = null;
+        var nom_temp = nom;
         if (typeof sel != 'undefined') {
             // ajoute un 's' si la selection contient plusieurs élements
             // dans le popup de suppression
-            (sel.length > 1) ? nom_temp = nom + 's' : nom_temp = nom;
+            (sel.length > 1) ? nom_temp += 's' : nom_temp;
 
             // écrit le texte dans le popup indiquant le nombre d'entités dans le tableau
             $('#nbSel').html('Vous êtes sur le point de supprimer définitivement ' +

@@ -166,7 +166,7 @@ class AdminController extends Controller
                 }
                 $em->flush();
                 $response->setData(array('reponse' => "OK"));
-            } else {
+            } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
                 if ($_POST['typeaction'] == "enregistré") {
                     // création de groupes
                     $groupe->setNom($sel[1]['value']);
@@ -182,9 +182,8 @@ class AdminController extends Controller
                     $groupe->setNom($sel[1]['value']);
                     $em->merge($groupe);
 
-                } else {
-                    throw new Exception('typeaction n\'est pas défini');
                 }
+
                 $em->flush();
                 $rows = [
                     "ck" => 'data-checkbox="true"',
@@ -204,6 +203,17 @@ class AdminController extends Controller
                 ];
 
                 $response->setData(array('reponse' => (array)$rows));
+
+            } else if ($_POST['typeaction'] == "children") {
+                $groupe = $em->find('GediBaseBundle:Groupe', $sel);
+                $rows = [];
+                foreach ($groupe->getIdUtilisateurUg() as $membre) {
+                    array_push($rows, $membre->getNom() . " " . $membre->getPrenom() . " - " . $membre->getUsername());
+                }
+                $response->setData(array('reponse' => (array)$rows));
+
+            } else {
+                throw new Exception('typeaction n\'est pas défini');
             }
             return $response;
         }
