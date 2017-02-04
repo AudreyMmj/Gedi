@@ -154,7 +154,6 @@ class AdminController extends Controller
             if ($sel == null || $sel == "") {
                 throw new Exception('La selection est nulle');
             }
-
             $rows = null;
             $response = new JsonResponse();
 
@@ -181,7 +180,6 @@ class AdminController extends Controller
                     $groupe = $em->find('GediBaseBundle:Groupe', $sel[0]['value']);
                     $groupe->setNom($sel[1]['value']);
                     $em->merge($groupe);
-
                 }
 
                 $em->flush();
@@ -201,7 +199,6 @@ class AdminController extends Controller
                         ',&quot;nom&quot;:&quot;' . $groupe->getNom() . '&quot;}\');">' .
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
-
                 $response->setData(array('reponse' => (array)$rows));
 
             } else if ($_POST['typeaction'] == "children") {
