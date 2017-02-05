@@ -2,26 +2,22 @@
 
 namespace Gedi\AdminBundle\Controller;
 
-use Doctrine\Common\Annotations\AnnotationException;
 use Exception;
 use Gedi\BaseBundle\Entity\Document;
 use Gedi\BaseBundle\Entity\Groupe;
 use Gedi\BaseBundle\Entity\Projet;
 use Gedi\BaseBundle\Entity\Utilisateur;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 
 class AdminController extends Controller
 {
     /**
-     * @Route("/home_admin")
+     * Page d'accueil du back office
+     * @return Response
      */
     public function homeAction()
     {
@@ -45,9 +41,8 @@ class AdminController extends Controller
 
     /**
      * Page d'administration des utilisateurs de l'application
-     * @Route("/users_admin")
      * @param Request $request
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return JsonResponse|Response
      * @throws Exception
      */
     public function usersAction(Request $request)
@@ -121,9 +116,8 @@ class AdminController extends Controller
 
     /**
      * Page d'administration des groupes de l'application
-     * @Route("/groups_admin")
      * @param Request $request
-     * @return Response
+     * @return JsonResponse|Response
      * @throws Exception
      */
     public function groupsAction(Request $request)
@@ -197,9 +191,8 @@ class AdminController extends Controller
 
     /**
      * Page d'administration des projets de l'application
-     * @Route("/projects_admin")
      * @param Request $request
-     * @return Response
+     * @return JsonResponse|Response
      * @throws Exception
      */
     public function projectsAction(Request $request)
@@ -273,9 +266,8 @@ class AdminController extends Controller
 
     /**
      * Page d'administration des documents de l'application
-     * @Route("/docs_admin")
      * @param Request $request
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function documentsAction(Request $request)
     {
