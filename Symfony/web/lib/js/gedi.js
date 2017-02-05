@@ -259,7 +259,11 @@ $(function () {
         var id = $(this).closest("tr").attr('data-uniqueid');
         var nomEntite = $(this).closest("tr").find('td:eq(1)').text();
         $('#liste-membres').empty();
-        $('#popup-admin-view-titre').html('Membres de ' + nomEntite);
+        if (window.location.href.indexOf("groups_admin") > -1) {
+            $('#popup-admin-view-titre').html('Membres de ' + nomEntite);
+        } else {
+            $('#popup-admin-view-titre').html('Documents de ' + nomEntite);
+        }
         ajaxSend(id, "children");
     });
 

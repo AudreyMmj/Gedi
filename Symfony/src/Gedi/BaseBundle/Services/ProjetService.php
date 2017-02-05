@@ -4,7 +4,6 @@ namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Gedi\BaseBundle\Entity\Projet;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -12,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * Class ProjetService
  * @package Gedi\BaseBundle\Services
  */
-class ProjetService extends Controller
+class ProjetService
 {
     /**
      * @var EntityManager

@@ -268,29 +268,77 @@ class AdminController extends Controller
      * Page d'administration des documents de l'application
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws Exception
      */
     public function documentsAction(Request $request)
     {
-        // importation de tous les documents
-        $em = $this->getDoctrine()->getManager();
-        $tab_objets = $em->getRepository('GediBaseBundle:Document')->findAll();
+        $objet = new Document();
+        $form = $this->createForm('Gedi\BaseBundle\Form\DocumentType', $objet);
+        $form->handleRequest($request);
 
-        // création du formulaire pour créer un nouveau document
-        $document = new Document();
-        $documentForm = $this->createForm('Gedi\BaseBundle\Form\DocumentType', $document);
-        $documentForm->handleRequest($request);
+        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeaction'])) {
+            $sel = $_POST['data'];
 
-        if ($documentForm->isSubmitted() && $documentForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($document);
-            $em->flush();
-            return $this->redirectToRoute('docs_admin');
+            if ($sel == null || $sel == "") {
+                throw new Exception('La selection est nulle');
+            }
+            $response = new JsonResponse();
+
+            if ($_POST['typeaction'] == "supprimé") {
+                // suppression
+                $response = $this->get('document.service')->delete($sel);
+
+            } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
+
+                if ($_POST['typeaction'] == "enregistré") {
+                    // création
+                    $objet = $this->get('document.service')->create($sel);
+                } else if ($_POST['typeaction'] == "modifié") {
+                    // modification
+                    $objet = $this->get('document.service')->update($sel);
+                }
+//MAJ
+                $rows = [
+                    "ck" => 'data-checkbox="true"',
+                    "id" => $objet->getIdUtilisateur(),
+                    "nom" => $objet->getNom(),
+                    "prenom" => $objet->getPrenom(),
+                    "login" => $objet->getUsername(),
+                    "datec" => date_format($objet->getDateCreation(), 'Y-m-d H:i:s'),
+                    "datem" => date_format($objet->getDateModification(), 'Y-m-d H:i:s'),
+                    "actif" => (($objet->getActif() == false) ? "" : "1"),
+                    "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Accéder à l\'espace utilisateur">' .
+                        '<button type="button" class="btn btn-default btn-primary round-button">' .
+                        '<span class="glyphicon glyphicon-dashboard"></span></button></span>' .
+                        '<span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche utilisateur">' .
+                        '<button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"' .
+                        'data-target="#popup-add" onclick="edit(\'{&quot;idUtilisateur&quot;:' . $objet->getIdUtilisateur() .
+                        ',&quot;username&quot;:&quot;' . $objet->getUsername() .
+                        '&quot;,&quot;password&quot;:&quot;' . $objet->getPassword() .
+                        '&quot;,&quot;nom&quot;:&quot;' . $objet->getNom() .
+                        '&quot;,&quot;prenom&quot;:&quot;' . $objet->getPrenom() .
+                        '&quot;,&quot;actif&quot;:' . (($objet->getActif() == false) ? "false" : "true") . '}\');">' .
+                        '<span class="glyphicon glyphicon-pencil"></span></button></span>',
+                ];
+
+                $response->setData(array('reponse' => (array)$rows));
+
+            } else {
+                throw new Exception('typeaction n\'est pas défini');
+            }
+            return $response;
         }
+
+        // importation de tous les documents
+        $tab_objets = $this->get('document.service')->read();
+        // importation de tous les utilisateurs
+        $tab_users = $this->get('utilisateur.service')->read();
 
         return $this->render('GediAdminBundle:Admin:docs_admin.html.twig', array(
             'tab_objets' => $tab_objets,
-            'document' => $document,
-            'documentForm' => $documentForm->createView(),
+            'document' => $objet,
+            'documentForm' => $form->createView(),
+            'tab_users' => $tab_users
         ));
     }
 }

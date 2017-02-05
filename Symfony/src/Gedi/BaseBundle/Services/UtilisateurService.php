@@ -4,7 +4,6 @@ namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Gedi\BaseBundle\Entity\Utilisateur;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
@@ -13,7 +12,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
  * Class UtilisateurService
  * @package Gedi\BaseBundle\Service
  */
-class UtilisateurService extends Controller
+class UtilisateurService
 {
     /**
      * @var EntityManager
