@@ -129,6 +129,22 @@ class Utilisateur implements UserInterface
     private $idGroupeUg;
 
     /**
+     * Projets dont l'utilisateur est propriétaire
+     * @var Projet
+     *
+     * @ORM\OneToMany(targetEntity="Projet", mappedBy="idUtilisateurFkProjet", cascade={"all"})
+     */
+    private $idUtilisateurFkProjet;
+
+    /**
+     * Document dont l'utilisateur est propriétaire
+     * @var Document
+     *
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="idUtilisateurFkDocument", cascade={"all"})
+     */
+    private $idUtilisateurFkDocument;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -459,6 +475,38 @@ class Utilisateur implements UserInterface
     public function getIdGroupeUg()
     {
         return $this->idGroupeUg;
+    }
+
+    /**
+     * @return Projet
+     */
+    public function getIdUtilisateurFkProjet()
+    {
+        return $this->idUtilisateurFkProjet;
+    }
+
+    /**
+     * @param $idUtilisateurFkProjet
+     */
+    public function setIdUtilisateurFkProjet($idUtilisateurFkProjet)
+    {
+        $this->idUtilisateurFkProjet = $idUtilisateurFkProjet;
+    }
+
+    /**
+     * @return Document
+     */
+    public function getIdUtilisateurFkDocument()
+    {
+        return $this->idUtilisateurFkDocument;
+    }
+
+    /**
+     * @param $idUtilisateurFkDocument
+     */
+    public function setIdUtilisateurFkDocument($idUtilisateurFkDocument)
+    {
+        $this->idUtilisateurFkDocument = $idUtilisateurFkDocument;
     }
 
     /**

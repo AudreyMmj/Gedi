@@ -111,14 +111,6 @@ class Groupe
     }
 
     /**
-     * @param int $idGroupe
-     */
-    public function setIdGroupe($idGroupe)
-    {
-        $this->idGroupe = $idGroupe;
-    }
-
-    /**
      * Get idGroupe
      *
      * @return integer

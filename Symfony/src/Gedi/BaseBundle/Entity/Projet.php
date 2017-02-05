@@ -59,7 +59,7 @@ class Projet
      * Propriétaire du projet
      * @var Utilisateur
      *
-     * @ORM\ManyToOne(targetEntity="Utilisateur")
+     * @ORM\ManyToOne(targetEntity="Utilisateur", inversedBy="idUtilisateurFkProjet")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_utilisateur_fk_projet", referencedColumnName="id_utilisateur")
      * })
@@ -73,6 +73,14 @@ class Projet
      * @ORM\ManyToMany(targetEntity="Groupe", mappedBy="idProjetGp")
      */
     private $idGroupeGp;
+
+    /**
+     * Documents du projet
+     * @var Document
+     *
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="idProjetFkDocument", cascade={"all"})
+     */
+    private $idProjetFkDocument;
 
     /**
      * Constructor
@@ -246,6 +254,22 @@ class Projet
     public function getIdGroupeGp()
     {
         return $this->idGroupeGp;
+    }
+
+    /**
+     * @return Document
+     */
+    public function getIdProjetFkDocument()
+    {
+        return $this->idProjetFkDocument;
+    }
+
+    /**
+     * @param $idProjetFkDocument
+     */
+    public function setIdProjetFkDocument($idProjetFkDocument)
+    {
+        $this->idProjetFkDocument = $idProjetFkDocument;
     }
 
     /**

@@ -66,7 +66,7 @@ function updateNbEntity() {
 // =======================================================================
 // fonction pour ajouter un utilisateurs en temps que propriétaire
 function addUser(js_arg) {
-    $('#gedi_basebundle_groupe_idUtilisateurFkGroupe').val(js_arg);
+    $('#gedi_basebundle_' + nom + '_idUtilisateurFk' + (nom.charAt(0).toUpperCase() + nom.slice(1))).val(js_arg);
 }
 
 // =======================================================================
@@ -172,7 +172,7 @@ $(function () {
 
     // fonction d'envoi de la requete en POST et rechargement de la page actualisée
     function ajaxSend(selection, typeAction) {
-        console.log(selection);
+        // console.log(selection);
         $.ajax({
             type: 'POST',
             url: window.location,
@@ -185,8 +185,7 @@ $(function () {
                             $('#liste-membres').prepend('<li class="list-group-item">' + data.reponse[i] + '</li>');
                         }
                     } else {
-                        $('#view-entity-modal-body').prepend('<p id="empty-list"><span class="glyphicon glyphicon-remove-sign"></span>' +
-                            ' La liste est vide</p>');
+                        $('#empty-list').show();
                     }
                 } else {
                     if (typeAction == "supprimé" && data['reponse'] == "OK") {

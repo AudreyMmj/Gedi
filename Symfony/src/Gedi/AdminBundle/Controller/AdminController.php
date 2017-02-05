@@ -298,8 +298,8 @@ class AdminController extends Controller
             } else if ($_POST['typeaction'] == "children") {
                 $objet = $em->find('GediBaseBundle:Projet', $sel);
                 $rows = [];
-                foreach ($objet->getIdUtilisateurUg() as $child) {
-                    array_push($rows, $child->getNom() . " " . $child->getPrenom() . " - " . $child->getUsername());
+                foreach ($objet->getIdProjetFkDocument() as $child) {
+                    array_push($rows, $child->getNom() . " " . $child->getTypeDoc() . " - " . $child->getTag());
                 }
                 $response->setData(array('reponse' => (array)$rows));
 
