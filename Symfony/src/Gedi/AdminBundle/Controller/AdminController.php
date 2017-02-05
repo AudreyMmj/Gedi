@@ -52,7 +52,6 @@ class AdminController extends Controller
      */
     public function usersAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
         $objet = new Utilisateur();
         $form = $this->createForm('Gedi\BaseBundle\Form\UtilisateurType', $objet);
         $form->handleRequest($request);
@@ -63,35 +62,21 @@ class AdminController extends Controller
             if ($sel == null || $sel == "") {
                 throw new Exception('La selection est nulle');
             }
+            $response = new JsonResponse();
 
             if ($_POST['typeaction'] == "supprimé") {
                 // suppression
-                for ($i = 0; $i <= count($sel) - 1; $i++) {
-                    $toDel = $em->find('GediBaseBundle:Utilisateur', $sel[$i]['id']);
-                    $em->remove($toDel);
-                }
-                $em->flush();
-                $response = new JsonResponse();
-                $response->setData(array('reponse' => "OK"));
+                $response = $this->get('utilisateur.service')->delete($sel);
 
             } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
-                // création ou modification
-                $objet->setUsername($sel[1]['value']);
-                $objet->setSalt(substr(md5(time()), 0, 23));
-                $encoderFactory = $this->get('security.encoder_factory');
-                $encoder = $encoderFactory->getEncoder($objet);
-                $password = $encoder->encodePassword($sel[2]['value'], $objet->getSalt());
-                $objet->setPassword($password);
-                $objet->setNom($sel[4]['value']);
-                $objet->setPrenom($sel[5]['value']);
-                $objet->setActif(($sel[6]['value'] == "false") ? false : true);
-                if ($sel[0]['value'] != "") {
-                    $objet->setIdUtilisateur($sel[0]['value']);
-                    $em->merge($objet);
-                } else {
-                    $em->persist($objet);
+
+                if ($_POST['typeaction'] == "enregistré") {
+                    // création
+                    $objet = $this->get('utilisateur.service')->create($sel);
+                } else if ($_POST['typeaction'] == "modifié") {
+                    // modification
+                    $objet = $this->get('utilisateur.service')->update($sel);
                 }
-                $em->flush();
 
                 $rows = [
                     "ck" => 'data-checkbox="true"',
@@ -116,8 +101,8 @@ class AdminController extends Controller
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
 
-                $response = new JsonResponse();
                 $response->setData(array('reponse' => (array)$rows));
+
             } else {
                 throw new Exception('typeaction n\'est pas défini');
             }
@@ -125,7 +110,7 @@ class AdminController extends Controller
         }
 
         // importation de tous les utilisateurs
-        $tab_objets = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
+        $tab_objets = $this->get('utilisateur.service')->read();
 
         return $this->render('GediAdminBundle:Admin:users_admin.html.twig', array(
             'tab_objets' => $tab_objets,
@@ -143,7 +128,6 @@ class AdminController extends Controller
      */
     public function groupsAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
         $objet = new Groupe();
         $form = $this->createForm('Gedi\BaseBundle\Form\GroupeType', $objet);
         $form->handleRequest($request);
@@ -159,30 +143,17 @@ class AdminController extends Controller
 
             if ($_POST['typeaction'] == "supprimé") {
                 // suppression
-                for ($i = 0; $i <= count($sel) - 1; $i++) {
-                    $toDel = $em->find('GediBaseBundle:Groupe', $sel[$i]['id']);
-                    $em->remove($toDel);
-                }
-                $em->flush();
-                $response->setData(array('reponse' => "OK"));
+                $response = $this->get('groupe.service')->delete($sel);
+
             } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
                 if ($_POST['typeaction'] == "enregistré") {
                     // création
-                    $objet->setNom($sel[1]['value']);
-                    $utilisateur = $em->find('GediBaseBundle:Utilisateur', $sel[2]['value']);
-                    $utilisateur->addIdGroupeUg($objet);
-                    $objet->addIdUtilisateurUg($utilisateur);
-                    $objet->setIdUtilisateurFkGroupe($utilisateur);
-                    $em->persist($objet);
-
+                    $objet = $this->get('groupe.service')->create($sel);
                 } else if ($_POST['typeaction'] == "modifié") {
                     // modification
-                    $objet = $em->find('GediBaseBundle:Groupe', $sel[0]['value']);
-                    $objet->setNom($sel[1]['value']);
-                    $em->merge($objet);
+                    $objet = $this->get('groupe.service')->update($sel);
                 }
 
-                $em->flush();
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdGroupe(),
@@ -203,13 +174,8 @@ class AdminController extends Controller
                 $response->setData(array('reponse' => (array)$rows));
 
             } else if ($_POST['typeaction'] == "children") {
-                $objet = $em->find('GediBaseBundle:Groupe', $sel);
-                $rows = [];
-                foreach ($objet->getIdUtilisateurUg() as $child) {
-                    array_push($rows, $child->getNom() . " " . $child->getPrenom() . " - " . $child->getUsername());
-                }
+                $rows = $this->get('groupe.service')->getChildren($sel, "membres");
                 $response->setData(array('reponse' => (array)$rows));
-
             } else {
                 throw new Exception('typeaction n\'est pas défini');
             }
@@ -217,9 +183,9 @@ class AdminController extends Controller
         }
 
         // importation de tous les groupes
-        $tab_objets = $em->getRepository('GediBaseBundle:Groupe')->findAll();
+        $tab_objets = $this->get('groupe.service')->read();
         // importation de tous les utilisateurs
-        $tab_users = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
+        $tab_users = $this->get('utilisateur.service')->read();
 
         return $this->render('GediAdminBundle:Admin:groups_admin.html.twig', array(
             'tab_objets' => $tab_objets,
@@ -238,7 +204,6 @@ class AdminController extends Controller
      */
     public function projectsAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
         $objet = new Projet();
         $form = $this->createForm('Gedi\BaseBundle\Form\ProjetType', $objet);
         $form->handleRequest($request);
@@ -254,28 +219,17 @@ class AdminController extends Controller
 
             if ($_POST['typeaction'] == "supprimé") {
                 // suppression
-                for ($i = 0; $i <= count($sel) - 1; $i++) {
-                    $toDel = $em->find('GediBaseBundle:Projet', $sel[$i]['id']);
-                    $em->remove($toDel);
-                }
-                $em->flush();
-                $response->setData(array('reponse' => "OK"));
+                $response = $this->get('projet.service')->delete($sel);
+
             } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
                 if ($_POST['typeaction'] == "enregistré") {
                     // création
-                    $objet->setNom($sel[1]['value']);
-                    $utilisateur = $em->find('GediBaseBundle:Utilisateur', $sel[2]['value']);
-                    $objet->setIdUtilisateurFkProjet($utilisateur);
-                    $em->persist($objet);
-
+                    $objet = $this->get('projet.service')->create($sel);
                 } else if ($_POST['typeaction'] == "modifié") {
                     // modification
-                    $objet = $em->find('GediBaseBundle:Projet', $sel[0]['value']);
-                    $objet->setNom($sel[1]['value']);
-                    $em->merge($objet);
+                    $objet = $this->get('projet.service')->update($sel);
                 }
 
-                $em->flush();
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdProjet(),
@@ -296,13 +250,8 @@ class AdminController extends Controller
                 $response->setData(array('reponse' => (array)$rows));
 
             } else if ($_POST['typeaction'] == "children") {
-                $objet = $em->find('GediBaseBundle:Projet', $sel);
-                $rows = [];
-                foreach ($objet->getIdProjetFkDocument() as $child) {
-                    array_push($rows, $child->getNom() . " " . $child->getTypeDoc() . " - " . $child->getTag());
-                }
+                $rows = $this->get('projet.service')->getChildren($sel, "documents");
                 $response->setData(array('reponse' => (array)$rows));
-
             } else {
                 throw new Exception('typeaction n\'est pas défini');
             }
@@ -310,9 +259,9 @@ class AdminController extends Controller
         }
 
         // importation de tous les projets
-        $tab_objets = $em->getRepository('GediBaseBundle:Projet')->findAll();
+        $tab_objets = $this->get('projet.service')->read();
         // importation de tous les utilisateurs
-        $tab_users = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
+        $tab_users = $this->get('utilisateur.service')->read();
 
         return $this->render('GediAdminBundle:Admin:projects_admin.html.twig', array(
             'tab_objets' => $tab_objets,

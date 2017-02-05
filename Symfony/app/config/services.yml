@@ -4,6 +4,18 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    utilisateur.service:
+        class: Gedi\BaseBundle\Services\UtilisateurService
+        arguments: [ "@doctrine.orm.entity_manager", "@security.encoder_factory" ]
+
+    groupe.service:
+        class: Gedi\BaseBundle\Services\GroupeService
+        arguments: [ "@doctrine.orm.entity_manager" ]
+
+    projet.service:
+        class: Gedi\BaseBundle\Services\ProjetService
+        arguments: [ "@doctrine.orm.entity_manager" ]
+
+    document.service:
+        class: Gedi\BaseBundle\Services\DocumentService
+        arguments: [ "@doctrine.orm.entity_manager" ]
