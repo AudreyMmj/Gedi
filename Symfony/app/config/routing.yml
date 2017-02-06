@@ -1,18 +1,18 @@
-gedi_base_groupe:
-    resource: "@GediBaseBundle/Controller/GroupeController.php"
-    type:     annotation
-
-gedi_base_document:
-    resource: "@GediBaseBundle/Controller/DocumentController.php"
-    type:     annotation
-
-gedi_base_projet:
-    resource: "@GediBaseBundle/Controller/ProjetController.php"
-    type:     annotation
-
-gedi_base_utilisateur:
-    resource: "@GediAdminBundle/Controller/UtilisateurController.php"
-    type:     annotation
+#gedi_base_groupe:
+#    resource: "@GediBaseBundle/Controller/GroupeController.php"
+#    type:     annotation
+#
+#gedi_base_document:
+#    resource: "@GediBaseBundle/Controller/DocumentController.php"
+#    type:     annotation
+#
+#gedi_base_projet:
+#    resource: "@GediBaseBundle/Controller/ProjetController.php"
+#    type:     annotation
+#
+#gedi_base_utilisateur:
+#    resource: "@GediAdminBundle/Controller/UtilisateurController.php"
+#    type:     annotation
 
 gedi_base:
     resource: "@GediBaseBundle/Resources/config/routing.yml"

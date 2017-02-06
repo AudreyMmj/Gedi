@@ -31,9 +31,6 @@ class BaseController extends Controller
         } elseif ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             return $this->render('GediUserBundle:User:home_user.html.twig');
         }
-//        return $this->render('GediBaseBundle:Base:home.html.twig', array(
-//            // ...
-//        ));
     }
 
     /**

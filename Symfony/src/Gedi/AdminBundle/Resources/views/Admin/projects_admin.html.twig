@@ -5,22 +5,26 @@
 {% block tooltip_admin %}des projets{% endblock %}
 
 {% block boutons_admin %}
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#popup-add">Créer</button>
-    <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal" data-target="#popup-delete"
-            onclick="majPopupDelete()">Supprimer <span class="badge spanNbSel"></span>
-    </button>
+    <div class="btn-group bs-bars pull-left" role="group" style="display: block">
+        <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
+                data-target="#popup-add">Créer
+        </button>
+        <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal" data-target="#popup-delete">
+            Supprimer <span class="badge spanNbSel"></span>
+        </button>
+    </div>
 {% endblock %}
 
 {% block tableau_admin %}
     <thead>
     <tr>
-        <th data-checkbox="true"></th>
-        <th>Id</th>
-        <th data-sortable="true">Nom du projet</th>
-        <th data-sortable="true">Date de création</th>
-        <th data-sortable="true">Date de modification</th>
-        <th data-sortable="true">Propriétaire</th>
-        <th data-align="center">Actions</th>
+        <th data-field="ck" data-checkbox="true"></th>
+        <th data-field="id" data-visible="false">Id</th>
+        <th data-field="nom" data-sortable="true">Nom du projet</th>
+        <th data-field="datec" data-sortable="true">Date de création</th>
+        <th data-field="datem" data-sortable="true">Date de modification</th>
+        <th data-field="propio" data-sortable="true">Propriétaire</th>
+        <th data-field="ctrl" data-align="center">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -34,20 +38,18 @@
                 <td>{{ projet.dateModification|date('Y-m-d H:i:s') }}</td>
                 <td>{{ projet.idUtilisateurFkProjet.nom }} {{ projet.idUtilisateurFkProjet.prenom }}</td>
                 <td data-align="center">
-    <span data-toggle="tooltip" data-placement="bottom"
-          title="Voir les documents">
-    <button type="button"
-            class="btn btn-default btn-primary round-button"><span
-                class="glyphicon glyphicon-file"></span>
-    </button>
-    </span>
-                    <span data-toggle="tooltip" data-placement="bottom"
-                          title="Editer le projet">
-    <button type="button"
-            class="btn btn-default btn-warning round-button" data-toggle="modal" data-target="#popup-add"><span
-                class="glyphicon glyphicon-pencil"></span>
-    </button>
-    </span>
+                    <span data-toggle="tooltip" data-placement="bottom" title="Voir les documents">
+                        <button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
+                                data-toggle="modal" data-target="#popup-view">
+                            <span class="glyphicon glyphicon-file"></span>
+                        </button>
+                    </span>
+                    <span data-toggle="tooltip" data-placement="bottom" title="Editer le projet">
+                        <button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"
+                                data-target="#popup-add" onclick="edit('{{ projet.toArray|json_encode }}');">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                    </span>
                 </td>
             </tr>
         </article>
@@ -60,26 +62,47 @@
 
 {% block popup_admin_add_titre %}projet{% endblock %}
 {% block popup_admin_add_contenu %}
-    {% if projetForm %}
-        {{ form_start(projetForm) }}
-        <div class="form-group">
-            <br>
+    {{ form_start(projetForm, { 'attr':  {
+        'class': 'form-admin',
+    }}) }}
+    <div class="form-group">
+        {{ form_row(projetForm.idProjet) }}
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">1</span>
             {{ form_errors(projetForm.nom) }}
             {{ form_widget(projetForm.nom, { 'attr':  {
                 'rows': '1',
                 'class': 'form-control',
                 'placeholder': 'Nom du projet'
             }}) }}
-            <br>
         </div>
-        <div class="modal-footer">
-            <div class="form-group">
-                <input type="submit" class="btn btn-success" value="Créer"/>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-            </div>
+        {{ form_row(projetForm.idUtilisateurFkProjet) }}
+        <br>
+    </div>
+
+    <div class="panel panel-info assign-user">
+        <div class="panel-heading">
+            <h5>Définir le propriétaire du projet</h5>
         </div>
-        {{ form_end(projetForm) }}
-    {% else %}
-        <a href="{{ path('login') }} ">Connectez-vous</a> pour créer un projet.
-    {% endif %}
+        <div class="list-group">
+            {% for utilisateur in tab_users %}
+                {% if (utilisateur.role == 'ROLE_USER' and utilisateur.actif == '1') %}
+                    <a href="#" class="list-group-item"
+                       onclick="addUser('{{ utilisateur.idUtilisateur }}');">{{ utilisateur.nom }} {{ utilisateur.prenom }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="form-group">
+            <input type="submit" class="btn btn-success bouton-submit-admin-entity"/>
+            <button type="button" class="btn btn-danger bouton-dismiss-entity" data-dismiss="modal">Annuler</button>
+        </div>
+    </div>
+    {{ form_end(projetForm) }}
+{% endblock %}
+
+{% block popup_admin_view_contenu %}
+    <ul id="liste-membres" class="list-group">
+    </ul>
 {% endblock %}

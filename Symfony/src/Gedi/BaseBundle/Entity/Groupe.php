@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Groupe
 {
     /**
+     * Id du groupe
      * @var integer
      *
      * @ORM\Column(name="id_groupe", type="integer", nullable=false)
@@ -23,6 +24,7 @@ class Groupe
     private $idGroupe;
 
     /**
+     * Nom du groupe
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=50, nullable=false)
@@ -30,6 +32,7 @@ class Groupe
     private $nom;
 
     /**
+     * Date de création du groupe
      * @var \DateTime
      *
      * @ORM\Column(name="date_creation", type="datetime", nullable=false)
@@ -37,6 +40,7 @@ class Groupe
     private $dateCreation = 'CURRENT_TIMESTAMP';
 
     /**
+     * Date de modification du groupe
      * @var \DateTime
      *
      * @ORM\Column(name="date_modification", type="datetime", nullable=true)
@@ -44,6 +48,7 @@ class Groupe
     private $dateModification;
 
     /**
+     * Propriétaire du groupe
      * @var Utilisateur
      *
      * @ORM\ManyToOne(targetEntity="Utilisateur")
@@ -54,6 +59,7 @@ class Groupe
     private $idUtilisateurFkGroupe;
 
     /**
+     * Documents du groupe
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Document", inversedBy="idGroupeGd")
@@ -69,6 +75,7 @@ class Groupe
     private $idDocumentGd;
 
     /**
+     * Projets du groupe
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Projet", inversedBy="idGroupeGp")
@@ -84,6 +91,7 @@ class Groupe
     private $idProjetGp;
 
     /**
+     * Membres du groupe
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Utilisateur", mappedBy="idGroupeUg")
@@ -187,7 +195,7 @@ class Groupe
     /**
      * Set idUtilisateurFkGroupe
      *
-     * @param integer $idUtilisateurFkGroupe
+     * @param $idUtilisateurFkGroupe
      *
      * @return Groupe
      */
@@ -201,7 +209,7 @@ class Groupe
     /**
      * Get idUtilisateurFkGroupe
      *
-     * @return integer
+     * @return Utilisateur
      */
     public function getIdUtilisateurFkGroupe()
     {
@@ -211,11 +219,11 @@ class Groupe
     /**
      * Add idDocumentGd
      *
-     * @param Document $idDocumentGd
+     * @param $idDocumentGd
      *
      * @return Groupe
      */
-    public function addIdDocumentGd(Document $idDocumentGd)
+    public function addIdDocumentGd($idDocumentGd)
     {
         $this->idDocumentGd[] = $idDocumentGd;
 
@@ -225,9 +233,9 @@ class Groupe
     /**
      * Remove idDocumentGd
      *
-     * @param Document $idDocumentGd
+     * @param $idDocumentGd
      */
-    public function removeIdDocumentGd(Document $idDocumentGd)
+    public function removeIdDocumentGd($idDocumentGd)
     {
         $this->idDocumentGd->removeElement($idDocumentGd);
     }
@@ -245,11 +253,11 @@ class Groupe
     /**
      * Add idProjetGp
      *
-     * @param Projet $idProjetGp
+     * @param $idProjetGp
      *
      * @return Groupe
      */
-    public function addIdProjetGp(Projet $idProjetGp)
+    public function addIdProjetGp($idProjetGp)
     {
         $this->idProjetGp[] = $idProjetGp;
 
@@ -259,9 +267,9 @@ class Groupe
     /**
      * Remove idProjetGp
      *
-     * @param Projet $idProjetGp
+     * @param $idProjetGp
      */
-    public function removeIdProjetGp(Projet $idProjetGp)
+    public function removeIdProjetGp($idProjetGp)
     {
         $this->idProjetGp->removeElement($idProjetGp);
     }
@@ -279,11 +287,11 @@ class Groupe
     /**
      * Add idUtilisateurUg
      *
-     * @param Utilisateur $idUtilisateurUg
+     * @param $idUtilisateurUg
      *
      * @return Groupe
      */
-    public function addIdUtilisateurUg(Utilisateur $idUtilisateurUg)
+    public function addIdUtilisateurUg($idUtilisateurUg)
     {
         $this->idUtilisateurUg[] = $idUtilisateurUg;
 
@@ -293,9 +301,9 @@ class Groupe
     /**
      * Remove idUtilisateurUg
      *
-     * @param Utilisateur $idUtilisateurUg
+     * @param $idUtilisateurUg
      */
-    public function removeIdUtilisateurUg(Utilisateur $idUtilisateurUg)
+    public function removeIdUtilisateurUg($idUtilisateurUg)
     {
         $this->idUtilisateurUg->removeElement($idUtilisateurUg);
     }
@@ -308,5 +316,19 @@ class Groupe
     public function getIdUtilisateurUg()
     {
         return $this->idUtilisateurUg;
+    }
+
+    /**
+     * Transforme le groupe en tableau associatif
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = array(
+            "idGroupe" => $this->idGroupe,
+            "nom" => $this->nom,
+            "proprietaire" => $this->idUtilisateurFkGroupe->getIdUtilisateur()
+        );
+        return $array;
     }
 }

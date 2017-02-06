@@ -14,14 +14,12 @@
 -- ====================================================================================================
 -- Données de la table Utilisateur
 --
-
-INSERT INTO Utilisateur (login, mot_de_passe, nom, prenom, salt, role) VALUES
-  ('anthony@email.com', 'azerty', 'gumb', 'ANTHONY', '22112a577edbc6141a01ee6', 'ROLE_USER'),
-  ('yasmine@email.com', 'azerty', 'aMar', 'yasmine', '22112a577edbc6141a01ee6', 'ROLE_USER'),
-  ('sofiane@email.fr', 'azerty', 'abidi', 'sofiane', '22112a577edbc6141a01ee6', 'ROLE_USER'),
-  ('admin@admin.com', '$2y$13$F9v8pl5u5WMrCorP9MLyJeyIsOLj.0/xqKd/hqa5440kyeB7FQ8te', 'John', 'John',
-   '22112a577edbc6141a01ee6', 'ROLE-ADMIN'),
-  ('audrey@email.eu', 'azerty', 'mommeja', 'audrey', '22112a577edbc6141a01ee6', 'ROLE_USER');
+INSERT INTO Utilisateur (id_utilisateur, login, mot_de_passe, nom, prenom, salt, role, actif, date_creation, date_modification) VALUES
+(4, 'anthony@email.fr', '$2y$13$LrssCwYymE2Uir9DeFKZzOXiZ.yqFI87lyGz5C2cHs1sXQ7BO/8wS', 'Gumb', 'Anthony', '4645d69b9cb6e93c1b4a32f', 'ROLE_ADMIN', 1, '2017-02-02 13:17:33', '2017-02-02 13:17:46'),
+(2, 'yasmine@email.fr', '$2y$13$xK22su06V.PyqfV1JJegV.BDd9MzkBgSBODVuJXeq36xi5j9b5QQy', 'Amar', 'Yasmine', '7e73d7731d88e74141609b4', 'ROLE_USER', 1, '2017-01-31 16:58:51', '2017-01-31 16:58:51'),
+(3, 'sofiane@email.fr', '$2y$13$muywvr0bLudB6V14JHcdrOEFjYqHHZTVTS7FAbaXWvLIPRiMYyPq2', 'Abidi', 'Sofiane', 'ebcca079406d4206bfec116', 'ROLE_USER', 1, '2017-01-31 16:58:30', '2017-01-31 16:58:30'),
+(1, 'admin@admin.com', '$2y$13$YpmnkOeWQt9f.VU5sfzkWujwao3Z0/ysimu7xiST0I2go3RSBiLrW', 'Wayne', 'John', '8bcebdbdeeb5d77b5ab2f38', 'ROLE_USER', 1, '2017-02-04 16:22:26', '2017-02-04 16:22:26'),
+(5, 'audrey@email.com', '$2y$13$nOyN8ho/HkxJ4XTP99dzr.5Gj4iJ4/YhJPOqdaHxCoZ.JUgauaIry', 'Mommeja', 'Audrey', '9a56bdbfeab8ecb89c6384a', 'ROLE_USER', 0, '2017-01-31 16:58:01', '2017-02-05 08:42:55');
 
 -- ====================================================================================================
 -- Données de la table Projet

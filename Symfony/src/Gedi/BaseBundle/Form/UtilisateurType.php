@@ -31,7 +31,7 @@ class UtilisateurType extends AbstractType
         ));
         $builder->add('nom', TextType::class);
         $builder->add('prenom', TextType::class);
-        $builder->add('actif', CheckboxType::class, array('required' => false));
+        $builder->add('actif', CheckboxType::class, array('required' => false, 'label' => false));
     }
 
     /**

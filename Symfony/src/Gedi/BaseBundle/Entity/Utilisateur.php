@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Utilisateur implements UserInterface
 {
     /**
+     * Id utilisateur
      * @var integer
      *
      * @ORM\Column(name="id_utilisateur", type="integer", nullable=false)
@@ -24,6 +25,7 @@ class Utilisateur implements UserInterface
     private $idUtilisateur;
 
     /**
+     * login de l'utilisateur
      * @var string
      *
      * @ORM\Column(name="login", type="string", length=50, nullable=false)
@@ -31,6 +33,7 @@ class Utilisateur implements UserInterface
     private $username;
 
     /**
+     * Mot de passe utilisateur, crypté en bcrypt
      * @var string
      *
      * @ORM\Column(name="mot_de_passe", type="string", length=255, nullable=false)
@@ -38,6 +41,7 @@ class Utilisateur implements UserInterface
     private $password;
 
     /**
+     * Nom de l'utilisateur
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=50, nullable=false)
@@ -45,6 +49,7 @@ class Utilisateur implements UserInterface
     private $nom;
 
     /**
+     * Prenom de l'utilisateur
      * @var string
      *
      * @ORM\Column(name="prenom", type="string", length=50, nullable=false)
@@ -52,6 +57,7 @@ class Utilisateur implements UserInterface
     private $prenom;
 
     /**
+     * Clé de salage de mot de passe
      * @var string
      *
      * @ORM\Column(name="salt", type="string", length=23, nullable=true)
@@ -59,6 +65,7 @@ class Utilisateur implements UserInterface
     private $salt;
 
     /**
+     * Role de l'utilisateur
      * @var string
      *
      * @ORM\Column(name="role", type="string", nullable=false)
@@ -66,6 +73,7 @@ class Utilisateur implements UserInterface
     private $role = 'ROLE_USER';
 
     /**
+     * Boolean servant à dire si l'utilisateur est activé ou pas
      * @var boolean
      *
      * @ORM\Column(name="actif", type="boolean", nullable=false)
@@ -73,6 +81,7 @@ class Utilisateur implements UserInterface
     private $actif = false;
 
     /**
+     * Date de création de l'utilisateur
      * @var \DateTime
      *
      * @ORM\Column(name="date_creation", type="datetime", nullable=false)
@@ -80,6 +89,7 @@ class Utilisateur implements UserInterface
     private $dateCreation = 'CURRENT_TIMESTAMP';
 
     /**
+     * Date de modification de l'utilisateur
      * @var \DateTime
      *
      * @ORM\Column(name="date_modification", type="datetime", nullable=true)
@@ -87,9 +97,10 @@ class Utilisateur implements UserInterface
     private $dateModification;
 
     /**
+     * Documents de l'utilisateur
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Document", inversedBy="idUtilisateurDu")
+     * @ORM\ManyToMany(targetEntity="Document", inversedBy="idUtilisateurDu", cascade={"all"})
      * @ORM\JoinTable(name="Document_Utilisateur",
      *   joinColumns={
      *     @ORM\JoinColumn(name="id_utilisateur_du", referencedColumnName="id_utilisateur")
@@ -102,9 +113,10 @@ class Utilisateur implements UserInterface
     private $idDocumentDu;
 
     /**
+     * Groupes de l'utilisateur
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Groupe", inversedBy="idUtilisateurUg")
+     * @ORM\ManyToMany(targetEntity="Groupe", inversedBy="idUtilisateurUg", cascade={"all"})
      * @ORM\JoinTable(name="Utilisateur_Groupe",
      *   joinColumns={
      *     @ORM\JoinColumn(name="id_utilisateur_ug", referencedColumnName="id_utilisateur")
@@ -115,6 +127,22 @@ class Utilisateur implements UserInterface
      * )
      */
     private $idGroupeUg;
+
+    /**
+     * Projets dont l'utilisateur est propriétaire
+     * @var Projet
+     *
+     * @ORM\OneToMany(targetEntity="Projet", mappedBy="idUtilisateurFkProjet", cascade={"all"})
+     */
+    private $idUtilisateurFkProjet;
+
+    /**
+     * Document dont l'utilisateur est propriétaire
+     * @var Document
+     *
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="idUtilisateurFkDocument", cascade={"all"})
+     */
+    private $idUtilisateurFkDocument;
 
     /**
      * Constructor
@@ -384,11 +412,11 @@ class Utilisateur implements UserInterface
     /**
      * Add idDocumentDu
      *
-     * @param Document $idDocumentDu
+     * @param $idDocumentDu
      *
      * @return Utilisateur
      */
-    public function addIdDocumentDu(Document $idDocumentDu)
+    public function addIdDocumentDu($idDocumentDu)
     {
         $this->idDocumentDu[] = $idDocumentDu;
 
@@ -398,9 +426,9 @@ class Utilisateur implements UserInterface
     /**
      * Remove idDocumentDu
      *
-     * @param Document $idDocumentDu
+     * @param $idDocumentDu
      */
-    public function removeIdDocumentDu(Document $idDocumentDu)
+    public function removeIdDocumentDu($idDocumentDu)
     {
         $this->idDocumentDu->removeElement($idDocumentDu);
     }
@@ -418,11 +446,11 @@ class Utilisateur implements UserInterface
     /**
      * Add idGroupeUg
      *
-     * @param Groupe $idGroupeUg
+     * @param $idGroupeUg
      *
      * @return Utilisateur
      */
-    public function addIdGroupeUg(Groupe $idGroupeUg)
+    public function addIdGroupeUg($idGroupeUg)
     {
         $this->idGroupeUg[] = $idGroupeUg;
 
@@ -432,9 +460,9 @@ class Utilisateur implements UserInterface
     /**
      * Remove idGroupeUg
      *
-     * @param Groupe $idGroupeUg
+     * @param $idGroupeUg
      */
-    public function removeIdGroupeUg(Groupe $idGroupeUg)
+    public function removeIdGroupeUg($idGroupeUg)
     {
         $this->idGroupeUg->removeElement($idGroupeUg);
     }
@@ -447,6 +475,38 @@ class Utilisateur implements UserInterface
     public function getIdGroupeUg()
     {
         return $this->idGroupeUg;
+    }
+
+    /**
+     * @return Projet
+     */
+    public function getIdUtilisateurFkProjet()
+    {
+        return $this->idUtilisateurFkProjet;
+    }
+
+    /**
+     * @param $idUtilisateurFkProjet
+     */
+    public function setIdUtilisateurFkProjet($idUtilisateurFkProjet)
+    {
+        $this->idUtilisateurFkProjet = $idUtilisateurFkProjet;
+    }
+
+    /**
+     * @return Document
+     */
+    public function getIdUtilisateurFkDocument()
+    {
+        return $this->idUtilisateurFkDocument;
+    }
+
+    /**
+     * @param $idUtilisateurFkDocument
+     */
+    public function setIdUtilisateurFkDocument($idUtilisateurFkDocument)
+    {
+        $this->idUtilisateurFkDocument = $idUtilisateurFkDocument;
     }
 
     /**
@@ -464,10 +524,12 @@ class Utilisateur implements UserInterface
      * Transforme l'utilisateur en tableau associatif
      * @return array
      */
-    public function toArray() {
+    public function toArray()
+    {
         $array = array(
             "idUtilisateur" => $this->idUtilisateur,
             "username" => $this->username,
+            "password" => $this->password,
             "nom" => $this->nom,
             "prenom" => $this->prenom,
             "actif" => $this->actif

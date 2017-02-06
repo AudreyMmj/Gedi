@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Projet
 {
     /**
+     * Id du projet
      * @var integer
      *
      * @ORM\Column(name="id_projet", type="integer", nullable=false)
@@ -23,6 +24,7 @@ class Projet
     private $idProjet;
 
     /**
+     * Nom du projet
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=50, nullable=false)
@@ -30,6 +32,7 @@ class Projet
     private $nom;
 
     /**
+     * Chemin du projet
      * @var string
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=false)
@@ -37,6 +40,7 @@ class Projet
     private $path = '/var/www/html/gedi/';
 
     /**
+     * Date de création du projet
      * @var \DateTime
      *
      * @ORM\Column(name="date_creation", type="datetime", nullable=false)
@@ -44,6 +48,7 @@ class Projet
     private $dateCreation = 'CURRENT_TIMESTAMP';
 
     /**
+     * Date de modification du projet
      * @var \DateTime
      *
      * @ORM\Column(name="date_modification", type="datetime", nullable=true)
@@ -51,9 +56,10 @@ class Projet
     private $dateModification;
 
     /**
+     * Propriétaire du projet
      * @var Utilisateur
      *
-     * @ORM\ManyToOne(targetEntity="Utilisateur")
+     * @ORM\ManyToOne(targetEntity="Utilisateur", inversedBy="idUtilisateurFkProjet")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_utilisateur_fk_projet", referencedColumnName="id_utilisateur")
      * })
@@ -61,11 +67,20 @@ class Projet
     private $idUtilisateurFkProjet;
 
     /**
+     * Groupe ayant accès au projet
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Groupe", mappedBy="idProjetGp")
      */
     private $idGroupeGp;
+
+    /**
+     * Documents du projet
+     * @var Document
+     *
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="idProjetFkDocument", cascade={"all"})
+     */
+    private $idProjetFkDocument;
 
     /**
      * Constructor
@@ -186,11 +201,11 @@ class Projet
     /**
      * Set idUtilisateurFkProjet
      *
-     * @param Utilisateur $idUtilisateurFkProjet
+     * @param $idUtilisateurFkProjet
      *
      * @return Projet
      */
-    public function setIdUtilisateurFkProjet(Utilisateur $idUtilisateurFkProjet = null)
+    public function setIdUtilisateurFkProjet($idUtilisateurFkProjet)
     {
         $this->idUtilisateurFkProjet = $idUtilisateurFkProjet;
 
@@ -210,11 +225,11 @@ class Projet
     /**
      * Add idGroupeGp
      *
-     * @param Groupe $idGroupeGp
+     * @param $idGroupeGp
      *
      * @return Projet
      */
-    public function addIdGroupeGp(Groupe $idGroupeGp)
+    public function addIdGroupeGp($idGroupeGp)
     {
         $this->idGroupeGp[] = $idGroupeGp;
 
@@ -224,9 +239,9 @@ class Projet
     /**
      * Remove idGroupeGp
      *
-     * @param Groupe $idGroupeGp
+     * @param $idGroupeGp
      */
-    public function removeIdGroupeGp(Groupe $idGroupeGp)
+    public function removeIdGroupeGp($idGroupeGp)
     {
         $this->idGroupeGp->removeElement($idGroupeGp);
     }
@@ -239,5 +254,35 @@ class Projet
     public function getIdGroupeGp()
     {
         return $this->idGroupeGp;
+    }
+
+    /**
+     * @return Document
+     */
+    public function getIdProjetFkDocument()
+    {
+        return $this->idProjetFkDocument;
+    }
+
+    /**
+     * @param $idProjetFkDocument
+     */
+    public function setIdProjetFkDocument($idProjetFkDocument)
+    {
+        $this->idProjetFkDocument = $idProjetFkDocument;
+    }
+
+    /**
+     * Transforme le projet en tableau associatif
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = array(
+            "idProjet" => $this->idProjet,
+            "nom" => $this->nom,
+            "proprietaire" => $this->idUtilisateurFkProjet->getIdUtilisateur()
+        );
+        return $array;
     }
 }

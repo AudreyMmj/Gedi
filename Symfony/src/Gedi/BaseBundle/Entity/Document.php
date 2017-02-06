@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Document
 {
     /**
+     * Id du document
      * @var integer
      *
      * @ORM\Column(name="id_document", type="integer", nullable=false)
@@ -23,6 +24,7 @@ class Document
     private $idDocument;
 
     /**
+     * Nom du document
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=50, nullable=false)
@@ -30,6 +32,7 @@ class Document
     private $nom;
 
     /**
+     * Type du document
      * @var string
      *
      * @ORM\Column(name="type_doc", type="string", nullable=false)
@@ -37,6 +40,7 @@ class Document
     private $typeDoc;
 
     /**
+     * Date de création du document
      * @var \DateTime
      *
      * @ORM\Column(name="date_creation", type="datetime", nullable=false)
@@ -44,6 +48,7 @@ class Document
     private $dateCreation = 'CURRENT_TIMESTAMP';
 
     /**
+     * Date de modification du document
      * @var \DateTime
      *
      * @ORM\Column(name="date_modification", type="datetime", nullable=true)
@@ -51,6 +56,7 @@ class Document
     private $dateModification;
 
     /**
+     * Tag du document
      * @var string
      *
      * @ORM\Column(name="tag", type="string", length=255, nullable=true)
@@ -58,6 +64,7 @@ class Document
     private $tag;
 
     /**
+     * Resumé du document
      * @var string
      *
      * @ORM\Column(name="resume", type="text", length=65535, nullable=true)
@@ -65,6 +72,7 @@ class Document
     private $resume;
 
     /**
+     * Chemin du document
      * @var string
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=false)
@@ -72,9 +80,10 @@ class Document
     private $path = '/var/www/html/gedi/';
 
     /**
+     * Projet du document
      * @var Projet
      *
-     * @ORM\ManyToOne(targetEntity="Projet")
+     * @ORM\ManyToOne(targetEntity="Projet", inversedBy="idProjetFkDocument")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_projet_fk_document", referencedColumnName="id_projet")
      * })
@@ -82,9 +91,10 @@ class Document
     private $idProjetFkDocument;
 
     /**
+     * Propriétaire du document
      * @var Utilisateur
      *
-     * @ORM\ManyToOne(targetEntity="Utilisateur")
+     * @ORM\ManyToOne(targetEntity="Utilisateur", inversedBy="idUtilisateurFkDocument")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_utilisateur_fk_document", referencedColumnName="id_utilisateur")
      * })
@@ -92,6 +102,7 @@ class Document
     private $idUtilisateurFkDocument;
 
     /**
+     * Utilisateurs étants habilités à voir le document
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Utilisateur", mappedBy="idDocumentDu")
@@ -99,6 +110,7 @@ class Document
     private $idUtilisateurDu;
 
     /**
+     * Groupes étants habilités à voir le document
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Groupe", mappedBy="idDocumentGd")
@@ -115,7 +127,6 @@ class Document
         $this->dateCreation = new \DateTime();
         $this->dateModification = new \DateTime();
     }
-
 
     /**
      * Get idDocument
@@ -298,11 +309,11 @@ class Document
     /**
      * Set idProjetFkDocument
      *
-     * @param Projet $idProjetFkDocument
+     * @param $idProjetFkDocument
      *
      * @return Document
      */
-    public function setIdProjetFkDocument(Projet $idProjetFkDocument = null)
+    public function setIdProjetFkDocument($idProjetFkDocument = null)
     {
         $this->idProjetFkDocument = $idProjetFkDocument;
 
@@ -322,11 +333,11 @@ class Document
     /**
      * Set idUtilisateurFkDocument
      *
-     * @param Utilisateur $idUtilisateurFkDocument
+     * @param $idUtilisateurFkDocument
      *
      * @return Document
      */
-    public function setIdUtilisateurFkDocument(Utilisateur $idUtilisateurFkDocument = null)
+    public function setIdUtilisateurFkDocument($idUtilisateurFkDocument = null)
     {
         $this->idUtilisateurFkDocument = $idUtilisateurFkDocument;
 
@@ -346,11 +357,11 @@ class Document
     /**
      * Add idUtilisateurDu
      *
-     * @param Utilisateur $idUtilisateurDu
+     * @param $idUtilisateurDu
      *
      * @return Document
      */
-    public function addIdUtilisateurDu(Utilisateur $idUtilisateurDu)
+    public function addIdUtilisateurDu($idUtilisateurDu)
     {
         $this->idUtilisateurDu[] = $idUtilisateurDu;
 
@@ -360,9 +371,9 @@ class Document
     /**
      * Remove idUtilisateurDu
      *
-     * @param Utilisateur $idUtilisateurDu
+     * @param $idUtilisateurDu
      */
-    public function removeIdUtilisateurDu(Utilisateur $idUtilisateurDu)
+    public function removeIdUtilisateurDu($idUtilisateurDu)
     {
         $this->idUtilisateurDu->removeElement($idUtilisateurDu);
     }
@@ -380,11 +391,11 @@ class Document
     /**
      * Add idGroupeGd
      *
-     * @param Groupe $idGroupeGd
+     * @param $idGroupeGd
      *
      * @return Document
      */
-    public function addIdGroupeGd(Groupe $idGroupeGd)
+    public function addIdGroupeGd($idGroupeGd)
     {
         $this->idGroupeGd[] = $idGroupeGd;
 
@@ -394,9 +405,9 @@ class Document
     /**
      * Remove idGroupeGd
      *
-     * @param Groupe $idGroupeGd
+     * @param $idGroupeGd
      */
-    public function removeIdGroupeGd(Groupe $idGroupeGd)
+    public function removeIdGroupeGd($idGroupeGd)
     {
         $this->idGroupeGd->removeElement($idGroupeGd);
     }

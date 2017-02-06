@@ -3,6 +3,8 @@
 namespace Gedi\BaseBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,9 +15,11 @@ class ProjetType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('nom');
+        $builder->add('idProjet', HiddenType::class);
+        $builder->add('nom', TextType::class);
+        $builder->add('idUtilisateurFkProjet', HiddenType::class);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -33,6 +37,4 @@ class ProjetType extends AbstractType
     {
         return 'gedi_basebundle_projet';
     }
-
-
 }

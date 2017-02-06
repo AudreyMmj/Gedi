@@ -5,35 +5,35 @@
 {% block tooltip_admin %}d'utilisateur{% endblock %}
 
 {% block boutons_admin %}
-    <!-- affichage du nombre d'utilisateurs inactifs -->
-    {% set nbUserInactif = 0 %}
-    {% for utilisateur in tab_objets %}
-        {% if (utilisateur.actif == '0') %}
-            {% set nbUserInactif = nbUserInactif + 1 %}
-        {% endif %}
-    {% endfor %}
-    <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
-            data-target="#popup-add">Ajouter
-    </button>
-    <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal"
-            data-target="#popup-delete">Supprimer <span class="badge spanNbSel"></span>
-    </button>
-    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#popup-add">Demandes d'ajout
-        <span class="badge">{{ nbUserInactif }}</span>
-    </button>
+    <div class="btn-group bs-bars pull-left" role="group" style="display: block">
+        <button type="button" class="btn btn-success bouton-admin-popup-add" data-toggle="modal"
+                data-target="#popup-add">Ajouter
+        </button>
+        <button type="button" class="btn btn-danger bouton-desactive" data-toggle="modal"
+                data-target="#popup-delete">Supprimer <span class="badge spanNbSel"></span>
+        </button>
+    </div>
+    <div class="bs-bars pull-left">
+        <label class="checkbox-inline">
+            <input id="toggle-new-users" type="checkbox" checked data-toggle="toggle" data-on="Nouveaux" data-off="Tous"
+                   data-size="large" data-width="100" data-height="35">
+            <span id="span-nb-inactifs" class="badge"></span>
+        </label>
+    </div>
 {% endblock %}
 
 {% block tableau_admin %}
     <thead>
     <tr>
-        <th data-checkbox="true"></th>
-        <th>Id</th>
-        <th data-sortable="true">Nom</th>
-        <th data-sortable="true">Prenom</th>
-        <th data-sortable="true">Login</th>
-        <th data-sortable="true">Date de création</th>
-        <th data-sortable="true">Date de modification</th>
-        <th data-align="center">Actions</th>
+        <th data-field="ck" data-checkbox="true"></th>
+        <th data-field="id" data-visible="false">Id</th>
+        <th data-field="nom" data-sortable="true">Nom</th>
+        <th data-field="prenom" data-sortable="true">Prenom</th>
+        <th data-field="login" data-sortable="true">Login</th>
+        <th data-field="datec" data-sortable="true">Date de création</th>
+        <th data-field="datem" data-sortable="true">Date de modification</th>
+        <th data-field="actif" data-visible="false">Actif</th>
+        <th data-field="ctrl" data-align="center">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -53,6 +53,7 @@
                 <td>{{ utilisateur.username }}</td>
                 <td>{{ utilisateur.dateCreation|date('Y-m-d H:i:s') }}</td>
                 <td>{{ utilisateur.dateModification|date('Y-m-d H:i:s') }}</td>
+                <td>{{ utilisateur.actif }}</td>
                 <td data-align="center">
                         <span data-toggle="tooltip" data-placement="bottom"
                               title="Accéder à l'espace utilisateur">
@@ -78,8 +79,11 @@
 {% block popup_admin_del_titre %}d'utilisateurs{% endblock %}
 
 {% block popup_admin_add_contenu %}
-    {{ form_start(utilisateurForm) }}
+    {{ form_start(utilisateurForm, { 'attr':  {
+        'class': 'form-admin',
+    }}) }}
     <div class="form-group">
+        {{ form_row(utilisateurForm.idUtilisateur) }}
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">1</span>
             {{ form_errors(utilisateurForm.username) }}
@@ -129,8 +133,19 @@
                 'placeholder': 'Prenom'
             }}) }}
         </div>
-        {{ form_row(utilisateurForm.actif) }}
-        {{ form_row(utilisateurForm.idUtilisateur) }}
+        <br>
+        <div class="input-group" style="margin-top: -10px; margin-left: -20px;">
+            {{ form_widget(utilisateurForm.actif, { 'attr':  {
+                'rows': '1',
+                'class': 'form-control',
+                'data-toggle': 'toggle',
+                'data-on': 'Actif',
+                'data-off': 'Inactif',
+                'data-size': 'large',
+                'data-width': '100',
+                'data-height': '35',
+            }}) }}
+        </div>
     </div>
     <div class="modal-footer">
         <div class="form-group">
