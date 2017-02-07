@@ -4,7 +4,6 @@ namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Gedi\BaseBundle\Entity\Groupe;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -12,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * Class GroupeService
  * @package Gedi\BaseBundle\Services
  */
-class GroupeService extends Controller
+class GroupeService
 {
     /**
      * @var EntityManager

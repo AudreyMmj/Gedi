@@ -421,4 +421,21 @@ class Document
     {
         return $this->idGroupeGd;
     }
+
+    /**
+     * Transforme le document en tableau associatif
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = array(
+            "idDocument" => $this->idDocument,
+            "nom" => $this->nom,
+            "typeDoc" => $this->typeDoc,
+            "tag" => $this->tag,
+            "resume" => $this->resume,
+            "proprietaire" => $this->idUtilisateurFkDocument
+        );
+        return $array;
+    }
 }

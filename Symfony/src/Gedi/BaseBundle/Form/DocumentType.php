@@ -3,6 +3,9 @@
 namespace Gedi\BaseBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,9 +16,14 @@ class DocumentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('nom')->add('typeDoc')->add('tag')->add('resume');
+        $builder->add('idDocument', HiddenType::class);
+        $builder->add('nom', TextType::class);
+        $builder->add('typeDoc', TextType::class);
+        $builder->add('tag', TextType::class);
+        $builder->add('resume', TextareaType::class);
+        $builder->add('idUtilisateurFkDocument', HiddenType::class);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -33,6 +41,4 @@ class DocumentType extends AbstractType
     {
         return 'gedi_basebundle_document';
     }
-
-
 }
