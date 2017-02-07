@@ -4,26 +4,25 @@ namespace Gedi\BaseBundle\Controller;
 
 use Gedi\BaseBundle\Entity\Utilisateur;
 use Gedi\BaseBundle\Entity\Contact;
+use Gedi\BaseBundle\Form\ContactType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class BaseController extends Controller
 {
     /**
-     * Page d'accueil de l'application
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/")
      */
     public function startAction()
     {
         return $this->render('GediBaseBundle:Base:start.html.twig', array(
+            // ...
         ));
     }
 
     /**
-     * Page d'accueil des utilisateurs connectés
-     * Cette page redirige l'utilisateur vers home_admin ou home_user
-     * en fonction de son role ROLE_ADMIN ou ROLE_USER
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/home")
      */
     public function homeAction()
     {
@@ -37,6 +36,7 @@ class BaseController extends Controller
     /**
      * Page d'enregistrement des nouveaux utilisateurs
      * Les utilisateurs enregistrés ici ne sont pas activés
+     * @Route("/register")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -52,7 +52,7 @@ class BaseController extends Controller
         if ($utilisateurForm->isSubmitted() && $utilisateurForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($utilisateur);
-            $em->flush();
+            $em->flush($utilisateur);
 
             return $this->redirectToRoute('start');
         }
@@ -64,47 +64,45 @@ class BaseController extends Controller
     }
 
     /**
-     * Page de contact de l'application, la page contient un formulaire de contact
-     * permettant d'envoyer une demande à l'administrateur du site.
-     * L'expéditeur reçoit également une notification d'envoi par email
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("/contact")
      */
     public function contactAction(Request $request)
     {
         $contact = new Contact();
         $contactForm = $this->createForm('Gedi\BaseBundle\Form\ContactType', $contact);
         $contactForm->handleRequest($request);
-        $object = $contact->getObject();
-        $email = $contact->getEmail();
-        $text = $contact->getText();
-        $nom = $contact->getName();
+        $object=$contact->getObject();
+        $email=$contact->getEmail();
+        $text=$contact->getText();
+        $nom=$contact->getName();
         if ($contactForm->isValid() && $contactForm->isSubmitted()) {
             //Envoi du mail à l'admin
             $message = \Swift_Message::newInstance()
                 ->setSubject($object)
                 ->setFrom($contact->getEmail())
                 ->setTo('gedi.l3imiage@gmail.com')
+                ->setBody('envoi de l\'adresse : '.$email.'
+'.'nom : '.$nom.'
+'.'objet du mail : '.$object.'
 
-                //ne pas toucher merci !!
-                ->setBody('envoi de l\'adresse : ' . $email . '
-' . 'nom : ' . $nom . '
-' . 'objet du mail : ' . $object . '
-
-' . $text);
+'.$text)
+            ;
             $this->get('mailer')->send($message);
 
-            // Envoyer un e-mail de confirmation à l'expéditeur
+            // Envoyer un e-mail de confirmation
             $message2 = \Swift_Message::newInstance()
                 ->setSubject('Confirmation d\'envoi mail GEDI')
                 ->setFrom('gedi.l3imiage@gmail.com')
                 ->setTo($email)
-                ->setBody('Bonjour, votre demande a bien été envoyé, nous vous répondrons dans les meilleurs délais !
+                ->setBody('Bonjour, votre mail à l\'administrateur de notre gestionnaire de documents GEDI a bien été envoyé, il vous répondra dès que possible !
                  
-Cordialement, l\'équipe Gedi.');
+Cordialement, l\'équipe Gedi.' )
+            ;
             $this->get('mailer')->send($message2);
 
-            return $this->redirectToRoute('start');
+
+            // the form if they refresh the page
+            return $this->redirectToRoute ('start');
         }
 
         return $this->render('GediBaseBundle:Base:contact.html.twig', array(
