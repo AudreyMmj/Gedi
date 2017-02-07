@@ -9,7 +9,6 @@ var logins; // tableau des logins
 // =======================================================================
 // elements lancés au chargement de la page
 $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip(); // script permettant de jouer les tooltips
     $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de type bouton-desactive
 
     // change le texte du popup de suppression en fonction de la page
@@ -30,7 +29,15 @@ $(document).ready(function () {
         // }
     }
     updateNbEntity();
+    activeDefault();
 });
+
+// =======================================================================
+// fonction pour activer les elements jquery
+function activeDefault() {
+    $('[data-toggle="tooltip"]').tooltip(); // script permettant de jouer les tooltips
+    $('[data-toggle="popover"]').popover();
+}
 
 // =======================================================================
 // fonction pour mettre à jour le nombre d'utilisateurs inactifs
@@ -180,12 +187,16 @@ $(function () {
             success: function (data) {
                 if (typeAction == "children") {
                     if (data.reponse.length > 0) {
-                        $('#empty-list').hide();
                         for (var i = 0; i < data.reponse.length; i++) {
-                            $('#liste-membres').prepend('<li class="list-group-item">' + data.reponse[i] + '</li>');
+                            if (i % 2 == 0) {
+                                $('#liste-membres').prepend('<li class="list-group-item"' +
+                                    'style="background-color: #f9f9f9">' + data.reponse[i] + '</li>');
+                            } else {
+                                $('#liste-membres').prepend('<li class="list-group-item">' + data.reponse[i] + '</li>');
+                            }
                         }
                     } else {
-                        $('#empty-list').show();
+                        $('#liste-membres').prepend('<li class="list-group-item">... vide</li>');
                     }
                 } else {
                     if (typeAction == "supprimé" && data['reponse'] == "OK") {
@@ -219,6 +230,7 @@ $(function () {
                     sel = null;
                     hideOuShow(0);
                     updateNbEntity();
+                    activeDefault();
 
                     showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
                         ((typeAction == "supprimé" && selection.length > 1) ? 's bien ' + typeAction + 's' :
@@ -257,13 +269,7 @@ $(function () {
     // listener pour voir les entités contenus par une entité parente
     $table.on('click', '.btn-view-entity', function () {
         var id = $(this).closest("tr").attr('data-uniqueid');
-        var nomEntite = $(this).closest("tr").find('td:eq(1)').text();
         $('#liste-membres').empty();
-        if (window.location.href.indexOf("groups_admin") > -1) {
-            $('#popup-admin-view-titre').html('Membres de ' + nomEntite);
-        } else {
-            $('#popup-admin-view-titre').html('Documents de ' + nomEntite);
-        }
         ajaxSend(id, "children");
     });
 

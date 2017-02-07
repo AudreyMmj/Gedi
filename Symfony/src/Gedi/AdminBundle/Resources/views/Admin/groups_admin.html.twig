@@ -38,12 +38,12 @@
                 <td>{{ groupe.dateModification|date('Y-m-d H:i:s') }}</td>
                 <td>{{ groupe.idUtilisateurFkGroupe.nom }} {{ groupe.idUtilisateurFkGroupe.prenom }}</td>
                 <td data-align="center">
-                    <span data-toggle="tooltip" data-placement="bottom" title="Voir les membres">
-                        <button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
-                                data-toggle="modal" data-target="#popup-view">
-                            <span class="glyphicon glyphicon-user"></span>
-                        </button>
-                    </span>
+                    <button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
+                            data-toggle="popover" data-placement="auto left" title="Membres du groupe"
+                            data-trigger="focus" data-content="<ul id='liste-membres' class='list-group'></ul>"
+                            data-animation="true" data-container="body" data-html="true">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </button>
                     <span data-toggle="tooltip" data-placement="bottom" title="Editer le groupe">
                         <button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"
                                 data-target="#popup-add" onclick="edit('{{ groupe.toArray|json_encode }}');">
