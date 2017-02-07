@@ -89,6 +89,18 @@ body {
     max-width: 25%;
 }
 
+.popover{
+    width:500px;
+    height:auto;
+}
+
+#liste-membres{
+    height:100px;
+    width:100%;
+    overflow:hidden;
+    overflow-y:auto;
+}
+
 /* classe de couleurs personnalisée */
 :root {
     --color-error: #eea096;

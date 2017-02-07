@@ -155,10 +155,11 @@ class AdminController extends Controller
                     "datec" => date_format($objet->getDateCreation(), 'Y-m-d H:i:s'),
                     "datem" => date_format($objet->getDateModification(), 'Y-m-d H:i:s'),
                     "propio" => $objet->getIdUtilisateurFkGroupe()->getNom() . " " . $objet->getIdUtilisateurFkGroupe()->getPrenom(),
-                    "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Voir les membres">' .
-                        '<button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
-                                data-toggle="modal" data-target="#popup-view">' .
-                        '<span class="glyphicon glyphicon-user"></span></button></span>' .
+                    "ctrl" => '<button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
+                            data-toggle="popover" data-placement="auto left" title="Membres du groupe"
+                            data-trigger="focus" data-content="<ul id=\'liste-membres\' class=\'list-group\'></ul>"
+                            data-animation="true" data-container="body" data-html="true">' .
+                        '<span class="glyphicon glyphicon-user"></span></button>' .
                         '<span data-toggle="tooltip" data-placement="bottom" title="Editer le groupe">' .
                         '<button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"' .
                         'data-target="#popup-add" onclick="edit(\'{&quot;idGroupe&quot;:' . $objet->getIdGroupe() .
@@ -230,10 +231,11 @@ class AdminController extends Controller
                     "datec" => date_format($objet->getDateCreation(), 'Y-m-d H:i:s'),
                     "datem" => date_format($objet->getDateModification(), 'Y-m-d H:i:s'),
                     "propio" => $objet->getIdUtilisateurFkProjet()->getNom() . " " . $objet->getIdUtilisateurFkProjet()->getPrenom(),
-                    "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Voir les documents">' .
-                        '<button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
-                                data-toggle="modal" data-target="#popup-view"">' .
-                        '<span class="glyphicon glyphicon-user"></span></button></span>' .
+                    "ctrl" => '<button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
+                            data-toggle="popover" data-placement="auto left" title="Documents du projet"
+                            data-trigger="focus" data-content="<ul id=\'liste-membres\' class=\'list-group\'></ul>"
+                            data-animation="true" data-container="body" data-html="true">' .
+                        '<span class="glyphicon glyphicon-file"></span></button>' .
                         '<span data-toggle="tooltip" data-placement="bottom" title="Editer le projet">' .
                         '<button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"' .
                         'data-target="#popup-add" onclick="edit(\'{&quot;idProjet   &quot;:' . $objet->getIdProjet() .
