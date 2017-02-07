@@ -3,18 +3,12 @@
 {% block base_titre %}Contact{% endblock %}
 
 {% block base_contenu %}
-
     <header>
         <h1 class="text-white"> Contact</h1>
     </header>
-
     <p class="text-white">Pour envoyer un mail à l'administrateur, remplissez tous les champs.</p>
-
-
     {{ form_start(contactForm) }}
-
     <div class="form-group full-transparent">
-
         {{ form_errors(contactForm.name) }}
         {{ form_widget(contactForm.name, { 'attr':  {
             'rows': '1',
@@ -44,15 +38,9 @@
             'style' : 'resize : none'
         }}) }}
     </div>
-
-
     {{ form_rest(contactForm) }}
-
-
     <div class="panel-footer full-transparent">
         <input type="submit" class="btn btn-success" value="Envoyer"/>
     </div>
     {{ form_end(contactForm) }}
 {% endblock %}
-
-

@@ -2,40 +2,105 @@
 
 namespace Gedi\BaseBundle\Entity;
 
-
+/**
+ * Class Contact
+ * @package Gedi\BaseBundle\Entity
+ */
 class Contact
 {
+    /**
+     * Nom du demandeur
+     * @var
+     */
     private $name;
+
+    /**
+     * Adresse email du demandeur
+     * @var
+     */
     private $email;
+
+    /**
+     * Objet de la demande
+     * @var
+     */
     private $object;
+
+    /**
+     * Contenu de la demande
+     * @var
+     */
     private $text;
 
-    public function getName () {
+    /**
+     * Getter du nom du demandeur
+     * @return mixed
+     */
+    public function getName()
+    {
         return $this->name;
     }
-    public function setName ($name) {
+
+    /**
+     * Setter du nom du demandeur
+     * @param $name
+     */
+    public function setName($name)
+    {
         $this->name = $name;
     }
 
-    public function getEmail () {
+    /**
+     * Getter de l'email du demandeur
+     * @return mixed
+     */
+    public function getEmail()
+    {
         return $this->email;
     }
-    public function setEmail ($email) {
+
+    /**
+     * Setter de l'email du demandeur
+     * @param $email
+     */
+    public function setEmail($email)
+    {
         $this->email = $email;
     }
 
-    public function getObject () {
+    /**
+     * Getter de l'objet de l'email
+     * @return mixed
+     */
+    public function getObject()
+    {
         return $this->object;
     }
-    public function setObject ($object) {
+
+    /**
+     * Setter de l'objet de l'email
+     * @param $object
+     */
+    public function setObject($object)
+    {
         $this->object = $object;
     }
 
-    public function getText ()
+    /**
+     * Getter du contenu de l'email
+     * @return mixed
+     */
+    public function getText()
     {
         return $this->text;
     }
-    public function setText ($text) {
+
+    /**
+     * Setter du contenu de l'email
+     * @param $text
+     */
+    public function setText($text)
+    {
         $this->text = $text;
     }
 }
