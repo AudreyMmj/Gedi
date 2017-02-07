@@ -35,8 +35,8 @@ $(document).ready(function () {
 // =======================================================================
 // fonction pour activer les elements jquery
 function activeDefault() {
-    $('[data-toggle="tooltip"]').tooltip(); // script permettant de jouer les tooltips
-    $('[data-toggle="popover"]').popover();
+    $('[data-toggle="tooltip"]').tooltip(); // permet de jouer les tooltips
+    $('[data-toggle="popover"]').popover(); // permet de jouer les popover
 }
 
 // =======================================================================
