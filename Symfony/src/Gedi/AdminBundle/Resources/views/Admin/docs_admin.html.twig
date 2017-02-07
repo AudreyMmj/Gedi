@@ -81,7 +81,7 @@
             {{ form_widget(documentForm.nom, { 'attr':  {
                 'rows': '1',
                 'class': 'form-control',
-                'placeholder': 'Nom du ducument'
+                'placeholder': 'Nom du document'
             }}) }}
         </div>
         <br>
@@ -93,7 +93,7 @@
                     {{ form_widget(documentForm.typeDoc, { 'attr':  {
                         'rows': '1',
                         'class': 'form-control',
-                        'placeholder': 'Type du ducument'
+                        'placeholder': 'Type du document'
                     }}) }}
                 </div>
             </div>
@@ -104,7 +104,7 @@
                     {{ form_widget(documentForm.tag, { 'attr':  {
                         'rows': '1',
                         'class': 'form-control',
-                        'placeholder': 'Tag du ducument'
+                        'placeholder': 'Tag du document'
                     }}) }}
                 </div>
             </div>
@@ -116,7 +116,8 @@
             {{ form_widget(documentForm.resume, { 'attr':  {
                 'rows': '4',
                 'class': 'form-control',
-                'placeholder': 'Resumé du ducument'
+                'placeholder': 'Resumé du document',
+                'style' : 'resize : none'
             }}) }}
         </div>
         {{ form_row(documentForm.idUtilisateurFkDocument) }}
