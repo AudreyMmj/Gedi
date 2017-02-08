@@ -19,12 +19,19 @@ class DocumentService
     private $em;
 
     /**
+     * @var FileService
+     */
+    private $fs;
+
+    /**
      * DocumentService constructor.
      * @param EntityManager $entityManager
+     * @param FileService $fileService
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, FileService $fileService)
     {
         $this->em = $entityManager;
+        $this->fs = $fileService;
     }
 
     /**
@@ -33,12 +40,16 @@ class DocumentService
      * @return Document
      */
     public function create($sel)
-    {//MAJ
+    {
         $objet = new Document();
         $objet->setNom($sel[1]['value']);
         $objet->setTypeDoc($sel[2]['value']);
         $objet->setTag($sel[3]['value']);
         $objet->setResume($sel[4]['value']);
+        $utilisateur = $this->em->find('GediBaseBundle:Utilisateur', $sel[5]['value']);
+        $objet->setIdUtilisateurFkDocument($utilisateur);
+        $fileName = $this->fs->upload($sel[6]['value']);
+        $objet->setFichier($fileName);
         $this->em->persist($objet);
         $this->em->flush();
         return $objet;
