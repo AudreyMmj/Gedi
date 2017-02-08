@@ -25,12 +25,10 @@
         <th data-field="id" data-visible="false">Id</th>
         <th data-field="nom" data-sortable="true">Nom du document</th>
         <th data-field="type" data-sortable="true">Type</th>
-        <th data-field="tag" data-sortable="true">Tag</th>
         <th data-field="datec" data-sortable="true">Date de création</th>
         <th data-field="datem" data-sortable="true">Date de modification</th>
         <th data-field="projet" data-sortable="true">Projet</th>
         <th data-field="propio" data-sortable="true">Propriétaire</th>
-        <th data-field="shared" data-align="center">Partagé</th>
         <th data-field="ctrl" data-align="center">Actions</th>
     </tr>
     </thead>
@@ -42,15 +40,10 @@
                 <td>{{ document.idDocument }}</td>
                 <td>{{ document.nom }}</td>
                 <td>{{ document.typeDoc }}</td>
-                <td>{{ document.tag }}</td>
                 <td>{{ document.dateCreation|date('Y-m-d H:i:s') }}</td>
                 <td>{{ document.dateModification|date('Y-m-d H:i:s') }}</td>
                 <td>{{ document.idProjetFkDocument.nom }}</td>
                 <td>{{ document.idUtilisateurFkDocument.nom }} {{ document.idUtilisateurFkDocument.prenom }}</td>
-                <td data-align="center">
-                    {# mettre la condition : si le document est partagé, mettre le drapeau#}
-                    <span class="glyphicon glyphicon-flag" style="color:blue"></span>
-                </td>
                 <td data-align="center">
                     <span data-toggle="tooltip" data-placement="bottom" title="Editer le document">
                     <button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"
@@ -121,6 +114,7 @@
             }}) }}
         </div>
         {{ form_row(documentForm.idUtilisateurFkDocument) }}
+        {{ form_errors(documentForm.fichier) }}
     </div>
     <div class="panel panel-info assign-user">
         <div class="panel-heading">
@@ -138,7 +132,12 @@
     <div class="modal-footer">
         <div class="form-group">
             <label class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span>
-                Uploader <input type="file" style="display: none">
+                Uploader
+                {{ form_widget(documentForm.fichier, { 'attr':  {
+                    'rows': '1',
+                    'class': 'form-control',
+                    'style': 'display: none'
+                }}) }}
             </label>
             <input type="submit" class="btn btn-success bouton-submit-admin-entity"/>
             <button type="button" class="btn btn-danger bouton-dismiss-entity" data-dismiss="modal">Annuler</button>

@@ -19,3 +19,7 @@ services:
     document.service:
         class: Gedi\BaseBundle\Services\DocumentService
         arguments: [ "@doctrine.orm.entity_manager" ]
+
+    fichier.service:
+        class: edi\BaseBundle\Services\FichierService
+        arguments: ['%fichiers_directory%']
