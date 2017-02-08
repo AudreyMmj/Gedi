@@ -299,27 +299,23 @@ class AdminController extends Controller
                     // modification
                     $objet = $this->get('document.service')->update($sel);
                 }
-//MAJ
+
                 $rows = [
                     "ck" => 'data-checkbox="true"',
-                    "id" => $objet->getIdUtilisateur(),
+                    "id" => $objet->getIdDocument(),
                     "nom" => $objet->getNom(),
-                    "prenom" => $objet->getPrenom(),
-                    "login" => $objet->getUsername(),
+                    "type" => $objet->getTypeDoc(),
                     "datec" => date_format($objet->getDateCreation(), 'Y-m-d H:i:s'),
                     "datem" => date_format($objet->getDateModification(), 'Y-m-d H:i:s'),
-                    "actif" => (($objet->getActif() == false) ? "" : "1"),
-                    "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Accéder à l\'espace utilisateur">' .
-                        '<button type="button" class="btn btn-default btn-primary round-button">' .
-                        '<span class="glyphicon glyphicon-dashboard"></span></button></span>' .
-                        '<span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche utilisateur">' .
+                    "projet" => $objet->getidProjetFkDocument()->getNom(),
+                    "propio" => $objet->getIdUtilisateurFkDocument()->getNom() . " " . $objet->getIdUtilisateurFkDocument()->getPrenom(),
+                    "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Editer le document">' .
                         '<button type="button" class="btn btn-default btn-warning round-button" data-toggle="modal"' .
-                        'data-target="#popup-add" onclick="edit(\'{&quot;idUtilisateur&quot;:' . $objet->getIdUtilisateur() .
-                        ',&quot;username&quot;:&quot;' . $objet->getUsername() .
-                        '&quot;,&quot;password&quot;:&quot;' . $objet->getPassword() .
-                        '&quot;,&quot;nom&quot;:&quot;' . $objet->getNom() .
-                        '&quot;,&quot;prenom&quot;:&quot;' . $objet->getPrenom() .
-                        '&quot;,&quot;actif&quot;:' . (($objet->getActif() == false) ? "false" : "true") . '}\');">' .
+                        'data-target="#popup-add" onclick="edit(\'{&quot;idDocument&quot;:' . $objet->getIdDocument() .
+                        ',&quot;nom&quot;:&quot;' . $objet->getNom() .
+                        '&quot;,&quot;typeDoc&quot;:&quot;' . $objet->getTypeDoc() .
+                        '&quot;,&quot;tag&quot;:&quot;' . $objet->getTag() .
+                        '&quot;,&quot;resume&quot;:&quot;' . $objet->getResume() . '}\');">' .
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
 

@@ -72,12 +72,11 @@ class Document
     private $resume;
 
     /**
-     * Chemin du document
-     * @var string
+     * Fichier du document
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=false)
      */
-    private $path = '/var/www/html/gedi/';
+    private $fichier;
 
     /**
      * Projet du document
@@ -283,27 +282,27 @@ class Document
     }
 
     /**
-     * Set path
+     * Set fichier
      *
-     * @param string $path
+     * @param string $fichier
      *
      * @return Document
      */
-    public function setPath($path)
+    public function setFichier($fichier)
     {
-        $this->path = $path;
+        $this->fichier = $fichier;
 
         return $this;
     }
 
     /**
-     * Get path
+     * Get fichier
      *
      * @return string
      */
-    public function getPath()
+    public function getFichier()
     {
-        return $this->path;
+        return $this->fichier;
     }
 
     /**
@@ -433,8 +432,7 @@ class Document
             "nom" => $this->nom,
             "typeDoc" => $this->typeDoc,
             "tag" => $this->tag,
-            "resume" => $this->resume,
-            "proprietaire" => $this->idUtilisateurFkDocument
+            "resume" => $this->resume
         );
         return $array;
     }
