@@ -206,9 +206,6 @@ class FrameworkExtension extends Extension
             'Symfony\\Component\\EventDispatcher\\Event',
             'Symfony\\Component\\EventDispatcher\\ContainerAwareEventDispatcher',
 
-            'Symfony\\Component\\HttpFoundation\\Response',
-            'Symfony\\Component\\HttpFoundation\\ResponseHeaderBag',
-
             'Symfony\\Component\\HttpKernel\\EventListener\\ResponseListener',
             'Symfony\\Component\\HttpKernel\\EventListener\\RouterListener',
             'Symfony\\Component\\HttpKernel\\Bundle\\Bundle',
@@ -408,13 +405,13 @@ class FrameworkExtension extends Extension
             $type = $workflow['type'];
 
             $transitions = array();
-            foreach ($workflow['transitions'] as $transitionName => $transition) {
+            foreach ($workflow['transitions'] as $transition) {
                 if ($type === 'workflow') {
-                    $transitions[] = new Definition(Workflow\Transition::class, array($transitionName, $transition['from'], $transition['to']));
+                    $transitions[] = new Definition(Workflow\Transition::class, array($transition['name'], $transition['from'], $transition['to']));
                 } elseif ($type === 'state_machine') {
                     foreach ($transition['from'] as $from) {
                         foreach ($transition['to'] as $to) {
-                            $transitions[] = new Definition(Workflow\Transition::class, array($transitionName, $from, $to));
+                            $transitions[] = new Definition(Workflow\Transition::class, array($transition['name'], $from, $to));
                         }
                     }
                 }
@@ -845,12 +842,11 @@ class FrameworkExtension extends Extension
             $dirs[] = dirname(dirname($r->getFileName())).'/Resources/translations';
         }
         $rootDir = $container->getParameter('kernel.root_dir');
-        foreach ($container->getParameter('kernel.bundles') as $bundle => $class) {
-            $reflection = new \ReflectionClass($class);
-            if (is_dir($dir = dirname($reflection->getFileName()).'/Resources/translations')) {
+        foreach ($container->getParameter('kernel.bundles_metadata') as $name => $bundle) {
+            if (is_dir($dir = $bundle['path'].'/Resources/translations')) {
                 $dirs[] = $dir;
             }
-            if (is_dir($dir = $rootDir.sprintf('/Resources/%s/translations', $bundle))) {
+            if (is_dir($dir = $rootDir.sprintf('/Resources/%s/translations', $name))) {
                 $dirs[] = $dir;
             }
         }
@@ -913,6 +909,10 @@ class FrameworkExtension extends Extension
             return;
         }
 
+        if (!class_exists('Symfony\Component\Validator\Validation')) {
+            throw new LogicException('Validation support cannot be enabled as the Validator component is not installed.');
+        }
+
         $loader->load('validator.xml');
 
         $validatorBuilder = $container->getDefinition('validator.builder');
@@ -969,11 +969,8 @@ class FrameworkExtension extends Extension
             $container->addResource(new FileResource($files[0][0]));
         }
 
-        $bundles = $container->getParameter('kernel.bundles');
-        foreach ($bundles as $bundle) {
-            $reflection = new \ReflectionClass($bundle);
-            $dirname = dirname($reflection->getFileName());
-
+        foreach ($container->getParameter('kernel.bundles_metadata') as $bundle) {
+            $dirname = $bundle['path'];
             if (is_file($file = $dirname.'/Resources/config/validation.xml')) {
                 $files[0][] = $file;
                 $container->addResource(new FileResource($file));
@@ -1046,7 +1043,8 @@ class FrameworkExtension extends Extension
                 ->replaceArgument(2, $config['debug'])
                 ->addAutowiringType(Reader::class)
             ;
-            $container->setAlias('annotation_reader', 'annotations.cached_reader');
+        } else {
+            $container->removeDefinition('annotations.cached_reader');
         }
     }
 
@@ -1146,10 +1144,8 @@ class FrameworkExtension extends Extension
             $serializerLoaders[] = $annotationLoader;
         }
 
-        $bundles = $container->getParameter('kernel.bundles');
-        foreach ($bundles as $bundle) {
-            $reflection = new \ReflectionClass($bundle);
-            $dirname = dirname($reflection->getFileName());
+        foreach ($container->getParameter('kernel.bundles_metadata') as $bundle) {
+            $dirname = $bundle['path'];
 
             if (is_file($file = $dirname.'/Resources/config/serialization.xml')) {
                 $definition = new Definition('Symfony\Component\Serializer\Mapping\Loader\XmlFileLoader', array($file));

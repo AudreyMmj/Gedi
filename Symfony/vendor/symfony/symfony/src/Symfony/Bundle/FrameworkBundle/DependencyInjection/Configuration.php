@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\FrameworkBundle\DependencyInjection;
 
+use Doctrine\Common\Annotations\Annotation;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -295,11 +296,33 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->arrayNode('transitions')
-                                ->useAttributeAsKey('name')
+                                ->beforeNormalization()
+                                    ->always()
+                                    ->then(function ($transitions) {
+                                        // It's an indexed array, we let the validation occurs
+                                        if (isset($transitions[0])) {
+                                            return $transitions;
+                                        }
+
+                                        foreach ($transitions as $name => $transition) {
+                                            if (array_key_exists('name', $transition)) {
+                                                continue;
+                                            }
+                                            $transition['name'] = $name;
+                                            $transitions[$name] = $transition;
+                                        }
+
+                                        return $transitions;
+                                    })
+                                ->end()
                                 ->isRequired()
                                 ->requiresAtLeastOneElement()
                                 ->prototype('array')
                                     ->children()
+                                        ->scalarNode('name')
+                                            ->isRequired()
+                                            ->cannotBeEmpty()
+                                        ->end()
                                         ->arrayNode('from')
                                             ->beforeNormalization()
                                                 ->ifString()
@@ -602,7 +625,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('annotations')
                     ->info('annotation configuration')
-                    ->canBeDisabled()
+                    ->{class_exists(Annotation::class) ? 'canBeDisabled' : 'canBeEnabled'}()
                     ->children()
                         ->scalarNode('cache')->defaultValue('php_array')->end()
                         ->scalarNode('file_cache_dir')->defaultValue('%kernel.cache_dir%/annotations')->end()
