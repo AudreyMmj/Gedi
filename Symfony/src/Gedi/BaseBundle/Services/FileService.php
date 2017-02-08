@@ -16,7 +16,7 @@ class FileService
 
     public function upload(UploadedFile $file)
     {
-        $fileName = md5(uniqid()).'.'.$file->guessExtension();
+        $fileName = md5(uniqid()) . '.' . $file->guessExtension();
         $file->move($this->targetDir, $fileName);
         return $fileName;
     }
