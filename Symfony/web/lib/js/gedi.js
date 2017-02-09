@@ -353,6 +353,7 @@ $(function () {
     // vide le formulaire de son contenu
     $(".bouton-dismiss-entity").click(function () {
         $('form').trigger("reset");
+        $('#gedi_basebundle_utilisateur_actif').bootstrapToggle('off');
         $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
         $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-default)');
         logins = null;
@@ -362,6 +363,7 @@ $(function () {
     // vide le formulaire de son contenu
     $(".bouton-admin-popup-add").click(function () {
         $('form').trigger("reset");
+        $('#gedi_basebundle_utilisateur_actif').bootstrapToggle('off');
         // modification du popup ajout / edition
         $('#popup-admin-add-titre').html('Créer un ' + nom);
         var $bsae = $('.bouton-submit-admin-entity');

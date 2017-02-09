@@ -6,7 +6,7 @@ parameters:
 services:
     utilisateur.service:
         class: Gedi\BaseBundle\Services\UtilisateurService
-        arguments: [ "@doctrine.orm.entity_manager", "@security.encoder_factory" ]
+        arguments: [ "@doctrine.orm.entity_manager", "@security.encoder_factory", '%fichiers_directory%' ]
 
     groupe.service:
         class: Gedi\BaseBundle\Services\GroupeService
@@ -14,7 +14,7 @@ services:
 
     projet.service:
         class: Gedi\BaseBundle\Services\ProjetService
-        arguments: [ "@doctrine.orm.entity_manager" ]
+        arguments: [ "@doctrine.orm.entity_manager", '%fichiers_directory%' ]
 
     document.service:
         class: Gedi\BaseBundle\Services\DocumentService

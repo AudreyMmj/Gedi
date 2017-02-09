@@ -4,6 +4,7 @@ namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Gedi\BaseBundle\Entity\Projet;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -19,12 +20,25 @@ class ProjetService
     private $em;
 
     /**
+     * @var Filesystem
+     */
+    private $fs;
+
+    /**
+     * @var string
+     */
+    private $targetDir;
+
+    /**
      * ProjetService constructor.
      * @param EntityManager $entityManager
+     * @param $targetDir
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, $targetDir)
     {
         $this->em = $entityManager;
+        $this->targetDir = $targetDir;
+        $this->fs = new Filesystem();
     }
 
     /**
@@ -38,8 +52,10 @@ class ProjetService
         $objet->setNom($sel[1]['value']);
         $utilisateur = $this->em->find('GediBaseBundle:Utilisateur', $sel[2]['value']);
         $objet->setIdUtilisateurFkProjet($utilisateur);
+        $objet->setPath($objet->getIdUtilisateurFkProjet()->getIdUtilisateur() . "/" . $objet->getNom());
         $this->em->persist($objet);
         $this->em->flush();
+        $this->fs->mkdir($this->targetDir . $objet->getPath(), 0777);
         return $objet;
     }
 
@@ -75,6 +91,7 @@ class ProjetService
     {
         for ($i = 0; $i <= count($sel) - 1; $i++) {
             $toDel = $this->em->find('GediBaseBundle:Projet', $sel[$i]['id']);
+            $this->fs->remove($this->targetDir . $toDel->getPath());
             $this->em->remove($toDel);
         }
         $this->em->flush();
