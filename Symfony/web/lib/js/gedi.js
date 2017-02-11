@@ -30,7 +30,10 @@ $(document).ready(function () {
     }
 
     //bouton de contact
-    if (window.location.href.indexOf("home_user" && "account_user") > -1) {
+    if (window.location.href.indexOf("account_user") > -1) {
+        showNotifyRight('<strong>' + 'Contactez-nous' +
+            '</strong>', 'glyphicon glyphicon-comment', 'success');
+    } else if (window.location.href.indexOf("home_user" || "recent_user" || "shared_user") > -1) {
         showNotifyRight('<strong>' + 'Contactez-nous' +
             '</strong>', 'glyphicon glyphicon-comment', 'success');
     }
