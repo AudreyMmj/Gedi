@@ -28,8 +28,12 @@ $(document).ready(function () {
             '</strong>', 'glyphicon glyphicon-info-sign', 'info');
         // }
     }
-    showNotifyRight('<strong>' + 'Contactez-nous' +
-        '</strong>', 'glyphicon glyphicon-comment', 'success');
+
+    //bouton de contact
+    if (window.location.href.indexOf("home_user" && "account_user") > -1) {
+        showNotifyRight('<strong>' + 'Contactez-nous' +
+            '</strong>', 'glyphicon glyphicon-comment', 'success');
+    }
 
     updateNbEntity();
     activeDefault();
