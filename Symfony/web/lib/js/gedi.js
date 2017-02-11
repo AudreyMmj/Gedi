@@ -120,9 +120,9 @@ function showNotifyRight(texte, icon, type) {
             message: texte
         }, {
             type: type,
-            animate: {
-                enter: 'animated bounceInRight'
-            }
+            autoHide: false,
+            position: 'right middle',
+            showAnimation: 'slideRight'
         });
     }
 }
