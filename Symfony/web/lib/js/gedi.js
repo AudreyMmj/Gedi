@@ -28,6 +28,9 @@ $(document).ready(function () {
             '</strong>', 'glyphicon glyphicon-info-sign', 'info');
         // }
     }
+    showNotifyRight('<strong>' + 'Contactez-nous' +
+        '</strong>', 'glyphicon glyphicon-comment', 'success');
+
     updateNbEntity();
     activeDefault();
 });
@@ -100,6 +103,21 @@ function showNotify(texte, icon, type) {
             animate: {
                 enter: 'animated bounceInDown',
                 exit: 'animated bounceOutUp'
+            }
+        });
+    }
+}
+
+//fonction d'affichage de pop-up sur la droite
+function showNotifyRight(texte, icon, type) {
+    if (texte.length > 1) {
+        $.notify({
+            icon: icon,
+            message: texte
+        }, {
+            type: type,
+            animate: {
+                enter: 'animated bounceInRight'
             }
         });
     }
