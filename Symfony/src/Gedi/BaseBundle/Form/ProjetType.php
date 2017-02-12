@@ -18,6 +18,7 @@ class ProjetType extends AbstractType
         $builder->add('idProjet', HiddenType::class);
         $builder->add('nom', TextType::class);
         $builder->add('idUtilisateurFkProjet', HiddenType::class);
+        $builder->add('parent', HiddenType::class);
     }
 
     /**

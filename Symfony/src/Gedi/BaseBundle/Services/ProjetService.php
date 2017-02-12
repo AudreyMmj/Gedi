@@ -3,9 +3,10 @@
 namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Gedi\BaseBundle\Entity\Projet;
+use Gedi\BaseBundle\Resources\Enum\BaseEnum;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Service permettant de manipuler les projets
@@ -85,7 +86,7 @@ class ProjetService
     /**
      * Supprime un ou plusieurs projets
      * @param $sel
-     * @return JsonResponse
+     * @return string
      */
     public function delete($sel)
     {
@@ -95,9 +96,7 @@ class ProjetService
             $this->em->remove($toDel);
         }
         $this->em->flush();
-        $response = new JsonResponse();
-        $response->setData(array('reponse' => "OK"));
-        return $response;
+        return "OK";
     }
 
     /**
@@ -105,15 +104,20 @@ class ProjetService
      * @param $sel
      * @param $childType
      * @return array
+     * @throws Exception
      */
     public function getChildren($sel, $childType)
     {
         $objet = $this->em->find('GediBaseBundle:Projet', $sel);
         $rows = [];
-        if ($childType == "documents") {
-            foreach ($objet->getIdProjetFkDocument() as $child) {
-                array_push($rows, $child->getNom() . " " . $child->getTypeDoc() . " - " . $child->getTag());
-            }
+        switch ($childType) {
+            case BaseEnum::DOCUMENT:
+                foreach ($objet->getIdProjetFkDocument() as $child) {
+                    array_push($rows, $child->getNom() . " " . $child->getTypeDoc() . " - " . $child->getTag());
+                }
+                break;
+            default:
+                throw new Exception('ChildType n\'est pas défini');
         }
         return $rows;
     }
