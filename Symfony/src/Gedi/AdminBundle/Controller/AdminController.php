@@ -7,6 +7,7 @@ use Gedi\BaseBundle\Entity\Document;
 use Gedi\BaseBundle\Entity\Groupe;
 use Gedi\BaseBundle\Entity\Projet;
 use Gedi\BaseBundle\Entity\Utilisateur;
+use Gedi\BaseBundle\Resources\Enum\BaseEnum;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,22 +58,24 @@ class AdminController extends Controller
             if ($sel == null || $sel == "") {
                 throw new Exception('La selection est nulle');
             }
+            $rows = [];
             $response = new JsonResponse();
 
-            if ($_POST['typeaction'] == "supprimé") {
-                // suppression
-                $response = $this->get('utilisateur.service')->delete($sel);
-
-            } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
-
-                if ($_POST['typeaction'] == "enregistré") {
-                    // création
+            switch ($_POST['typeaction']) {
+                case BaseEnum::SUPPRESSION:
+                    $rows = $this->get('utilisateur.service')->delete($sel);
+                    break;
+                case BaseEnum::ENREGISTREMENT:
                     $objet = $this->get('utilisateur.service')->create($sel);
-                } else if ($_POST['typeaction'] == "modifié") {
-                    // modification
+                    break;
+                case BaseEnum::MODIFICATION:
                     $objet = $this->get('utilisateur.service')->update($sel);
-                }
+                    break;
+                default:
+                    throw new Exception('Typeaction n\'est pas reconnu');
+            }
 
+            if ($_POST['typeaction'] == BaseEnum::ENREGISTREMENT || $_POST['typeaction'] == BaseEnum::MODIFICATION) {
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdUtilisateur(),
@@ -95,12 +98,8 @@ class AdminController extends Controller
                         '&quot;,&quot;actif&quot;:' . (($objet->getActif() == false) ? "false" : "true") . '}\');">' .
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
-
-                $response->setData(array('reponse' => (array)$rows));
-
-            } else {
-                throw new Exception('typeaction n\'est pas défini');
             }
+            $response->setData(array('reponse' => (array)$rows));
             return $response;
         }
 
@@ -132,22 +131,40 @@ class AdminController extends Controller
             if ($sel == null || $sel == "") {
                 throw new Exception('La selection est nulle');
             }
-            $rows = null;
+            $rows = [];
             $response = new JsonResponse();
 
-            if ($_POST['typeaction'] == "supprimé") {
-                // suppression
-                $response = $this->get('groupe.service')->delete($sel);
-
-            } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
-                if ($_POST['typeaction'] == "enregistré") {
-                    // création
+            switch ($_POST['typeaction']) {
+                case BaseEnum::SUPPRESSION:
+                    $rows = $this->get('groupe.service')->delete($sel);
+                    break;
+                case BaseEnum::ENREGISTREMENT:
                     $objet = $this->get('groupe.service')->create($sel);
-                } else if ($_POST['typeaction'] == "modifié") {
-                    // modification
+                    break;
+                case BaseEnum::MODIFICATION:
                     $objet = $this->get('groupe.service')->update($sel);
-                }
+                    break;
+                case BaseEnum::UTILISATEUR:
+                    $tmp = $this->get('groupe.service')->getChildren($sel, $_POST['typeaction']);
 
+                    if (sizeof($tmp) > 0) {
+                        for ($i = 0; $i < sizeof($tmp); $i++) {
+                            if ($i % 2 == 0) {
+                                array_push($rows, '<li class="list-group-item"' .
+                                    'style="background-color: #f9f9f9">' . $tmp[$i] . '</li>');
+                            } else {
+                                array_push($rows, '<li class="list-group-item">' . $tmp[$i] . '</li>');
+                            }
+                        }
+                    } else {
+                        array_push($rows, '<li class="list-group-item">... vide</li>');
+                    }
+                    break;
+                default:
+                    throw new Exception('Typeaction n\'est pas reconnu');
+            }
+
+            if ($_POST['typeaction'] == BaseEnum::ENREGISTREMENT || $_POST['typeaction'] == BaseEnum::MODIFICATION) {
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdGroupe(),
@@ -166,14 +183,8 @@ class AdminController extends Controller
                         ',&quot;nom&quot;:&quot;' . $objet->getNom() . '&quot;}\');">' .
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
-                $response->setData(array('reponse' => (array)$rows));
-
-            } else if ($_POST['typeaction'] == "children") {
-                $rows = $this->get('groupe.service')->getChildren($sel, "membres");
-                $response->setData(array('reponse' => (array)$rows));
-            } else {
-                throw new Exception('typeaction n\'est pas défini');
             }
+            $response->setData(array('reponse' => (array)$rows));
             return $response;
         }
 
@@ -208,22 +219,58 @@ class AdminController extends Controller
             if ($sel == null || $sel == "") {
                 throw new Exception('La selection est nulle');
             }
-            $rows = null;
+            $rows = [];
             $response = new JsonResponse();
 
-            if ($_POST['typeaction'] == "supprimé") {
-                // suppression
-                $response = $this->get('projet.service')->delete($sel);
-
-            } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
-                if ($_POST['typeaction'] == "enregistré") {
-                    // création
+            switch ($_POST['typeaction']) {
+                case BaseEnum::SUPPRESSION:
+                    $rows = $this->get('projet.service')->delete($sel);
+                    break;
+                case BaseEnum::ENREGISTREMENT:
                     $objet = $this->get('projet.service')->create($sel);
-                } else if ($_POST['typeaction'] == "modifié") {
-                    // modification
+                    break;
+                case BaseEnum::MODIFICATION:
                     $objet = $this->get('projet.service')->update($sel);
-                }
+                    break;
+                case BaseEnum::DOCUMENT:
+                    $tmp = $this->get('projet.service')->getChildren($sel, $_POST['typeaction']);
 
+                    if (sizeof($tmp) > 0) {
+                        for ($i = 0; $i < sizeof($tmp); $i++) {
+                            if ($i % 2 == 0) {
+                                array_push($rows, '<li class="list-group-item"' .
+                                    'style="background-color: #f9f9f9">' . $tmp[$i] . '</li>');
+                            } else {
+                                array_push($rows, '<li class="list-group-item">' . $tmp[$i] . '</li>');
+                            }
+                        }
+                    } else {
+                        array_push($rows, '<li class="list-group-item">... vide</li>');
+                    }
+                    break;
+                case BaseEnum::PROJET:
+                    $tmp = $this->get('utilisateur.service')->getChildren($sel, $_POST['typeaction']);
+
+                    if (sizeof($tmp) > 0) {
+                        foreach ($tmp as $key => $value) {
+                            if ($key % 2 == 0) {
+                                array_push($rows, '<a href="#" onclick="addProject(' . $key .
+                                    ')" class="list-group-item list-activable-item"' .
+                                    'style="background-color: #f9f9f9">' . $value . '</a>');
+                            } else {
+                                array_push($rows, '<a href="#" onclick="addProject(' . $key .
+                                    ')" class="list-group-item list-activable-item">' . $value . '</a>');
+                            }
+                        }
+                    } else {
+                        array_push($rows, '<a href="#" class="list-group-item">... vide</a>');
+                    }
+                    break;
+                default:
+                    throw new Exception('Typeaction n\'est pas reconnu');
+            }
+
+            if ($_POST['typeaction'] == BaseEnum::ENREGISTREMENT || $_POST['typeaction'] == BaseEnum::MODIFICATION) {
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdProjet(),
@@ -242,14 +289,8 @@ class AdminController extends Controller
                         ',&quot;nom&quot;:&quot;' . $objet->getNom() . '&quot;}\');">' .
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
-                $response->setData(array('reponse' => (array)$rows));
-
-            } else if ($_POST['typeaction'] == "children") {
-                $rows = $this->get('projet.service')->getChildren($sel, "documents");
-                $response->setData(array('reponse' => (array)$rows));
-            } else {
-                throw new Exception('typeaction n\'est pas défini');
             }
+            $response->setData(array('reponse' => (array)$rows));
             return $response;
         }
 

@@ -40,7 +40,7 @@
                 <td data-align="center">
                     <button type="button" class="btn btn-default btn-primary round-button btn-view-entity"
                             data-toggle="popover" data-placement="auto left" title="Documents du projet"
-                            data-trigger="focus" data-content="<ul id='liste-membres' class='list-group'></ul>"
+                            data-trigger="focus" data-content="<ul id='liste-children' class='list-group'></ul>"
                             data-animation="true" data-container="body" data-html="true">
                         <span class="glyphicon glyphicon-file"></span>
                     </button>
@@ -77,6 +77,7 @@
             }}) }}
         </div>
         {{ form_row(projetForm.idUtilisateurFkProjet) }}
+        {{ form_row(projetForm.parent) }}
         <br>
     </div>
     <div class="row">
@@ -88,7 +89,8 @@
                 <div class="list-group">
                     {% for utilisateur in tab_users %}
                         {% if (utilisateur.role == 'ROLE_USER' and utilisateur.actif == '1') %}
-                            <a href="#" class="list-group-item"
+                            <a id="list-activable-item-{{ utilisateur.idUtilisateur }}" href="#"
+                               class="list-group-item list-users-item list-activable-item"
                                onclick="addUser('{{ utilisateur.idUtilisateur }}');">{{ utilisateur.nom }} {{ utilisateur.prenom }}</a>
                         {% endif %}
                     {% endfor %}
@@ -100,14 +102,7 @@
                 <div class="panel-heading">
                     <h5>Définir le projet parent</h5>
                 </div>
-                <div class="list-group">
-                    {% for utilisateur in tab_users %}
-                        {% if (utilisateur.role == 'ROLE_USER' and utilisateur.actif == '1') %}
-                            <a href="#" class="list-group-item"
-                               onclick="addUser('{{ utilisateur.idUtilisateur }}');">{{ utilisateur.nom }} {{ utilisateur.prenom }}</a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+                <div id="liste-projets" class="list-group"></div>
             </div>
         </div>
     </div>
