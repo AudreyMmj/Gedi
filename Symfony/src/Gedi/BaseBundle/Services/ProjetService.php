@@ -53,7 +53,14 @@ class ProjetService
         $objet->setNom($sel[1]['value']);
         $utilisateur = $this->em->find('GediBaseBundle:Utilisateur', $sel[2]['value']);
         $objet->setIdUtilisateurFkProjet($utilisateur);
-        $objet->setPath($objet->getIdUtilisateurFkProjet()->getIdUtilisateur() . "/" . $objet->getNom());
+        if ($sel[3]['value'] != null && $sel[3]['value'] != "") {
+            $parent = $this->em->find('GediBaseBundle:Projet', $sel[3]['value']);
+            $parent->addChildren($objet);
+            $objet->setParent($parent);
+            $objet->setPath($parent->getPath() . "/" . $objet->getNom());
+        } else {
+            $objet->setPath($objet->getIdUtilisateurFkProjet()->getIdUtilisateur() . "/" . $objet->getNom());
+        }
         $this->em->persist($objet);
         $this->em->flush();
         $this->fs->mkdir($this->targetDir . $objet->getPath(), 0777);

@@ -123,6 +123,8 @@ function addUser(js_arg) {
  */
 function addProject(js_arg) {
     $('#gedi_basebundle_projet_parent').val(js_arg);
+    $('.list-activable-item').removeClass('active');
+    $('#list-activable-item-project-' + js_arg).addClass('active');
 }
 
 /*

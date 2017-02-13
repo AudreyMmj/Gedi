@@ -253,14 +253,9 @@ class AdminController extends Controller
 
                     if (sizeof($tmp) > 0) {
                         foreach ($tmp as $key => $value) {
-                            if ($key % 2 == 0) {
-                                array_push($rows, '<a href="#" onclick="addProject(' . $key .
-                                    ')" class="list-group-item list-activable-item"' .
-                                    'style="background-color: #f9f9f9">' . $value . '</a>');
-                            } else {
-                                array_push($rows, '<a href="#" onclick="addProject(' . $key .
-                                    ')" class="list-group-item list-activable-item">' . $value . '</a>');
-                            }
+                            array_push($rows, '<a id="list-activable-item-project-' . $key .
+                                '" href="#" onclick="addProject(' . $key .
+                                ')" class="list-group-item list-activable-item">' . $value . '</a>');
                         }
                     } else {
                         array_push($rows, '<a href="#" class="list-group-item">... vide</a>');
@@ -325,22 +320,24 @@ class AdminController extends Controller
             if ($sel == null || $sel == "") {
                 throw new Exception('La selection est nulle');
             }
+            $rows = [];
             $response = new JsonResponse();
 
-            if ($_POST['typeaction'] == "supprimé") {
-                // suppression
-                $response = $this->get('document.service')->delete($sel);
-
-            } else if ($_POST['typeaction'] == "enregistré" || $_POST['typeaction'] == "modifié") {
-
-                if ($_POST['typeaction'] == "enregistré") {
-                    // création
+            switch ($_POST['typeaction']) {
+                case BaseEnum::SUPPRESSION:
+                    $rows = $this->get('document.service')->delete($sel);
+                    break;
+                case BaseEnum::ENREGISTREMENT:
                     $objet = $this->get('document.service')->create($sel);
-                } else if ($_POST['typeaction'] == "modifié") {
-                    // modification
+                    break;
+                case BaseEnum::MODIFICATION:
                     $objet = $this->get('document.service')->update($sel);
-                }
+                    break;
+                default:
+                    throw new Exception('Typeaction n\'est pas reconnu');
+            }
 
+            if ($_POST['typeaction'] == BaseEnum::ENREGISTREMENT || $_POST['typeaction'] == BaseEnum::MODIFICATION) {
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdDocument(),
@@ -359,12 +356,8 @@ class AdminController extends Controller
                         '&quot;,&quot;resume&quot;:&quot;' . $objet->getResume() . '}\');">' .
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
-
-                $response->setData(array('reponse' => (array)$rows));
-
-            } else {
-                throw new Exception('typeaction n\'est pas défini');
             }
+            $response->setData(array('reponse' => (array)$rows));
             return $response;
         }
 
