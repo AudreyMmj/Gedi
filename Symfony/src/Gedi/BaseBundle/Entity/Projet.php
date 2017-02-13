@@ -303,6 +303,27 @@ class Projet
     }
 
     /**
+     * Ajouter un children
+     * @param $children
+     * @return $this
+     */
+    public function addChildren($children)
+    {
+        $this->children[] = $children;
+
+        return $this;
+    }
+
+    /**
+     * Supprimer un children
+     * @param $children
+     */
+    public function removeChildren($children)
+    {
+        $this->children->removeElement($children);
+    }
+
+    /**
      * @return mixed
      */
     public function getParent()
