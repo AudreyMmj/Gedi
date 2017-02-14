@@ -116,16 +116,12 @@ class ProjetService
     public function getChildren($sel, $childType)
     {
         $objet = $this->em->find('GediBaseBundle:Projet', $sel);
-        $rows = [];
         switch ($childType) {
             case BaseEnum::DOCUMENT:
-                foreach ($objet->getIdProjetFkDocument() as $child) {
-                    array_push($rows, $child->getNom() . " " . $child->getTypeDoc() . " - " . $child->getTag());
-                }
+                return $objet->getIdProjetFkDocument();
                 break;
             default:
                 throw new Exception('ChildType n\'est pas défini');
         }
-        return $rows;
     }
 }

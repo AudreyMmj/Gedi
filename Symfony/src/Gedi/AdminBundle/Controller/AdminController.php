@@ -148,13 +148,9 @@ class AdminController extends Controller
                     $tmp = $this->get('groupe.service')->getChildren($sel, $_POST['typeaction']);
 
                     if (sizeof($tmp) > 0) {
-                        for ($i = 0; $i < sizeof($tmp); $i++) {
-                            if ($i % 2 == 0) {
-                                array_push($rows, '<li class="list-group-item"' .
-                                    'style="background-color: #f9f9f9">' . $tmp[$i] . '</li>');
-                            } else {
-                                array_push($rows, '<li class="list-group-item">' . $tmp[$i] . '</li>');
-                            }
+                        foreach ($tmp as $child) {
+                            array_push($rows, '<li class="list-group-item">' . $child->getNom() . " " .
+                                $child->getPrenom() . " - " . $child->getUsername() . '</li>');
                         }
                     } else {
                         array_push($rows, '<li class="list-group-item">... vide</li>');
@@ -236,13 +232,9 @@ class AdminController extends Controller
                     $tmp = $this->get('projet.service')->getChildren($sel, $_POST['typeaction']);
 
                     if (sizeof($tmp) > 0) {
-                        for ($i = 0; $i < sizeof($tmp); $i++) {
-                            if ($i % 2 == 0) {
-                                array_push($rows, '<li class="list-group-item"' .
-                                    'style="background-color: #f9f9f9">' . $tmp[$i] . '</li>');
-                            } else {
-                                array_push($rows, '<li class="list-group-item">' . $tmp[$i] . '</li>');
-                            }
+                        foreach ($tmp as $child) {
+                            array_push($rows, '<li class="list-group-item">' . $child->getNom() . " " .
+                                $child->getTypeDoc() . " - " . $child->getTag() . '</li>');
                         }
                     } else {
                         array_push($rows, '<li class="list-group-item">... vide</li>');
@@ -252,10 +244,10 @@ class AdminController extends Controller
                     $tmp = $this->get('utilisateur.service')->getChildren($sel, $_POST['typeaction']);
 
                     if (sizeof($tmp) > 0) {
-                        foreach ($tmp as $key => $value) {
-                            array_push($rows, '<a id="list-activable-item-project-' . $key .
-                                '" href="#" onclick="addProject(' . $key .
-                                ')" class="list-group-item list-activable-item">' . $value . '</a>');
+                        foreach ($tmp as $child) {
+                            array_push($rows, '<a id="list-activable-item-project-' . $child->getidProjet() .
+                                '" href="#" onclick="addProject(' . $child->getidProjet() .
+                                ')" class="list-group-item list-activable-item">' . $child->getNom() . '</a>');
                         }
                     } else {
                         array_push($rows, '<a href="#" class="list-group-item">... vide</a>');

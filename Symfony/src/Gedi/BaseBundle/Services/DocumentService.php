@@ -4,7 +4,6 @@ namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Gedi\BaseBundle\Entity\Document;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Service permettant de manipuler les documents
@@ -84,7 +83,7 @@ class DocumentService
     /**
      * Supprime un ou plusieurs documents
      * @param $sel
-     * @return JsonResponse
+     * @return string
      */
     public function delete($sel)
     {
@@ -93,8 +92,6 @@ class DocumentService
             $this->em->remove($toDel);
         }
         $this->em->flush();
-        $response = new JsonResponse();
-        $response->setData(array('reponse' => "OK"));
-        return $response;
+        return "OK";
     }
 }
