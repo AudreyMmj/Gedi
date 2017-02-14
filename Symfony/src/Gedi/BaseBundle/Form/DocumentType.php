@@ -23,6 +23,7 @@ class DocumentType extends AbstractType
         $builder->add('tag', TextType::class);
         $builder->add('resume', TextareaType::class);
         $builder->add('idUtilisateurFkDocument', HiddenType::class);
+        $builder->add('idProjetFkDocument', HiddenType::class);
         $builder->add('fichier', FileType::class);
     }
 

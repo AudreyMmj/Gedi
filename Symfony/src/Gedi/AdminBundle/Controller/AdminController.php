@@ -325,6 +325,19 @@ class AdminController extends Controller
                 case BaseEnum::MODIFICATION:
                     $objet = $this->get('document.service')->update($sel);
                     break;
+                case BaseEnum::PROJET:
+                    $tmp = $this->get('utilisateur.service')->getChildren($sel, $_POST['typeaction']);
+
+                    if (sizeof($tmp) > 0) {
+                        foreach ($tmp as $child) {
+                            array_push($rows, '<a id="list-activable-item-project-' . $child->getidProjet() .
+                                '" href="#" onclick="addProject(' . $child->getidProjet() .
+                                ')" class="list-group-item list-activable-item">' . $child->getNom() . '</a>');
+                        }
+                    } else {
+                        array_push($rows, '<a href="#" class="list-group-item">... vide</a>');
+                    }
+                    break;
                 default:
                     throw new Exception('Typeaction n\'est pas reconnu');
             }

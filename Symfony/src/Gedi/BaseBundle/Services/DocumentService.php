@@ -46,7 +46,11 @@ class DocumentService
         $objet->setTag($sel[3]['value']);
         $objet->setResume($sel[4]['value']);
         $utilisateur = $this->em->find('GediBaseBundle:Utilisateur', $sel[5]['value']);
+        $utilisateur->addIdDocumentDu($objet);
         $objet->setIdUtilisateurFkDocument($utilisateur);
+        $projet = $this->em->find('GediBaseBundle:Projet', $sel[6]['value']);
+        $projet->setIdProjetFkDocument($objet);
+        $objet->setIdProjetFkDocument($projet);
         $fileName = $this->fs->upload($sel[6]['value']);
         $objet->setFichier($fileName);
         $this->em->persist($objet);
