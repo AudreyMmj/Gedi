@@ -94,16 +94,12 @@ class GroupeService
     public function getChildren($sel, $childType)
     {
         $objet = $this->em->find('GediBaseBundle:Groupe', $sel);
-        $rows = [];
         switch ($childType) {
             case BaseEnum::UTILISATEUR:
-                foreach ($objet->getIdUtilisateurUg() as $child) {
-                    array_push($rows, $child->getNom() . " " . $child->getPrenom() . " - " . $child->getUsername());
-                }
+                return $objet->getIdUtilisateurUg();
                 break;
             default:
                 throw new Exception('ChildType n\'est pas défini');
         }
-        return $rows;
     }
 }

@@ -136,16 +136,12 @@ class UtilisateurService
     public function getChildren($sel, $childType)
     {
         $objet = $this->em->find('GediBaseBundle:Utilisateur', $sel);
-        $rows = [];
         switch ($childType) {
             case BaseEnum::PROJET:
-                foreach ($objet->getIdUtilisateurFkProjet() as $child) {
-                    $rows[$child->getidProjet()] = $child->getNom();
-                }
+                return $objet->getIdUtilisateurFkProjet();
                 break;
             default:
                 throw new Exception('ChildType n\'est pas défini');
         }
-        return $rows;
     }
 }
