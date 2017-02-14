@@ -30,11 +30,9 @@ $(document).ready(function () {
     }
 
     //bouton de contact
-    if ((window.location.href.indexOf("home_admin") > -1) || (window.location.href.indexOf("docs_admin") > -1) || (window.location.href.indexOf("projects_admin") > -1) || (window.location.href.indexOf("groups_admin") > -1)|| (window.location.href.indexOf("users_admin") > -1) || (window.location.href.indexOf("contact") > -1))
-    {}
-    else {
-        showNotifyRight('<strong>' + 'Contactez-nous' +
-            '</strong>', 'glyphicon glyphicon-comment', 'success');
+    if (!((window.location.href.indexOf("home_admin") > -1) || (window.location.href.indexOf("docs_admin") > -1) || (window.location.href.indexOf("projects_admin") > -1) || (window.location.href.indexOf("groups_admin") > -1)|| (window.location.href.indexOf("users_admin") > -1) || (window.location.href.indexOf("contact") > -1)))
+    {
+        showNotifyRight('','../img/contact_tab.png', 'primary');
     }
 
     updateNbEntity();
@@ -109,38 +107,40 @@ function showNotify(texte, icon, type) {
             animate: {
                 enter: 'animated bounceInDown',
                 exit: 'animated bounceOutUp'
-            }
+            },
+            newest_on_top: true
         });
     }
 }
 
 //fonction d'affichage de pop-up sur la droite
 function showNotifyRight(texte, icon, type) {
-    if (texte.length > 1) {
+    //if (texte.length > 1) {
         $.notify({
             //options
             icon: icon,
             message: texte,
             // à changer plus tard
             url: 'http://localhost/Gedi/Symfony/web/contact'
-        }, {
+        },{
             //settings
             type: type,
+            icon_type: 'image',
             allow_dismiss: false,
             placement: {
-                from: "bottom",
+                from: "top",
                 align: "right"
             },
             offset: {
                 x: 0,
-                y: 0
+                y: 200
             },
             delay: 0,
             animate: {
                 enter: 'animated slideInRight'
             },
         });
-    }
+    //}
 }
 
 // =======================================================================
