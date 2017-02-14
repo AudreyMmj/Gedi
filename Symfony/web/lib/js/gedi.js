@@ -28,16 +28,6 @@ $(document).ready(function () {
             '</strong>', 'glyphicon glyphicon-info-sign', 'info');
         // }
     }
-
-    //bouton de contact
-    if (window.location.href.indexOf("account_user") > -1) {
-        showNotifyRight('<strong>' + 'Contactez-nous' +
-            '</strong>', 'glyphicon glyphicon-comment', 'success');
-    } else if (window.location.href.indexOf("home_user" || "recent_user" || "shared_user") > -1) {
-        showNotifyRight('<strong>' + 'Contactez-nous' +
-            '</strong>', 'glyphicon glyphicon-comment', 'success');
-    }
-
     updateNbEntity();
     activeDefault();
 });
@@ -111,21 +101,6 @@ function showNotify(texte, icon, type) {
                 enter: 'animated bounceInDown',
                 exit: 'animated bounceOutUp'
             }
-        });
-    }
-}
-
-//fonction d'affichage de pop-up sur la droite
-function showNotifyRight(texte, icon, type) {
-    if (texte.length > 1) {
-        $.notify({
-            icon: icon,
-            message: texte
-        }, {
-            type: type,
-            autoHide: false,
-            position: 'right middle',
-            showAnimation: 'slideRight'
         });
     }
 }
