@@ -123,6 +123,7 @@ function addUser(js_arg) {
  */
 function addProject(js_arg) {
     $('#gedi_basebundle_projet_parent').val(js_arg);
+    $('#gedi_basebundle_document_idProjetFkDocument').val(js_arg);
     $('.list-activable-item').removeClass('active');
     $('#list-activable-item-project-' + js_arg).addClass('active');
 }
@@ -193,7 +194,10 @@ function edit(js_object_arg) {
     var $bsae = $('.bouton-submit-admin-entity');
     $bsae.val('Appliquer');
     $bsae.prop('disabled', false);
-    $('.assign-user').hide();
+    $('#gedi_basebundle_document_nom').prop('disabled', false);
+    $('#gedi_basebundle_document_typeDoc').prop('disabled', false);
+    $('.assign-user').hide(); // masque le panel d'assignation d'utilisateur
+    $('#bouton-upload').hide(); // masque le bouton upload
 }
 
 /*
@@ -220,7 +224,6 @@ function validFormUtilisateur() {
     }
 
     // test si le login n'est pas déjà utilisé
-    // if (window.location.href.indexOf("users_admin") > -1) {
     if (logins != null && logins.includes(username)) {
         $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-error)');
         $('.bouton-submit-admin-entity').prop('disabled', true);
@@ -228,7 +231,6 @@ function validFormUtilisateur() {
         $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-default)');
         $('.bouton-submit-admin-entity').prop('disabled', false);
     }
-    // }
 
     // test si tous les champs sont remplis
     if (username == "" || pass1 == "" || pass2 == "" || nom == "" || prenom == "") {
@@ -353,6 +355,19 @@ $(function () {
     });
 
     /*
+     Listener sur le bouton d'upload de fichier.
+     Renseigne les champs nom de document et type.
+
+     @listens #gedi_basebundle_document_fichier
+     @fires change
+     */
+    $('#gedi_basebundle_document_fichier').change(function () {
+        var uf = document.getElementById("gedi_basebundle_document_fichier").value;
+        $('#gedi_basebundle_document_nom').val(uf.substring(uf.lastIndexOf('\\') + 1, uf.lastIndexOf('.')));
+        $('#gedi_basebundle_document_typeDoc').val(uf.substring(uf.lastIndexOf('.'), uf.length));
+    });
+
+    /*
      Listener sur le bouton supprimer du popup de suppression
      envoi la selection à supprimer au controller via ajaxSend
 
@@ -374,6 +389,8 @@ $(function () {
     $('.form-admin').submit(function (event) {
         // Eviter le comportement par défaut (soumettre le formulaire)
         event.preventDefault();
+        $('#gedi_basebundle_document_nom').prop('disabled', false);
+        $('#gedi_basebundle_document_typeDoc').prop('disabled', false);
 
         // récupération des données du formulaire
         var selection = $('form').serializeArray();
@@ -457,6 +474,9 @@ $(function () {
         var $bsae = $('.bouton-submit-admin-entity'); // récupère l'element de la classe bouton-submit-admin-entity
         $bsae.val('Créer'); // change la valeur de $bsae
         $('.assign-user').show(); // affiche le panel d'assignation d'utilisateur
+        $('#bouton-upload').show(); // affiche le bouton upload
+        $('#gedi_basebundle_document_nom').prop('disabled', true);
+        $('#gedi_basebundle_document_typeDoc').prop('disabled', true);
 
         // ne s'execute que sur la page users_admin
         // récupère tous les login pour vérifier coté client si
@@ -513,7 +533,8 @@ $(function () {
                         return 0;
                         break;
                     case types.PROJET:
-                        if (window.location.href.indexOf("projects_admin") > -1) {
+                        if (window.location.href.indexOf("projects_admin") > -1
+                            || window.location.href.indexOf("docs_admin") > -1) {
                             var $lp = $('#liste-projets');
                             $lp.empty();
                             $lp.prepend(data.reponse);
