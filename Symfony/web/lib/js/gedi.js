@@ -24,7 +24,7 @@ $(document).ready(function () {
         // if (nbNewUsers != null && nbNewUsers > 0) {
         var nbNewUsers = 3;
         showNotify('<strong>' + 'Vous avez ' + nbNewUsers +
-            ((nbNewUsers > 1) ? ' demandes' : ' demande') + 'd\'ajout' +
+            ((nbNewUsers > 1) ? ' demandes ' : ' demande') + 'd\'ajout' +
             '</strong>', 'glyphicon glyphicon-info-sign', 'info');
         // }
     }
@@ -32,7 +32,7 @@ $(document).ready(function () {
     //bouton de contact
     if (!((window.location.href.indexOf("home_admin") > -1) || (window.location.href.indexOf("docs_admin") > -1) || (window.location.href.indexOf("projects_admin") > -1) || (window.location.href.indexOf("groups_admin") > -1)|| (window.location.href.indexOf("users_admin") > -1) || (window.location.href.indexOf("contact") > -1)))
     {
-        showNotifyRight('','../img/contact_tab.png', 'primary');
+        showNotifyRight('','../img/contact_img.png', 'primary');
     }
 
     updateNbEntity();
@@ -104,6 +104,10 @@ function showNotify(texte, icon, type) {
             message: texte
         }, {
             type: type,
+            placement: {
+                from: "top",
+                align: "left"
+            },
             animate: {
                 enter: 'animated bounceInDown',
                 exit: 'animated bounceOutUp'
