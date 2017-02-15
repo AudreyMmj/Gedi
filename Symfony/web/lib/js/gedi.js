@@ -1,50 +1,17 @@
-/*
- Variable de selection d'entité
- @global {object} sel
- @var {object} sel
+/**
+ * Created by explorer on 30/12/16.
  */
-var sel;
 
-/*
- Nom de l'entité affiché sur la page
- @global {string} nom
- @var {string} nom
- */
-var nom;
+var sel; // variable de selection d'entité
+var nom; // nom de l'entité affiché sur la page
+var logins; // tableau des logins
 
-/*
- Tableau des logins
- @global {array} logins
- @var {array} logins
- */
-var logins;
-
-/*
- Enumération des types d'actions possibles sur le serveur
- @global {array} types
- @const {array} types
- */
-const types = {
-    ENREGISTREMENT: "enregistré", // demande d'enregistrement
-    MODIFICATION: "modifié", // demande de modification
-    SUPPRESSION: "supprimé", // demande de suppression
-    UTILISATEUR: "utilisateur", // demande d'optention des utilisateurs d'une entité
-    DOCUMENT: "document", // demande d'optention des documents d'une entité
-    PROJET: "projet", // demande d'optention des projets d'une entité
-    GROUPE: "groupe" // demande d'optention des groupes d'une entité
-};
-
-// ======================================================================================================
-// FONCTIONS CLIENT
-// ======================================================================================================
-
-/*
- Elements lancés au chargement de la page
- */
+// =======================================================================
+// elements lancés au chargement de la page
 $(document).ready(function () {
-    $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de la clasee bouton-desactive
+    $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de type bouton-desactive
 
-    // change la variable nom en fonction de la page courante
+    // change le texte du popup de suppression en fonction de la page
     if (window.location.href.indexOf("users_admin") > -1) {
         nom = 'utilisateur';
     } else if (window.location.href.indexOf("groups_admin") > -1) {
@@ -57,83 +24,67 @@ $(document).ready(function () {
         // if (nbNewUsers != null && nbNewUsers > 0) {
         var nbNewUsers = 3;
         showNotify('<strong>' + 'Vous avez ' + nbNewUsers +
-            ((nbNewUsers > 1) ? ' demandes' : ' demande') + 'd\'ajout' +
+            ((nbNewUsers > 1) ? ' demandes ' : ' demande') + 'd\'ajout' +
             '</strong>', 'glyphicon glyphicon-info-sign', 'info');
         // }
     }
-    updateNbEntity(); // met à jour le nombre d'entités
-    activeDefault(); // active les éléments par défaut
+
+    //bouton de contact
+    if (!((window.location.href.indexOf("home_admin") > -1) || (window.location.href.indexOf("docs_admin") > -1) || (window.location.href.indexOf("projects_admin") > -1) || (window.location.href.indexOf("groups_admin") > -1)|| (window.location.href.indexOf("users_admin") > -1) || (window.location.href.indexOf("contact") > -1)))
+    {
+        showNotifyRight('','../img/contact_img.png', 'primary');
+    }
+
+    updateNbEntity();
+    activeDefault();
 });
 
-/*
- Fonction pour activer les elements jquery
- */
+// =======================================================================
+// fonction pour activer les elements jquery
 function activeDefault() {
     $('[data-toggle="tooltip"]').tooltip(); // permet de jouer les tooltips
     $('[data-toggle="popover"]').popover(); // permet de jouer les popover
 }
 
-/*
- Fonction pour mettre à jour le nombre d'utilisateurs inactifs
- et le nombre d'entités total
- */
+// =======================================================================
+// fonction pour mettre à jour le nombre d'utilisateurs inactifs
+// et le nombre d'entités total
 function updateNbEntity() {
-    var $table = $('#table_admin'); // récupération du tableau admin
+    var $table = $('#table_admin');
 
     // ne s'execute que si on est sur la page users_admin
     if (window.location.href.indexOf("users_admin") > -1) {
         var nbInactifs = 0;
-        // récupère les utilisateurs actifs
+        // nombre d'utilisateurs actifs
         var inactifs = $.map($table.bootstrapTable('getData'), function (rows) {
             return rows.actif;
         });
         for (var i = 0; i < inactifs.length; i++) {
             if (inactifs[i] != "1") {
-                nbInactifs++; // filtre dans nbInactifs le nombre d'utilisateurs inactifs
+                nbInactifs++;
             }
         }
 
-        if (nbInactifs > 0) { // active ou désactive le toggle toggle-new-users si il y a des utilisateurs inactifs
+        if (nbInactifs > 0) {
             $('#toggle-new-users').bootstrapToggle('enable');
         } else {
             $('#toggle-new-users').bootstrapToggle('disable');
         }
-        $('#span-nb-inactifs').html(nbInactifs); // inscrit le nombre d'utilisateurs inactifs dans le span
+        $('#span-nb-inactifs').html(nbInactifs);
     }
 
-    // inscrit le nombre d'entités total dans le span
+    // nombre d'entités
     $('#span-nb-entity').html($table.bootstrapTable('getData').length);
 }
 
-/*
- Fonction pour ajouter un utilisateurs en temps que propriétaire.
- Ajoute l'id de l'entité enfant au formulaire de création
-
- @param {integer} js_arg, id de l'entité enfant
- */
+// =======================================================================
+// fonction pour ajouter un utilisateurs en temps que propriétaire
 function addUser(js_arg) {
     $('#gedi_basebundle_' + nom + '_idUtilisateurFk' + (nom.charAt(0).toUpperCase() + nom.slice(1))).val(js_arg);
 }
 
-/*
- Fonction pour ajouter un projet en temps que parent.
- Ajoute l'id de l'entité enfant au formulaire de création
-
- @param {integer} js_arg, id de l'entité enfant
- */
-function addProject(js_arg) {
-    $('#gedi_basebundle_projet_parent').val(js_arg);
-    $('#gedi_basebundle_document_idProjetFkDocument').val(js_arg);
-    $('.list-activable-item').removeClass('active');
-    $('#list-activable-item-project-' + js_arg).addClass('active');
-}
-
-/*
- Fonction pour afficher ou cacher le span du nombre d'entités sélectionnés
- des boutons de controle.
-
- @param {integer} nbSel, nombre d'éléments selectionnés
- */
+// =======================================================================
+// fonction pour afficher ou cacher le span des boutons de controle
 function hideOuShow(nbSel) {
     if (nbSel < 1) {
         $('.spanNbSel').hide();
@@ -144,13 +95,8 @@ function hideOuShow(nbSel) {
     }
 }
 
-/*
- Fonction d'affichage de popups de notification.
-
- @param {string} texte, texte à afficher
- @param {string} icon, icone bootstrap à afficher
- @param {string} type, type de notification à afficher [success, info, primary, warning, danger]
- */
+// =======================================================================
+// fonction d'affichage de popups
 function showNotify(texte, icon, type) {
     if (texte.length > 1) {
         $.notify({
@@ -158,19 +104,51 @@ function showNotify(texte, icon, type) {
             message: texte
         }, {
             type: type,
+            placement: {
+                from: "top",
+                align: "left"
+            },
             animate: {
                 enter: 'animated bounceInDown',
                 exit: 'animated bounceOutUp'
-            }
+            },
+            newest_on_top: true
         });
     }
 }
 
-/*
- Fonction d'édition d'entité. La fonction renseigne les champs du formulaire.
+//fonction d'affichage de pop-up sur la droite
+function showNotifyRight(texte, icon, type) {
+    //if (texte.length > 1) {
+        $.notify({
+            //options
+            icon: icon,
+            message: texte,
+            // à changer plus tard
+            url: 'http://localhost/Gedi/Symfony/web/contact'
+        },{
+            //settings
+            type: type,
+            icon_type: 'image',
+            allow_dismiss: false,
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            offset: {
+                x: 0,
+                y: 200
+            },
+            delay: 0,
+            animate: {
+                enter: 'animated slideInRight'
+            },
+        });
+    //}
+}
 
- @param {object | array | json} js_object_arg, infos de l'entité à mettre dans le formulaire
- */
+// =======================================================================
+// fonction d'édition d'entité
 function edit(js_object_arg) {
 
     // récupération de l'entité au format json et transformation
@@ -194,16 +172,12 @@ function edit(js_object_arg) {
     var $bsae = $('.bouton-submit-admin-entity');
     $bsae.val('Appliquer');
     $bsae.prop('disabled', false);
-    $('#gedi_basebundle_document_nom').prop('disabled', false);
-    $('#gedi_basebundle_document_typeDoc').prop('disabled', false);
-    $('.assign-user').hide(); // masque le panel d'assignation d'utilisateur
-    $('#bouton-upload').hide(); // masque le bouton upload
+    $('.assign-user').hide();
 }
 
-/*
- Fonction de vérification de formulaire, permet de valider les champs coté client.
- Cette fonction s'execute uniquement sur la page users_admin
- */
+// =======================================================================
+// fonction de vérification de formulaire
+// permet de valider les champs coté client
 function validFormUtilisateur() {
     var pass1 = document.getElementById("gedi_basebundle_utilisateur_password_first").value;
     var pass2 = document.getElementById("gedi_basebundle_utilisateur_password_second").value;
@@ -224,12 +198,14 @@ function validFormUtilisateur() {
     }
 
     // test si le login n'est pas déjà utilisé
-    if (logins != null && logins.includes(username)) {
-        $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-error)');
-        $('.bouton-submit-admin-entity').prop('disabled', true);
-    } else {
-        $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-default)');
-        $('.bouton-submit-admin-entity').prop('disabled', false);
+    if (window.location.href.indexOf("users_admin") > -1) {
+        if (logins != null && logins.includes(username)) {
+            $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-error)');
+            $('.bouton-submit-admin-entity').prop('disabled', true);
+        } else {
+            $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-default)');
+            $('.bouton-submit-admin-entity').prop('disabled', false);
+        }
     }
 
     // test si tous les champs sont remplis
@@ -243,20 +219,75 @@ function validFormUtilisateur() {
 $(function () {
     var $table = $('#table_admin');
 
-    // ======================================================================================================
-    // LISTENERS
-    // ======================================================================================================
+    // fonction d'envoi de la requete en POST et rechargement de la page actualisée
+    function ajaxSend(selection, typeAction) {
+        // console.log(selection);
+        $.ajax({
+            type: 'POST',
+            url: window.location,
+            data: {'data': selection, 'typeaction': typeAction},
+            success: function (data) {
+                if (typeAction == "children") {
+                    if (data.reponse.length > 0) {
+                        for (var i = 0; i < data.reponse.length; i++) {
+                            if (i % 2 == 0) {
+                                $('#liste-membres').prepend('<li class="list-group-item"' +
+                                    'style="background-color: #f9f9f9">' + data.reponse[i] + '</li>');
+                            } else {
+                                $('#liste-membres').prepend('<li class="list-group-item">' + data.reponse[i] + '</li>');
+                            }
+                        }
+                    } else {
+                        $('#liste-membres').prepend('<li class="list-group-item">... vide</li>');
+                    }
+                } else {
+                    if (typeAction == "supprimé" && data['reponse'] == "OK") {
+                        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+                            return row.id;
+                        });
+                        $table.bootstrapTable('remove', {
+                            field: 'id',
+                            values: ids
+                        });
+                    } else {
+                        if (typeAction == "enregistré") {
+                            $table.bootstrapTable('append', data.reponse);
+                        } else if (typeAction == "modifié") {
+                            $table.bootstrapTable('updateByUniqueId', {id: data.reponse.id, row: data.reponse});
+                        }
+                        $table.bootstrapTable('filterBy', {});
+                        $table.bootstrapTable('scrollTo', 'bottom');
+                        if (window.location.href.indexOf("users_admin") > -1) {
+                            if (data.reponse.actif != "1") {
+                                $('tr[data-uniqueid=' + data.reponse.id + ']').addClass('info text-info'); //BUG #2
+                            } else {
+                                $('tr[data-uniqueid=' + data.reponse.id + ']').removeClass('info text-info');
+                            }
+                            $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
+                        }
+                        $('form').trigger("reset");
+                        $('.modal-backdrop').remove();
+                        $('#popup-add').modal('toggle');
+                    }
+                    sel = null;
+                    hideOuShow(0);
+                    updateNbEntity();
+                    activeDefault();
 
-    /*
-     Listener sur les cases à cocher du tableau pour mettre à jour
-     la sélection.
+                    showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
+                        ((typeAction == "supprimé" && selection.length > 1) ? 's bien ' + typeAction + 's' :
+                            ' bien ' + typeAction) + '</strong>', 'glyphicon glyphicon-ok', 'success');
+                }
+            },
+            error: function () {
+                showNotify('<strong>' + 'La requête n\'a pas abouti' + '</strong>',
+                    'glyphicon glyphicon-remove', 'danger');
+            }
+        });
+    }
 
-     @listens #table_admin
-     @fires check.bs.table
-     @fires uncheck.bs.table
-     @fires check-all.bs.table
-     @fires uncheck-all.bs.table
-     */
+    // listener sur les cases à cocher du tableau pour mettre à jour
+    // les boutons et les spans
     $table.on({
         'check.bs.table': function () {
             sel = $('#table_admin').bootstrapTable('getSelections');
@@ -277,31 +308,15 @@ $(function () {
         }
     });
 
-    /*
-     Listener sur les éléments de la classe btn-view-entity
-     Permet de voir les entités contenus par une entité parente
-
-     @listens .btn-view-entity
-     @fires click
-     */
+    // listener pour voir les entités contenus par une entité parente
     $table.on('click', '.btn-view-entity', function () {
-        var id = $(this).closest("tr").attr('data-uniqueid'); // récupère l'id de l'entité
-        $('#liste-children').empty(); // vide la liste avant affichage
-
-        if (window.location.href.indexOf("groups_admin") > -1) {
-            ajaxSend(id, types.UTILISATEUR);
-        } else if (window.location.href.indexOf("projects_admin") > -1) {
-            ajaxSend(id, types.DOCUMENT);
-        }
+        var id = $(this).closest("tr").attr('data-uniqueid');
+        $('#liste-membres').empty();
+        ajaxSend(id, "children");
     });
 
-    /*
-     Listener sur les elements de classe bouton-desactive
-     Met à jour du popup de suppression
-
-     @listens .bouton-desactive
-     @fires click
-     */
+    // listener sur les elements de classe bouton-desactive
+    // mise à jour du popup de suppression
     $('.bouton-desactive').click(function () {
         var nom_temp = nom;
         if (typeof sel != 'undefined') {
@@ -315,37 +330,7 @@ $(function () {
         }
     });
 
-    /*
-     Listener sur les elements de la classe list-activable-item.
-     Active l'element en couleur.
-
-     @listens .list-activable-item
-     @fires click
-     */
-    $('.list-activable-item').click(function (event) {
-        $('.list-activable-item').removeClass('active');
-        $('#' + event.currentTarget.id).addClass('active');
-    });
-
-    /*
-     Listener sur les elements de la classe list-group-item.
-     Affiche les projets d'un utilisateur
-
-     @listens .list-group-item
-     @fires click
-     */
-    $('.list-users-item').click(function (event) {
-        var tmp = event.currentTarget.id; // récupère l'id de la ligne de l'utilisateur
-        ajaxSend(tmp.substring(20, tmp.length), types.PROJET);
-    });
-
-    /*
-     Listener sur le toggle de filtre des demandes d'ajout.
-     Filtre le tableau d'utilisateurs actifs | inactifs
-
-     @listens #toggle-new-users
-     @fires change
-     */
+    // listener sur le toggle de filtre des demandes d'ajout
     $('#toggle-new-users').change(function () {
         if (!$('#toggle-new-users').prop('checked')) {
             $('#table_admin').bootstrapTable('filterBy', {actif: ""});
@@ -354,48 +339,21 @@ $(function () {
         }
     });
 
-    /*
-     Listener sur le bouton d'upload de fichier.
-     Renseigne les champs nom de document et type.
-
-     @listens #gedi_basebundle_document_fichier
-     @fires change
-     */
-    $('#gedi_basebundle_document_fichier').change(function () {
-        var uf = document.getElementById("gedi_basebundle_document_fichier").value;
-        $('#gedi_basebundle_document_nom').val(uf.substring(uf.lastIndexOf('\\') + 1, uf.lastIndexOf('.')));
-        $('#gedi_basebundle_document_typeDoc').val(uf.substring(uf.lastIndexOf('.'), uf.length));
-    });
-
-    /*
-     Listener sur le bouton supprimer du popup de suppression
-     envoi la selection à supprimer au controller via ajaxSend
-
-     @listens #delete-entity
-     @fires click
-     */
+    // listener sur le bouton supprimer du popup de suppression
+    // envoi la selection à supprimer au controller
     $('#delete-entity').click(function () {
-        ajaxSend(sel, types.SUPPRESSION);
+        ajaxSend(sel, "supprimé");
     });
 
-    /*
-     Listener sur les elements de la classe form-admin
-     Stope l'envoi normal du formulaire puis récupère le contenu du formulaire
-     et l'envoi au serveur avec la fonction ajaxSend
-
-     @listens .form-admin
-     @fires submit
-     */
+    // listener sur le bouton créer ou modifier du popup de d'ajout et de modification
+    // envoi l'entité à traiter au controller
     $('.form-admin').submit(function (event) {
         // Eviter le comportement par défaut (soumettre le formulaire)
         event.preventDefault();
-        $('#gedi_basebundle_document_nom').prop('disabled', false);
-        $('#gedi_basebundle_document_typeDoc').prop('disabled', false);
 
         // récupération des données du formulaire
         var selection = $('form').serializeArray();
 
-        // ne s'execute que sur la page users_admin
         if (window.location.href.indexOf("users_admin") > -1) {
             // une checkbox non cochée dans un formulaire n'est n'apparait pas dans
             // le tableau après un serializeArray. On doit donc dire à la main qu'elle
@@ -414,21 +372,13 @@ $(function () {
         }
 
         if (selection[0].value == "") {
-            ajaxSend(selection, types.ENREGISTREMENT);
+            ajaxSend(selection, "enregistré");
         } else {
-            ajaxSend(selection, types.MODIFICATION);
+            ajaxSend(selection, "modifié");
         }
     });
 
-    /*
-     Listener sur le formulaire d'ajout d'utilisateur.
-     Apelle la fonction validFormUtilisateur.
-     Ne s'execute que sur la page users_admin
-
-     @listens #popup-add
-     @fires keyup
-     @fires focusout
-     */
+    // listener sur le formulaire d'ajout d'utilisateur
     $('#popup-add').on({
         'keyup': function () {
             if (window.location.href.indexOf("users_admin") > -1) {
@@ -441,172 +391,33 @@ $(function () {
         }
     });
 
-    /*
-     Listener sur les elements de classe bouton-dismiss-entity
-     Vide le formulaire de son contenu.
-
-     @listens .bouton-dismiss-entity
-     @fires click
-     */
+    // listener sur les elements de classe bouton-dismiss-entity
+    // vide le formulaire de son contenu
     $(".bouton-dismiss-entity").click(function () {
-        $('form').trigger("reset"); // reset le formulaire
-        $('#gedi_basebundle_utilisateur_actif').bootstrapToggle('off'); // met le toggle sur off
-        // remet le champ confirmation de mot de passe et login à la couleur par défaut
+        $('form').trigger("reset");
         $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
         $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-default)');
-        logins = null; // vide la variable globale logins
+        logins = null;
     });
 
-    /*
-     Listener sur le bouton créer une entité.
-     Le listener fire dès que l'on clique sur un élément
-     de la classe bouton-admin-popup-add
-     La fonction vide le formulaire de son contenu et met à jour le modal
-
-     @listens .bouton-admin-popup-add
-     @fires click
-     */
+    // listener sur le bouton créer une entité
+    // vide le formulaire de son contenu
     $(".bouton-admin-popup-add").click(function () {
-        $('form').trigger("reset"); // reset le formulaire
-        $('#gedi_basebundle_utilisateur_actif').bootstrapToggle('off'); // met le toggle sur off
-        $('#liste-projets').empty(); // vide la liste des projets sur projects_admin
-        $('#popup-admin-add-titre').html('Créer un ' + nom); // écrit le titre du modal
-        var $bsae = $('.bouton-submit-admin-entity'); // récupère l'element de la classe bouton-submit-admin-entity
-        $bsae.val('Créer'); // change la valeur de $bsae
-        $('.assign-user').show(); // affiche le panel d'assignation d'utilisateur
-        $('#bouton-upload').show(); // affiche le bouton upload
-        $('#gedi_basebundle_document_nom').prop('disabled', true);
-        $('#gedi_basebundle_document_typeDoc').prop('disabled', true);
+        $('form').trigger("reset");
+        // modification du popup ajout / edition
+        $('#popup-admin-add-titre').html('Créer un ' + nom);
+        var $bsae = $('.bouton-submit-admin-entity');
+        $bsae.val('Créer');
+        $('.assign-user').show();
 
-        // ne s'execute que sur la page users_admin
+        // ne s'execute que si on est sur la page users_admin
         // récupère tous les login pour vérifier coté client si
         // on a pas un doublon de login
         if (window.location.href.indexOf("users_admin") > -1) {
-            $bsae.prop('disabled', true); // desactive le bouton submit du formulaire
+            $bsae.prop('disabled', true);
             logins = $.map($('#table_admin').bootstrapTable('getData'), function (rows) {
-                return rows.login; // met la liste des logins du tableau dans la variable globale logins
+                return rows.login;
             });
         }
     });
-
-    // ======================================================================================================
-    // ENVOI AJAX CLIENT -> SERVEUR
-    // ======================================================================================================
-
-    /*
-     Fonction d'envoi en Ajax de la requete en POST.
-     La fonction envoi des données au serveur dans la variable selection
-     et le type d'action à faire dans la variable typeAction.
-     La reponse du serveur arrive dans la variable data.
-
-     @param {object | array | string} selection, données à envoyer au serveur
-     @param {string} typeAction, type d'action à faire coté serveur [enregistré, modifié, supprimé, children]
-     */
-    function ajaxSend(selection, typeAction) {
-        $.ajax({
-            type: 'POST', // type d'envoi
-            url: window.location, // url d'envoi, ici ce sera toujours la page courante
-            data: {'data': selection, 'typeaction': typeAction}, // données à envoyer au serveur
-            success: function (data) { // traitement en cas de succes
-                switch (typeAction) {
-                    case types.ENREGISTREMENT:
-                        $table.bootstrapTable('append', data.reponse);
-                        completeRow(data); // finalise la création ou la modification
-                        break;
-                    case types.MODIFICATION:
-                        $table.bootstrapTable('updateByUniqueId', {id: data.reponse.id, row: data.reponse});
-                        completeRow(data); // finalise la création ou la modification
-                        break;
-                    case types.SUPPRESSION:
-                        deleteRow();
-                        break;
-                    case types.UTILISATEUR:
-                        if (window.location.href.indexOf("groups_admin") > -1) {
-                            $('#liste-children').prepend(data.reponse);
-                        }
-                        return 0;
-                        break;
-                    case types.DOCUMENT:
-                        if (window.location.href.indexOf("projects_admin") > -1) {
-                            $('#liste-children').prepend(data.reponse);
-                        }
-                        return 0;
-                        break;
-                    case types.PROJET:
-                        if (window.location.href.indexOf("projects_admin") > -1
-                            || window.location.href.indexOf("docs_admin") > -1) {
-                            var $lp = $('#liste-projets');
-                            $lp.empty();
-                            $lp.prepend(data.reponse);
-                        }
-                        return 0;
-                        break;
-                    default:
-                }
-
-                sel = null; // remet la sélection à null
-                hideOuShow(0);
-                updateNbEntity();
-                activeDefault();
-
-                // affiche la notification de succes
-                showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
-                    ((typeAction == types.SUPPRESSION && selection.length > 1) ? 's bien ' + typeAction + 's' :
-                        ' bien ' + typeAction) + '</strong>', 'glyphicon glyphicon-ok', 'success');
-            },
-            error: function () { // traitement en cas d'echec
-                // affiche la notification d'echec
-                showNotify('<strong>' + 'La requête n\'a pas abouti' + '</strong>',
-                    'glyphicon glyphicon-remove', 'danger');
-            }
-        });
-    }
-
-    // ======================================================================================================
-    // FONCTIONS REPONSE SERVEUR -> CLIENT
-    // ======================================================================================================
-
-    /*
-     Fonction de suppression, la fonction supprime
-     les lignes du tableau qui ont été cochées pour la suppression
-     */
-    function deleteRow() {
-        // récupère tous les id des lignes qui sont cochées
-        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
-            return row.id;
-        });
-        // supprime tous les id récupérés
-        $table.bootstrapTable('remove', {
-            field: 'id',
-            values: ids
-        });
-    }
-
-    /*
-     Fonction pour completer la création ou la modification d'entité.
-     Elle doit etre executée après un création ou une modification de
-     ligne dans le tableau.
-
-     @param {object} data, objet reponse du serveur contenant un tableau reponse
-     */
-    function completeRow(data) {
-        $table.bootstrapTable('filterBy', {}); // reset les filtres du tableau
-        $table.bootstrapTable('scrollTo', 'bottom'); // scroll en bas du tableau
-        // le code suivant ne s'execute que sur la page users_admin car les elements
-        // suivants sont sur cette page uniquement
-        if (window.location.href.indexOf("users_admin") > -1) {
-            if (data.reponse.actif != "1") { // test des lignes du tableau reponse, on test si l'utilisateur est actif
-                // met la ligne en bleu si l'utilisateur est inactif
-                $('tr[data-uniqueid=' + data.reponse.id + ']').addClass('info text-info'); //BUG #2
-            } else {
-                // laisse la ligne normal si l'utilisateur est actif
-                $('tr[data-uniqueid=' + data.reponse.id + ']').removeClass('info text-info');
-            }
-            // remet le champ confirmation de mot de passe à la couleur par défaut
-            $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
-        }
-        $('form').trigger("reset"); // reset le formulaire de création
-        $('.modal-backdrop').remove(); // enlève le modal-backdrop du formulaire
-        $('#popup-add').modal('toggle'); // fait disparaitre le modal de création
-    }
 });
