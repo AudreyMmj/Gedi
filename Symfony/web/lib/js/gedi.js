@@ -512,13 +512,11 @@ $(function () {
      * @param typeAction, type d'action à faire coté serveur [enregistré, modifié, supprimé, children]
      */
     function ajaxSend(selection, typeAction) {
-        console.log(selection);
         $.ajax({
             type: 'POST', // type d'envoi
             url: window.location, // url d'envoi, ici ce sera toujours la page courante
             data: {'data': selection, 'typeaction': typeAction}, // données à envoyer au serveur
             success: function (data) { // traitement en cas de succes
-                console.log(data);
                 switch (typeAction) {
                     case types.ENREGISTREMENT:
                         $table.bootstrapTable('append', data.reponse);
