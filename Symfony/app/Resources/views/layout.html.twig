@@ -38,9 +38,9 @@
                         <!-- la barre de recherche, elle n'apparait que lorsque quelqu'un est connecté -->
                         <form class="navbar-form navbar-left">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Rechercher...">
+                                <input id="search-bar" type="text" class="form-control" placeholder="Rechercher...">
                             </div>
-                            <button type="submit" class="btn btn-default"><span
+                            <button id="submit-search" type="submit" class="btn btn-default"><span
                                         class="glyphicon glyphicon-search"></span></button>
                         </form>
                         {% if is_granted('ROLE_ADMIN') %}
@@ -64,7 +64,8 @@
                                     <li role="separator" class="divider"></li>
                                     <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Paramètres</a></li>
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="{{ path('logout') }}"><span class="glyphicon glyphicon-log-out"></span>
+                                    <li><a id="btn-logout" href="{{ path('logout') }}"><span
+                                                    class="glyphicon glyphicon-log-out"></span>
                                             Deconnexion</a></li>
                                 </ul>
                             </li>
@@ -108,8 +109,11 @@
         </div>
     </nav>
     <!-- bloc contenu, contient le code des autres pages -->
-    <div id="content">{% block app_contenu %}{% endblock %}</div>
+    <div id="content" style="visibility:hidden">{% block app_contenu %}{% endblock %}</div>
 </div>
+<a id="back-to-top" href="#" class="btn effect-transparent btn-lg back-to-top" role="button"
+   title="Retour en haut" data-toggle="tooltip" data-placement="left"><span
+            class="glyphicon glyphicon-chevron-up" style="color:black;"></span></a>
 
 {% block javascripts %}
     <!-- jQuery -->

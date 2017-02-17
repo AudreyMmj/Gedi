@@ -101,6 +101,14 @@ body {
     overflow-y:auto;
 }
 
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display:none;
+}
+
 /* classe de couleurs personnalisée */
 :root {
     --color-error: #eea096;
