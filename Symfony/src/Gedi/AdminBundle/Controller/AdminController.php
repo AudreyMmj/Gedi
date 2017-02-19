@@ -347,7 +347,7 @@ class AdminController extends Controller
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdDocument(),
                     "nom" => $objet->getNom(),
-                    "type" => $objet->getTypeDoc(),
+                    "type" => '<span class="label label-default">' . $objet->getTypeDoc() . '</span>',
                     "datec" => date_format($objet->getDateCreation(), 'Y-m-d H:i:s'),
                     "datem" => date_format($objet->getDateModification(), 'Y-m-d H:i:s'),
                     "projet" => $objet->getidProjetFkDocument()->getNom(),
@@ -358,7 +358,7 @@ class AdminController extends Controller
                         ',&quot;nom&quot;:&quot;' . $objet->getNom() .
                         '&quot;,&quot;typeDoc&quot;:&quot;' . $objet->getTypeDoc() .
                         '&quot;,&quot;tag&quot;:&quot;' . $objet->getTag() .
-                        '&quot;,&quot;resume&quot;:&quot;' . $objet->getResume() . '}\');">' .
+                        '&quot;,&quot;resume&quot;:&quot;' . $objet->getResume() . '&quot;}\');">' .
                         '<span class="glyphicon glyphicon-pencil"></span></button></span>',
                 ];
             }

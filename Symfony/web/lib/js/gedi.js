@@ -20,6 +20,13 @@ var nom;
 var logins;
 
 /**
+ * contentType pour envoyer des données standards au serveur.
+ * Pour envoyer un fichier mettre false.
+ * @type {string}
+ */
+var contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+
+/**
  * Enumération des types d'actions possibles sur le serveur
  * @global {array} types
  * @const {array} types
@@ -32,7 +39,7 @@ const types = {
     UTILISATEUR: "utilisateur", // demande d'optention des utilisateurs d'une entité
     DOCUMENT: "document", // demande d'optention des documents d'une entité
     PROJET: "projet", // demande d'optention des projets d'une entité
-    GROUPE: "groupe", // demande d'optention des groupes d'une entité
+    GROUPE: "groupe" // demande d'optention des groupes d'une entité
 };
 
 // ======================================================================================================
@@ -320,9 +327,9 @@ $(function () {
         $('#liste-children').empty(); // vide la liste avant affichage
 
         if (window.location.href.indexOf("groups_admin") > -1) {
-            ajaxSend(id, types.UTILISATEUR);
+            ajaxSend(id, types.UTILISATEUR, contentType, true);
         } else if (window.location.href.indexOf("projects_admin") > -1) {
-            ajaxSend(id, types.DOCUMENT);
+            ajaxSend(id, types.DOCUMENT, contentType, true);
         }
     });
 
@@ -380,7 +387,7 @@ $(function () {
      */
     $('.list-users-item').click(function (event) {
         var tmp = event.currentTarget.id; // récupère l'id de la ligne de l'utilisateur
-        ajaxSend(tmp.substring(20, tmp.length), types.PROJET);
+        ajaxSend(tmp.substring(20, tmp.length), types.PROJET, contentType, true);
     });
 
     /**
@@ -410,7 +417,7 @@ $(function () {
      * envoi la selection à supprimer au controller via ajaxSend
      */
     $('#delete-entity').click(function () {
-        ajaxSend(sel, types.SUPPRESSION);
+        ajaxSend(sel, types.SUPPRESSION, contentType, true);
     });
 
     /**
@@ -423,32 +430,42 @@ $(function () {
         event.preventDefault();
         $('#gedi_basebundle_document_nom').prop('disabled', false);
         $('#gedi_basebundle_document_typeDoc').prop('disabled', false);
-
         // récupération des données du formulaire
         var selection = $('form').serializeArray();
 
-        // ne s'execute que sur la page users_admin
-        if (window.location.href.indexOf("users_admin") > -1) {
-            // une checkbox non cochée dans un formulaire n'est n'apparait pas dans
-            // le tableau après un serializeArray. On doit donc dire à la main qu'elle
-            // n'est pas cochée
-            if (!$('#gedi_basebundle_utilisateur_actif').prop('checked')) {
-                selection.splice(6, 0, {
-                    name: "gedi_basebundle_utilisateur[actif]",
-                    value: false
-                });
-            } else {
-                selection.splice(6, 1, {
-                    name: "gedi_basebundle_utilisateur[actif]",
-                    value: true
-                });
-            }
-        }
-
-        if (selection[0].value == "") {
-            ajaxSend(selection, types.ENREGISTREMENT);
+        // ne s'execute que sur la page docs_admin
+        if (window.location.href.indexOf("docs_admin") > -1 && selection[0].value == "") {
+            // var file = document.getElementById("gedi_basebundle_document_fichier");
+            // selection.push({
+            //     name: "fichier",
+            //     number: file.files
+            // });
+            // console.log(selection);
+            ajaxSend(selection, types.ENREGISTREMENT, contentType, true);
         } else {
-            ajaxSend(selection, types.MODIFICATION);
+            // ne s'execute que sur la page users_admin
+            if (window.location.href.indexOf("users_admin") > -1) {
+                // une checkbox non cochée dans un formulaire n'est n'apparait pas dans
+                // le tableau après un serializeArray. On doit donc dire à la main qu'elle
+                // n'est pas cochée
+                if (!$('#gedi_basebundle_utilisateur_actif').prop('checked')) {
+                    selection.splice(6, 0, {
+                        name: "gedi_basebundle_utilisateur[actif]",
+                        value: false
+                    });
+                } else {
+                    selection.splice(6, 1, {
+                        name: "gedi_basebundle_utilisateur[actif]",
+                        value: true
+                    });
+                }
+            }
+
+            if (selection[0].value == "") {
+                ajaxSend(selection, types.ENREGISTREMENT, contentType, true);
+            } else {
+                ajaxSend(selection, types.MODIFICATION, contentType, true);
+            }
         }
     });
 
@@ -522,11 +539,15 @@ $(function () {
      * La reponse du serveur arrive dans la variable data.
      * @param selection, données à envoyer au serveur
      * @param typeAction, type d'action à faire coté serveur [enregistré, modifié, supprimé, children]
+     * @param contentType
+     * @param processData
      */
-    function ajaxSend(selection, typeAction) {
+    function ajaxSend(selection, typeAction, contentType, processData) {
         $.ajax({
             type: 'POST', // type d'envoi
             url: window.location, // url d'envoi, ici ce sera toujours la page courante
+            contentType: contentType,
+            processData: processData,
             data: {'data': selection, 'typeaction': typeAction}, // données à envoyer au serveur
             success: function (data) { // traitement en cas de succes
                 switch (typeAction) {

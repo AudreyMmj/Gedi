@@ -312,7 +312,7 @@ class Document
      *
      * @return Document
      */
-    public function setIdProjetFkDocument($idProjetFkDocument = null)
+    public function setIdProjetFkDocument($idProjetFkDocument)
     {
         $this->idProjetFkDocument = $idProjetFkDocument;
 
@@ -336,7 +336,7 @@ class Document
      *
      * @return Document
      */
-    public function setIdUtilisateurFkDocument($idUtilisateurFkDocument = null)
+    public function setIdUtilisateurFkDocument($idUtilisateurFkDocument)
     {
         $this->idUtilisateurFkDocument = $idUtilisateurFkDocument;
 
