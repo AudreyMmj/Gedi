@@ -243,10 +243,26 @@ $(function () {
      * Elements lancés au chargement de la page
      */
     $(document).ready(function () {
-        $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de la clasee bouton-desactive
+        $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de la classe bouton-desactive
+        document.getElementById("content").style.visibility = "visible";
 
         // change la variable nom en fonction de la page courante
-        if (window.location.href.indexOf("users_admin") > -1) {
+        if (window.location.href.lastIndexOf("/") == window.location.href.length - 1) {
+            document.getElementById("jumbo1").style.visibility = "visible";
+            $('#jumbo1').animateCss('bounceInUp');
+            setTimeout(function () {
+                document.getElementById("bt1").style.visibility = "visible";
+                $('#bt1').animateCss('bounceInUp');
+                setTimeout(function () {
+                    document.getElementById("bt2").style.visibility = "visible";
+                    $('#bt2').animateCss('bounceInUp');
+                    setTimeout(function () {
+                        document.getElementById("bt3").style.visibility = "visible";
+                        $('#bt3').animateCss('bounceInUp');
+                    }, 400);
+                }, 400);
+            }, 400);
+        } else if (window.location.href.indexOf("users_admin") > -1) {
             nom = 'utilisateur';
         } else if (window.location.href.indexOf("groups_admin") > -1) {
             nom = 'groupe';
@@ -265,10 +281,6 @@ $(function () {
         updateNbEntity(); // met à jour le nombre d'entités
         activeDefault(); // active les éléments par défaut
         backToTop();
-        document.getElementById("content").style.visibility = "visible";
-        if (window.location.href.indexOf("home") > -1) {
-            $('#content').animateCss('bounceInUp');
-        }
     });
 
     // ======================================================================================================
