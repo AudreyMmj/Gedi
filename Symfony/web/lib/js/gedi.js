@@ -409,7 +409,7 @@ $(function () {
     $('#gedi_basebundle_document_fichier').change(function () {
         var uf = document.getElementById("gedi_basebundle_document_fichier").value;
         $('#gedi_basebundle_document_nom').val(uf.substring(uf.lastIndexOf('\\') + 1, uf.lastIndexOf('.')));
-        $('#gedi_basebundle_document_typeDoc').val(uf.substring(uf.lastIndexOf('.'), uf.length));
+        $('#gedi_basebundle_document_typeDoc').val(uf.substring(uf.lastIndexOf('.') + 1, uf.length));
     });
 
     /**
@@ -435,13 +435,14 @@ $(function () {
 
         // ne s'execute que sur la page docs_admin
         if (window.location.href.indexOf("docs_admin") > -1 && selection[0].value == "") {
-            // var file = document.getElementById("gedi_basebundle_document_fichier");
+            var file = document.getElementById("gedi_basebundle_document_fichier").files;
             // selection.push({
             //     name: "fichier",
             //     number: file.files
             // });
-            // console.log(selection);
-            ajaxSend(selection, types.ENREGISTREMENT, contentType, true);
+            var formData = new FormData($(this));
+            formData.append('fichier', file, file.name);
+            ajaxSend(formData, types.ENREGISTREMENT, false, false);
         } else {
             // ne s'execute que sur la page users_admin
             if (window.location.href.indexOf("users_admin") > -1) {
