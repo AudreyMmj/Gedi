@@ -3,12 +3,13 @@
 {% block base_titre %}Start{% endblock %}
 
 {% block base_contenu %}
-    <div id="jumbo1" style="visibility:hidden" class="jumbotron pad-space down-decale effect-transparent">
+    <div id="jumbo1" style="visibility:hidden"
+         class="jumbotron pad-space effect-transparent text-center">
         <h1 class="up-decale">Bienvenue sur Gedi</h1>
         <h2>Que la force soit avec vous !</h2>
-        <p>Gedi vous permet de stocker vos documents en ligne, de créer des projets et de collaborer <br>
-            avec d'autres personnes. Profitez des fonctionnalités du bureau en ligne et accedez simplement<br>
-            à tous vos fichiers.</p>
+        <p>Gedi vous permet de stocker vos documents en ligne, de créer des projets et de collaborer
+            avec d'autres personnes. Profitez des fonctionnalités du bureau en ligne et accedez
+            simplement à tous vos fichiers.</p>
 
         {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
         <!-- le bouton de connexion n'apparait que lorqu'on est deconnecté -->
@@ -16,28 +17,4 @@
             {% endif %}
             <a class="btn btn-success btn-lg" href="{{ path('login') }}" role="button">Connexion</a></p>
     </div>
-
-    <div class="container text-white text-center">
-        <div class="row">
-            <div id="bt1" style="visibility:hidden" class="col-md-4">
-                <h2>Stockage</h2>
-                <p>Stockez vos fichiers sur Gedi et accédez à tous vos documents depuis vos appareils.
-                    Vous aurez toujours la possilité de créer, déplacer, modifier, supprimer, rechercher ou télécharger
-                    vos documents et fichiers. Ajoutez des étiquettes sur vos documents pour mieux vous organiser</p>
-            </div>
-            <div id="bt2" style="visibility:hidden" class="col-md-4">
-                <h2>Organisation</h2>
-                <p>Creez des projets afin d'organisez vos documents. Vos projets servent de container pour vos
-                    documents ou d'autres projets. Vous avez la possibilité de restreindre l'accès à certains projets
-                    afin d'organiser votre team hierarchy.</p>
-            </div>
-            <div id="bt3" style="visibility:hidden" class="col-md-4">
-                <h2>Collaboration</h2>
-                <p>Collaborez avec d'autres personnes sur Gedi et travaillez à plusieurs sur vos projets. Sur Gedi
-                    vous pouvez former plusieurs équipes de projet sous forme de groupes de travail. Vous gérez vos
-                    groupes et leurs membres pour autoriser ou restreindre l'accès à vos projets et documents.</p>
-            </div>
-        </div>
-    </div>
-    <br>
 {% endblock %}

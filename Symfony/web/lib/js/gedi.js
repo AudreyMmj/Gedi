@@ -254,21 +254,16 @@ $(function () {
         document.getElementById("content").style.visibility = "visible";
 
         // change la variable nom en fonction de la page courante
+        // charge les animations sur les pages
         if (window.location.href.lastIndexOf("/") == window.location.href.length - 1) {
             document.getElementById("jumbo1").style.visibility = "visible";
-            $('#jumbo1').animateCss('bounceInUp');
-            setTimeout(function () {
-                document.getElementById("bt1").style.visibility = "visible";
-                $('#bt1').animateCss('bounceInUp');
-                setTimeout(function () {
-                    document.getElementById("bt2").style.visibility = "visible";
-                    $('#bt2').animateCss('bounceInUp');
-                    setTimeout(function () {
-                        document.getElementById("bt3").style.visibility = "visible";
-                        $('#bt3').animateCss('bounceInUp');
-                    }, 400);
-                }, 400);
-            }, 400);
+            $('#jumbo1').animateCss('zoomInDown');
+        } else if (window.location.href.indexOf("register") > -1) {
+            document.getElementById("panel-register").style.visibility = "visible";
+            $('#panel-register').animateCss('bounceInUp');
+        } else if (window.location.href.indexOf("contact") > -1) {
+            document.getElementById("panel-contact").style.visibility = "visible";
+            $('#panel-contact').animateCss('bounceInUp');
         } else if (window.location.href.indexOf("users_admin") > -1) {
             nom = 'utilisateur';
         } else if (window.location.href.indexOf("groups_admin") > -1) {
