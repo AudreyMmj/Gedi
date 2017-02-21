@@ -36,8 +36,8 @@ class DocumentService
     /**
      * Enregistre un document dans la BDD
      * @param $sel
-     * @param $formData
      * @return Document
+     * @internal param $formData
      */
     public function create($sel)
     {
@@ -52,8 +52,8 @@ class DocumentService
         $projet = $this->em->find('GediBaseBundle:Projet', $sel[6]['value']);
         $projet->addIdProjetFkDocument($objet);
         $objet->setIdProjetFkDocument($projet);
-//        $fileName = $this->fs->upload($sel[8][0]);
-//        $objet->setFichier($fileName);
+        $fileName = $this->fs->upload($sel[8][0]);
+        $objet->setFichier($fileName);
         $objet->setFichier($sel[1]['value']);
         $this->em->persist($objet);
         $this->em->flush();

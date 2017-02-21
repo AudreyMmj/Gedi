@@ -20,13 +20,6 @@ var nom;
 var logins;
 
 /**
- * contentType pour envoyer des données standards au serveur.
- * Pour envoyer un fichier mettre false.
- * @type {string}
- */
-var contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
-
-/**
  * Enumération des types d'actions possibles sur le serveur
  * @global {array} types
  * @const {array} types
@@ -34,6 +27,7 @@ var contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
  */
 const types = {
     ENREGISTREMENT: "enregistré", // demande d'enregistrement
+    UPLOAD: "upload", // demande d'enregistrement de fichier
     MODIFICATION: "modifié", // demande de modification
     SUPPRESSION: "supprimé", // demande de suppression
     UTILISATEUR: "utilisateur", // demande d'optention des utilisateurs d'une entité
@@ -322,9 +316,9 @@ $(function () {
         $('#liste-children').empty(); // vide la liste avant affichage
 
         if (window.location.href.indexOf("groups_admin") > -1) {
-            ajaxSend(id, types.UTILISATEUR, contentType, true);
+            ajaxSend(id, types.UTILISATEUR);
         } else if (window.location.href.indexOf("projects_admin") > -1) {
-            ajaxSend(id, types.DOCUMENT, contentType, true);
+            ajaxSend(id, types.DOCUMENT);
         }
     });
 
@@ -382,7 +376,7 @@ $(function () {
      */
     $('.list-users-item').click(function (event) {
         var tmp = event.currentTarget.id; // récupère l'id de la ligne de l'utilisateur
-        ajaxSend(tmp.substring(20, tmp.length), types.PROJET, contentType, true);
+        ajaxSend(tmp.substring(20, tmp.length), types.PROJET);
     });
 
     /**
@@ -412,7 +406,7 @@ $(function () {
      * envoi la selection à supprimer au controller via ajaxSend
      */
     $('#delete-entity').click(function () {
-        ajaxSend(sel, types.SUPPRESSION, contentType, true);
+        ajaxSend(sel, types.SUPPRESSION);
     });
 
     /**
@@ -427,17 +421,22 @@ $(function () {
         $('#gedi_basebundle_document_typeDoc').prop('disabled', false);
         // récupération des données du formulaire
         var selection = $('form').serializeArray();
+        // console.log(selection);
 
-        // ne s'execute que sur la page docs_admin
+        // ne s'execute que sur la page docs_admin, cas de l'upload de fichier
         if (window.location.href.indexOf("docs_admin") > -1 && selection[0].value == "") {
-            var file = document.getElementById("gedi_basebundle_document_fichier").files;
-            // selection.push({
-            //     name: "fichier",
-            //     number: file.files
-            // });
-            var formData = new FormData($(this));
-            formData.append('fichier', file, file.name);
-            ajaxSend(formData, types.ENREGISTREMENT, false, false);
+            var file = document.getElementById("gedi_basebundle_document_fichier");
+            // var formData = new FormData();
+            // for (var key in selection) {
+            //     formData.append(key, selection[key]);
+            // }
+
+            var $form = $(this);
+            var formdata = (window.FormData) ? new FormData($form[0]) : null;
+            formdata.append('fichier', file.files[0]);
+            var data = (formdata !== null) ? formdata : $form.serialize();
+
+            ajaxSend(data, types.UPLOAD);
         } else {
             // ne s'execute que sur la page users_admin
             if (window.location.href.indexOf("users_admin") > -1) {
@@ -458,9 +457,9 @@ $(function () {
             }
 
             if (selection[0].value == "") {
-                ajaxSend(selection, types.ENREGISTREMENT, contentType, true);
+                ajaxSend(selection, types.ENREGISTREMENT);
             } else {
-                ajaxSend(selection, types.MODIFICATION, contentType, true);
+                ajaxSend(selection, types.MODIFICATION);
             }
         }
     });
@@ -535,16 +534,28 @@ $(function () {
      * La reponse du serveur arrive dans la variable data.
      * @param selection, données à envoyer au serveur
      * @param typeAction, type d'action à faire coté serveur [enregistré, modifié, supprimé, children]
-     * @param contentType
-     * @param processData
      */
-    function ajaxSend(selection, typeAction, contentType, processData) {
+    function ajaxSend(selection, typeAction) {
+        var data, contentType, processData;
+
+        // upload de fichiers
+        if (typeAction == types.UPLOAD) {
+            data = selection;
+            contentType = false;
+            processData = false;
+        } else {
+            // toutes les autres requetes
+            data = {'data': selection, 'typeaction': typeAction};
+            contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+            processData = true;
+        }
+
         $.ajax({
             type: 'POST', // type d'envoi
             url: window.location, // url d'envoi, ici ce sera toujours la page courante
-            contentType: contentType,
-            processData: processData,
-            data: {'data': selection, 'typeaction': typeAction}, // données à envoyer au serveur
+            contentType: contentType, // type de contenu
+            processData: processData, // pré-traitement de jquery
+            data: data, // données à envoyer au serveur
             success: function (data) { // traitement en cas de succes
                 switch (typeAction) {
                     case types.ENREGISTREMENT:
