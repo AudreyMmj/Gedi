@@ -110,6 +110,7 @@ function updateNbEntity() {
  */
 function addUser(js_arg) {
     if (window.location.href.indexOf("docs_admin") > -1) {
+        $('#data_idProjetFkDocument').removeAttr('value');
         $('#data_idUtilisateurFk' + (nom.charAt(0).toUpperCase() + nom.slice(1))).val(js_arg);
     } else {
         $('#gedi_basebundle_' + nom + '_idUtilisateurFk' + (nom.charAt(0).toUpperCase() + nom.slice(1))).val(js_arg);

@@ -9,6 +9,7 @@ use Gedi\BaseBundle\Entity\Projet;
 use Gedi\BaseBundle\Entity\Utilisateur;
 use Gedi\BaseBundle\Resources\Enum\BaseEnum;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -324,7 +325,8 @@ class AdminController extends Controller
                         if ($file == null || $file == "") {
                             throw new Exception('Le fichier est nul');
                         }
-                        $objet = $this->get('document.service')->create($sel, $file);
+                        $uploadedFile = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['size']);
+                        $objet = $this->get('document.service')->create($sel, $uploadedFile);
                     }
                     break;
                 case BaseEnum::SUPPRESSION:

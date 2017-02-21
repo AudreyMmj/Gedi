@@ -4,7 +4,6 @@ namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Gedi\BaseBundle\Entity\Document;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Service permettant de manipuler les documents
@@ -43,7 +42,6 @@ class DocumentService
      */
     public function create($sel, $file)
     {
-        $uploadedFile = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['size']);
         $objet = new Document();
         $objet->setNom($sel['nom']);
         $objet->setTypeDoc($sel['typeDoc']);
@@ -55,7 +53,7 @@ class DocumentService
         $projet = $this->em->find('GediBaseBundle:Projet', $sel['idProjetFkDocument']);
         $projet->addIdProjetFkDocument($objet);
         $objet->setIdProjetFkDocument($projet);
-        $fileName = $this->fs->upload($uploadedFile, $projet->getNom());
+        $fileName = $this->fs->upload($file, $sel['idUtilisateurFkDocument'], $projet->getNom());
         $objet->setFichier($fileName);
         $this->em->persist($objet);
         $this->em->flush();
