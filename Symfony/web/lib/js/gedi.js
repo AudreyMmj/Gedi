@@ -27,7 +27,7 @@ var logins;
  */
 const types = {
     ENREGISTREMENT: "enregistré", // demande d'enregistrement
-    UPLOAD: "upload", // demande d'enregistrement de fichier
+    UPLOAD: "uploadé", // demande d'enregistrement de fichier
     MODIFICATION: "modifié", // demande de modification
     SUPPRESSION: "supprimé", // demande de suppression
     UTILISATEUR: "utilisateur", // demande d'optention des utilisateurs d'une entité
@@ -109,7 +109,11 @@ function updateNbEntity() {
  * @param js_arg, , id de l'entité enfant
  */
 function addUser(js_arg) {
-    $('#gedi_basebundle_' + nom + '_idUtilisateurFk' + (nom.charAt(0).toUpperCase() + nom.slice(1))).val(js_arg);
+    if (window.location.href.indexOf("docs_admin") > -1) {
+        $('#data_idUtilisateurFk' + (nom.charAt(0).toUpperCase() + nom.slice(1))).val(js_arg);
+    } else {
+        $('#gedi_basebundle_' + nom + '_idUtilisateurFk' + (nom.charAt(0).toUpperCase() + nom.slice(1))).val(js_arg);
+    }
 }
 
 /**
@@ -119,7 +123,7 @@ function addUser(js_arg) {
  */
 function addProject(js_arg) {
     $('#gedi_basebundle_projet_parent').val(js_arg);
-    $('#gedi_basebundle_document_idProjetFkDocument').val(js_arg);
+    $('#data_idProjetFkDocument').val(js_arg);
     $('.list-activable-item').removeClass('active');
     $('#list-activable-item-project-' + js_arg).addClass('active');
 }
@@ -178,7 +182,11 @@ function edit(js_object_arg) {
             $('#gedi_basebundle_' + nom + '_' + key + '_first').val(js_object[key]);
             $('#gedi_basebundle_' + nom + '_' + key + '_second').val(js_object[key]);
         } else {
-            $('#gedi_basebundle_' + nom + '_' + key).val(js_object[key]);
+            if (window.location.href.indexOf("docs_admin") > -1) {
+                $('#data_' + key).val(js_object[key]);
+            } else {
+                $('#gedi_basebundle_' + nom + '_' + key).val(js_object[key]);
+            }
         }
     }
 
@@ -187,8 +195,8 @@ function edit(js_object_arg) {
     var $bsae = $('.bouton-submit-admin-entity');
     $bsae.val('Appliquer');
     $bsae.prop('disabled', false);
-    $('#gedi_basebundle_document_nom').prop('disabled', false);
-    $('#gedi_basebundle_document_typeDoc').prop('disabled', false);
+    $('#data_nom').prop('disabled', false);
+    $('#data_typeDoc').prop('disabled', false);
     $('.assign-user').hide(); // masque le panel d'assignation d'utilisateur
     $('#bouton-upload').hide(); // masque le bouton upload
 }
@@ -208,7 +216,6 @@ function validFormUtilisateur() {
     if (pass1 != pass2 && (pass1 != "" && pass2 != "")) {
         $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-error)');
         $('.bouton-submit-admin-entity').prop('disabled', true);
-        $('#popup-add').animateCss('shake');
     } else if (pass1 == pass2 && (pass1 != "" && pass2 != "")) {
         $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-success)');
         $('.bouton-submit-admin-entity').prop('disabled', false);
@@ -221,7 +228,6 @@ function validFormUtilisateur() {
     if (logins != null && logins.includes(username)) {
         $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-error)');
         $('.bouton-submit-admin-entity').prop('disabled', true);
-        $('#popup-add').animateCss('shake');
     } else {
         $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-default)');
         $('.bouton-submit-admin-entity').prop('disabled', false);
@@ -395,10 +401,10 @@ $(function () {
      * Listener sur le bouton d'upload de fichier.
      * Renseigne les champs nom de document et type.
      */
-    $('#gedi_basebundle_document_fichier').change(function () {
-        var uf = document.getElementById("gedi_basebundle_document_fichier").value;
-        $('#gedi_basebundle_document_nom').val(uf.substring(uf.lastIndexOf('\\') + 1, uf.lastIndexOf('.')));
-        $('#gedi_basebundle_document_typeDoc').val(uf.substring(uf.lastIndexOf('.') + 1, uf.length));
+    $('#data_fichier').change(function () {
+        var uf = document.getElementById("data_fichier").value;
+        $('#data_nom').val(uf.substring(uf.lastIndexOf('\\') + 1, uf.lastIndexOf('.')));
+        $('#data_typeDoc').val(uf.substring(uf.lastIndexOf('.') + 1, uf.length));
     });
 
     /**
@@ -417,26 +423,20 @@ $(function () {
     $('.form-admin').submit(function (event) {
         // Eviter le comportement par défaut (soumettre le formulaire)
         event.preventDefault();
-        $('#gedi_basebundle_document_nom').prop('disabled', false);
-        $('#gedi_basebundle_document_typeDoc').prop('disabled', false);
+        $('#data_nom').prop('disabled', false);
+        $('#data_typeDoc').prop('disabled', false);
+
         // récupération des données du formulaire
-        var selection = $('form').serializeArray();
-        // console.log(selection);
+        var $form = $(this);
+        var selection = $form.serializeArray();
+        var formdata = new FormData($form[0]);
 
         // ne s'execute que sur la page docs_admin, cas de l'upload de fichier
         if (window.location.href.indexOf("docs_admin") > -1 && selection[0].value == "") {
-            var file = document.getElementById("gedi_basebundle_document_fichier");
-            // var formData = new FormData();
-            // for (var key in selection) {
-            //     formData.append(key, selection[key]);
-            // }
-
-            var $form = $(this);
-            var formdata = (window.FormData) ? new FormData($form[0]) : null;
+            var file = document.getElementById("data_fichier");
+            formdata.append('typeAction', types.UPLOAD);
             formdata.append('fichier', file.files[0]);
-            var data = (formdata !== null) ? formdata : $form.serialize();
-
-            ajaxSend(data, types.UPLOAD);
+            ajaxSend(formdata, types.UPLOAD);
         } else {
             // ne s'execute que sur la page users_admin
             if (window.location.href.indexOf("users_admin") > -1) {
@@ -509,8 +509,8 @@ $(function () {
         $bsae.val('Créer'); // change la valeur de $bsae
         $('.assign-user').show(); // affiche le panel d'assignation d'utilisateur
         $('#bouton-upload').show(); // affiche le bouton upload
-        $('#gedi_basebundle_document_nom').prop('disabled', true);
-        $('#gedi_basebundle_document_typeDoc').prop('disabled', true);
+        $('#data_nom').prop('disabled', true);
+        $('#data_typeDoc').prop('disabled', true);
 
         // ne s'execute que sur la page users_admin
         // récupère tous les login pour vérifier coté client si
@@ -536,16 +536,15 @@ $(function () {
      * @param typeAction, type d'action à faire coté serveur [enregistré, modifié, supprimé, children]
      */
     function ajaxSend(selection, typeAction) {
-        var data, contentType, processData;
+        var contentType, processData;
 
         // upload de fichiers
         if (typeAction == types.UPLOAD) {
-            data = selection;
             contentType = false;
             processData = false;
         } else {
             // toutes les autres requetes
-            data = {'data': selection, 'typeaction': typeAction};
+            selection = {'data': selection, 'typeAction': typeAction};
             contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
             processData = true;
         }
@@ -555,7 +554,7 @@ $(function () {
             url: window.location, // url d'envoi, ici ce sera toujours la page courante
             contentType: contentType, // type de contenu
             processData: processData, // pré-traitement de jquery
-            data: data, // données à envoyer au serveur
+            data: selection, // données à envoyer au serveur
             success: function (data) { // traitement en cas de succes
                 switch (typeAction) {
                     case types.ENREGISTREMENT:
@@ -568,6 +567,10 @@ $(function () {
                         break;
                     case types.SUPPRESSION:
                         deleteRow();
+                        break;
+                    case types.UPLOAD:
+                        $table.bootstrapTable('append', data.reponse);
+                        completeRow(data); // finalise la création ou la modification
                         break;
                     case types.UTILISATEUR:
                         if (window.location.href.indexOf("groups_admin") > -1) {

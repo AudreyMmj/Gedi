@@ -42,6 +42,6 @@ class DocumentType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'gedi_basebundle_document';
+        return 'data';
     }
 }

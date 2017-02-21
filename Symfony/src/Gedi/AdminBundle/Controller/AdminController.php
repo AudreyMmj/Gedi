@@ -52,7 +52,7 @@ class AdminController extends Controller
         $form = $this->createForm('Gedi\BaseBundle\Form\UtilisateurType', $objet);
         $form->handleRequest($request);
 
-        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeaction'])) {
+        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeAction'])) {
             $sel = $_POST['data'];
 
             if ($sel == null || $sel == "") {
@@ -61,7 +61,7 @@ class AdminController extends Controller
             $rows = [];
             $response = new JsonResponse();
 
-            switch ($_POST['typeaction']) {
+            switch ($_POST['typeAction']) {
                 case BaseEnum::SUPPRESSION:
                     $rows = $this->get('utilisateur.service')->delete($sel);
                     break;
@@ -75,7 +75,7 @@ class AdminController extends Controller
                     throw new Exception('Typeaction n\'est pas reconnu');
             }
 
-            if ($_POST['typeaction'] == BaseEnum::ENREGISTREMENT || $_POST['typeaction'] == BaseEnum::MODIFICATION) {
+            if ($_POST['typeAction'] == BaseEnum::ENREGISTREMENT || $_POST['typeAction'] == BaseEnum::MODIFICATION) {
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdUtilisateur(),
@@ -125,7 +125,7 @@ class AdminController extends Controller
         $form = $this->createForm('Gedi\BaseBundle\Form\GroupeType', $objet);
         $form->handleRequest($request);
 
-        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeaction'])) {
+        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeAction'])) {
             $sel = $_POST['data'];
 
             if ($sel == null || $sel == "") {
@@ -134,7 +134,7 @@ class AdminController extends Controller
             $rows = [];
             $response = new JsonResponse();
 
-            switch ($_POST['typeaction']) {
+            switch ($_POST['typeAction']) {
                 case BaseEnum::SUPPRESSION:
                     $rows = $this->get('groupe.service')->delete($sel);
                     break;
@@ -145,7 +145,7 @@ class AdminController extends Controller
                     $objet = $this->get('groupe.service')->update($sel);
                     break;
                 case BaseEnum::UTILISATEUR:
-                    $tmp = $this->get('groupe.service')->getChildren($sel, $_POST['typeaction']);
+                    $tmp = $this->get('groupe.service')->getChildren($sel, $_POST['typeAction']);
 
                     if (sizeof($tmp) > 0) {
                         foreach ($tmp as $child) {
@@ -160,7 +160,7 @@ class AdminController extends Controller
                     throw new Exception('Typeaction n\'est pas reconnu');
             }
 
-            if ($_POST['typeaction'] == BaseEnum::ENREGISTREMENT || $_POST['typeaction'] == BaseEnum::MODIFICATION) {
+            if ($_POST['typeAction'] == BaseEnum::ENREGISTREMENT || $_POST['typeAction'] == BaseEnum::MODIFICATION) {
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdGroupe(),
@@ -209,7 +209,7 @@ class AdminController extends Controller
         $form = $this->createForm('Gedi\BaseBundle\Form\ProjetType', $objet);
         $form->handleRequest($request);
 
-        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeaction'])) {
+        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeAction'])) {
             $sel = $_POST['data'];
 
             if ($sel == null || $sel == "") {
@@ -218,7 +218,7 @@ class AdminController extends Controller
             $rows = [];
             $response = new JsonResponse();
 
-            switch ($_POST['typeaction']) {
+            switch ($_POST['typeAction']) {
                 case BaseEnum::SUPPRESSION:
                     $rows = $this->get('projet.service')->delete($sel);
                     break;
@@ -229,7 +229,7 @@ class AdminController extends Controller
                     $objet = $this->get('projet.service')->update($sel);
                     break;
                 case BaseEnum::DOCUMENT:
-                    $tmp = $this->get('projet.service')->getChildren($sel, $_POST['typeaction']);
+                    $tmp = $this->get('projet.service')->getChildren($sel, $_POST['typeAction']);
 
                     if (sizeof($tmp) > 0) {
                         foreach ($tmp as $child) {
@@ -241,7 +241,7 @@ class AdminController extends Controller
                     }
                     break;
                 case BaseEnum::PROJET:
-                    $tmp = $this->get('utilisateur.service')->getChildren($sel, $_POST['typeaction']);
+                    $tmp = $this->get('utilisateur.service')->getChildren($sel, $_POST['typeAction']);
 
                     if (sizeof($tmp) > 0) {
                         foreach ($tmp as $child) {
@@ -257,7 +257,7 @@ class AdminController extends Controller
                     throw new Exception('Typeaction n\'est pas reconnu');
             }
 
-            if ($_POST['typeaction'] == BaseEnum::ENREGISTREMENT || $_POST['typeaction'] == BaseEnum::MODIFICATION) {
+            if ($_POST['typeAction'] == BaseEnum::ENREGISTREMENT || $_POST['typeAction'] == BaseEnum::MODIFICATION) {
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdProjet(),
@@ -306,71 +306,51 @@ class AdminController extends Controller
         $form = $this->createForm('Gedi\BaseBundle\Form\DocumentType', $objet);
         $form->handleRequest($request);
 
-        if ($request->isMethod('POST')) {
+        if ($request->isMethod('POST') && isset($_POST['data']) && isset($_POST['typeAction'])) {
             $rows = [];
             $response = new JsonResponse();
-            $flag = false;
+            $sel = $_POST['data'];
 
-            if (isset($_POST['data']) && isset($_POST['typeaction'])) {
-                $sel = $_POST['data'];
-
-                if ($sel == null || $sel == "") {
-                    throw new Exception('La selection est nulle');
-                }
-
-                switch ($_POST['typeaction']) {
-                    case BaseEnum::SUPPRESSION:
-                        $rows = $this->get('document.service')->delete($sel);
-                        break;
-                    case BaseEnum::MODIFICATION:
-                        $objet = $this->get('document.service')->update($sel);
-                        $flag = true;
-                        break;
-                    case BaseEnum::PROJET:
-                        $tmp = $this->get('utilisateur.service')->getChildren($sel, $_POST['typeaction']);
-
-                        if (sizeof($tmp) > 0) {
-                            foreach ($tmp as $child) {
-                                array_push($rows, '<a id="list-activable-item-project-' . $child->getidProjet() .
-                                    '" href="#" onclick="addProject(' . $child->getidProjet() .
-                                    ')" class="list-group-item list-activable-item">' . $child->getNom() . '</a>');
-                            }
-                        } else {
-                            array_push($rows, '<a href="#" class="list-group-item">... vide</a>');
-                        }
-                        break;
-                    default:
-                        throw new Exception('Typeaction n\'est pas reconnu');
-                }
-
-            } else if (isset($_FILES['gedi_basebundle_document'])) {
-                if (!isset($_POST['gedi_basebundle_document'])) {
-                    throw new Exception('La selection est nulle');
-                } else {
-                    $sel = $_POST;
-                }
-//                $sel = $_FILES['gedi_basebundle_document'];
-
-                if ($sel == null || $sel == "") {
-                    throw new Exception('La selection est nulle');
-                }
-
-                $response->setData(array('reponse' => (array)$sel));
-                return $response;
-
-                switch ($sel[0]) {
-                    case BaseEnum::UPLOAD:
-                        $objet = $this->get('document.service')->create($sel);
-                        $flag = true;
-                        break;
-                    default:
-                        throw new Exception('Typeaction n\'est pas reconnu');
-                }
-            } else {
-                throw new Exception('Erreur de selection');
+            if ($sel == null || $sel == "") {
+                throw new Exception('La selection est nulle');
             }
 
-            if ($flag == true) {
+            switch ($_POST['typeAction']) {
+                case BaseEnum::UPLOAD:
+                    if (!isset($_FILES['fichier'])) {
+                        throw new Exception('Le fichier n\'est pas uploadé');
+                    } else {
+                        $file = $_FILES['fichier'];
+                        if ($file == null || $file == "") {
+                            throw new Exception('Le fichier est nul');
+                        }
+                        $objet = $this->get('document.service')->create($sel, $file);
+                    }
+                    break;
+                case BaseEnum::SUPPRESSION:
+                    $rows = $this->get('document.service')->delete($sel);
+                    break;
+                case BaseEnum::MODIFICATION:
+                    $objet = $this->get('document.service')->update($sel);
+                    break;
+                case BaseEnum::PROJET:
+                    $tmp = $this->get('utilisateur.service')->getChildren($sel, $_POST['typeAction']);
+
+                    if (sizeof($tmp) > 0) {
+                        foreach ($tmp as $child) {
+                            array_push($rows, '<a id="list-activable-item-project-' . $child->getidProjet() .
+                                '" href="#" onclick="addProject(' . $child->getidProjet() .
+                                ')" class="list-group-item list-activable-item">' . $child->getNom() . '</a>');
+                        }
+                    } else {
+                        array_push($rows, '<a href="#" class="list-group-item">... vide</a>');
+                    }
+                    break;
+                default:
+                    throw new Exception('Typeaction n\'est pas reconnu');
+            }
+
+            if ($_POST['typeAction'] == BaseEnum::UPLOAD || $_POST['typeAction'] == BaseEnum::MODIFICATION) {
                 $rows = [
                     "ck" => 'data-checkbox="true"',
                     "id" => $objet->getIdDocument(),

@@ -4,6 +4,7 @@ namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Gedi\BaseBundle\Entity\Document;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Service permettant de manipuler les documents
@@ -36,25 +37,26 @@ class DocumentService
     /**
      * Enregistre un document dans la BDD
      * @param $sel
+     * @param $file
      * @return Document
      * @internal param $formData
      */
-    public function create($sel)
+    public function create($sel, $file)
     {
+        $uploadedFile = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['size']);
         $objet = new Document();
-        $objet->setNom($sel[1]['value']);
-        $objet->setTypeDoc($sel[2]['value']);
-        $objet->setTag($sel[3]['value']);
-        $objet->setResume($sel[4]['value']);
-        $utilisateur = $this->em->find('GediBaseBundle:Utilisateur', $sel[5]['value']);
+        $objet->setNom($sel['nom']);
+        $objet->setTypeDoc($sel['typeDoc']);
+        $objet->setTag($sel['tag']);
+        $objet->setResume($sel['resume']);
+        $utilisateur = $this->em->find('GediBaseBundle:Utilisateur', $sel['idUtilisateurFkDocument']);
         $utilisateur->addIdUtilisateurFkDocument($objet);
         $objet->setIdUtilisateurFkDocument($utilisateur);
-        $projet = $this->em->find('GediBaseBundle:Projet', $sel[6]['value']);
+        $projet = $this->em->find('GediBaseBundle:Projet', $sel['idProjetFkDocument']);
         $projet->addIdProjetFkDocument($objet);
         $objet->setIdProjetFkDocument($projet);
-        $fileName = $this->fs->upload($sel[8][0]);
+        $fileName = $this->fs->upload($uploadedFile, $projet->getNom());
         $objet->setFichier($fileName);
-        $objet->setFichier($sel[1]['value']);
         $this->em->persist($objet);
         $this->em->flush();
         return $objet;
