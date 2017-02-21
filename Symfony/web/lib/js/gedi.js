@@ -329,7 +329,7 @@ $(function () {
     });
 
     /**
-     * Listener sur le bouton logout, je l'animation
+     * Listener sur le bouton logout, joue l'animation
      */
     $('#btn-logout').click(function () {
         $('#content').animateCss('zoomOut');

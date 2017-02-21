@@ -19,7 +19,11 @@
     <!-- bloc de titre, contient les titres des autres pages -->
     <title>GEDI - {% block app_titre %}{% endblock %}</title>
 </head>
-<body class="full">
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <body class="background-app">
+{% else %}
+    <body class="full">
+{% endif %}
 <div class="container">
     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
         <div class="container">
