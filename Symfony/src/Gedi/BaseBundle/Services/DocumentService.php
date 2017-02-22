@@ -23,14 +23,21 @@ class DocumentService
     private $fs;
 
     /**
+     * @var string
+     */
+    private $targetDir;
+
+    /**
      * DocumentService constructor.
      * @param EntityManager $entityManager
      * @param FileService $fileService
+     * @param $targetDir
      */
-    public function __construct(EntityManager $entityManager, FileService $fileService)
+    public function __construct(EntityManager $entityManager, FileService $fileService, $targetDir)
     {
         $this->em = $entityManager;
         $this->fs = $fileService;
+        $this->targetDir = $targetDir;
     }
 
     /**
@@ -95,6 +102,7 @@ class DocumentService
     {
         for ($i = 0; $i <= count($sel) - 1; $i++) {
             $toDel = $this->em->find('GediBaseBundle:Document', $sel[$i]['id']);
+            unlink($this->targetDir . $toDel->getFichier());
             $this->em->remove($toDel);
         }
         $this->em->flush();
