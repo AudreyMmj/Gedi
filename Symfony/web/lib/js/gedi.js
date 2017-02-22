@@ -1,29 +1,24 @@
 /**
  * Variable de selection d'entité
- * @global {object} sel
  * @var {object} sel
  */
 var sel;
 
 /**
  * Nom de l'entité affiché sur la page
- * @global {string} nom
- * @var {string} nom
+ * @var {string} url
  */
-var nom;
+var url;
 
 /**
  * Tableau des logins
- * @global {array} logins
  * @var {array} logins
  */
 var logins;
 
 /**
  * Enumération des types d'actions possibles sur le serveur
- * @global {array} types
- * @const {array} types
- * @type {{ENREGISTREMENT: string, MODIFICATION: string, SUPPRESSION: string, UTILISATEUR: string, DOCUMENT: string, PROJET: string, GROUPE: string}}
+ * @type {{ENREGISTREMENT: string, UPLOAD: string, MODIFICATION: string, SUPPRESSION: string, UTILISATEUR: string, DOCUMENT: string, PROJET: string, GROUPE: string}}
  */
 const types = {
     ENREGISTREMENT: "enregistré", // demande d'enregistrement
@@ -76,26 +71,20 @@ function activeDefault() {
  * et le nombre d'entités total
  */
 function updateNbEntity() {
-    var $table = $('#table_admin'); // récupération du tableau admin
+    var $table = $('#table_admin');
 
     // ne s'execute que si on est sur la page users_admin
-    if (window.location.href.indexOf("users_admin") > -1) {
+    if (url == types.UTILISATEUR) {
         var nbInactifs = 0;
         // récupère les utilisateurs actifs
         var inactifs = $.map($table.bootstrapTable('getData'), function (rows) {
             return rows.actif;
         });
         for (var i = 0; i < inactifs.length; i++) {
-            if (inactifs[i] != "1") {
-                nbInactifs++; // filtre dans nbInactifs le nombre d'utilisateurs inactifs
-            }
+            (inactifs[i] != "1") ? nbInactifs++ : nbInactifs;
         }
 
-        if (nbInactifs > 0) { // active ou désactive le toggle toggle-new-users si il y a des utilisateurs inactifs
-            $('#toggle-new-users').bootstrapToggle('enable');
-        } else {
-            $('#toggle-new-users').bootstrapToggle('disable');
-        }
+        $('#toggle-new-users').bootstrapToggle((nbInactifs > 0) ? 'enable' : 'disable');
         $('#span-nb-inactifs').html(nbInactifs); // inscrit le nombre d'utilisateurs inactifs dans le span
     }
 
@@ -109,11 +98,11 @@ function updateNbEntity() {
  * @param js_arg, , id de l'entité enfant
  */
 function addUser(js_arg) {
-    if (window.location.href.indexOf("docs_admin") > -1) {
+    if (url == types.DOCUMENT) {
         $('#data_idProjetFkDocument').removeAttr('value');
-        $('#data_idUtilisateurFk' + (nom.charAt(0).toUpperCase() + nom.slice(1))).val(js_arg);
+        $('#data_idUtilisateurFk' + (url.charAt(0).toUpperCase() + url.slice(1))).val(js_arg);
     } else {
-        $('#gedi_basebundle_' + nom + '_idUtilisateurFk' + (nom.charAt(0).toUpperCase() + nom.slice(1))).val(js_arg);
+        $('#gedi_basebundle_' + url + '_idUtilisateurFk' + (url.charAt(0).toUpperCase() + url.slice(1))).val(js_arg);
     }
 }
 
@@ -178,21 +167,21 @@ function edit(js_object_arg) {
     // remplissages de champs des formulaires
     for (var key in js_object) {
         if (key == 'actif' && js_object[key] == '1') {
-            $('#gedi_basebundle_' + nom + '_' + key).bootstrapToggle('on');
+            $('#gedi_basebundle_' + url + '_' + key).bootstrapToggle('on');
         } else if (key == 'password') {
-            $('#gedi_basebundle_' + nom + '_' + key + '_first').val(js_object[key]);
-            $('#gedi_basebundle_' + nom + '_' + key + '_second').val(js_object[key]);
+            $('#gedi_basebundle_' + url + '_' + key + '_first').val(js_object[key]);
+            $('#gedi_basebundle_' + url + '_' + key + '_second').val(js_object[key]);
         } else {
-            if (window.location.href.indexOf("docs_admin") > -1) {
+            if (url == "document") {
                 $('#data_' + key).val(js_object[key]);
             } else {
-                $('#gedi_basebundle_' + nom + '_' + key).val(js_object[key]);
+                $('#gedi_basebundle_' + url + '_' + key).val(js_object[key]);
             }
         }
     }
 
     // modification du popup ajout / edition
-    $('#popup-admin-add-titre').html('Modifier un ' + nom);
+    $('#popup-admin-add-titre').html('Modifier un ' + url);
     var $bsae = $('.bouton-submit-admin-entity');
     $bsae.val('Appliquer');
     $bsae.prop('disabled', false);
@@ -202,41 +191,69 @@ function edit(js_object_arg) {
     $('#bouton-upload').hide(); // masque le bouton upload
 }
 
+function validForm() {
+    if (url == types.UTILISATEUR) {
+        validFormUser();
+    } else if (url == types.GROUPE) {
+        validFormGP(false);
+    } else if (url == types.PROJET) {
+        validFormGP(true);
+    }
+}
+
 /**
  * Fonction de vérification de formulaire, permet de valider les champs coté client.
  * Cette fonction s'execute uniquement sur la page users_admin
  */
-function validFormUtilisateur() {
-    var pass1 = document.getElementById("gedi_basebundle_utilisateur_password_first").value;
-    var pass2 = document.getElementById("gedi_basebundle_utilisateur_password_second").value;
-    var username = document.getElementById("gedi_basebundle_utilisateur_username").value;
-    var nom = document.getElementById("gedi_basebundle_utilisateur_nom").value;
-    var prenom = document.getElementById("gedi_basebundle_utilisateur_prenom").value;
+function validFormUser() {
+    var $bt = $('.bouton-submit-admin-entity');
+    var $pass1 = $('#gedi_basebundle_utilisateur_password_first');
+    var $pass2 = $('#gedi_basebundle_utilisateur_password_second');
+    var $username = $('#gedi_basebundle_utilisateur_username');
+    var $nom = $('#gedi_basebundle_utilisateur_nom');
+    var $prenom = $('#gedi_basebundle_utilisateur_prenom');
 
     // test si le mot de passe concorde avec la confirmation
-    if (pass1 != pass2 && (pass1 != "" && pass2 != "")) {
-        $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-error)');
-        $('.bouton-submit-admin-entity').prop('disabled', true);
-    } else if (pass1 == pass2 && (pass1 != "" && pass2 != "")) {
-        $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-success)');
-        $('.bouton-submit-admin-entity').prop('disabled', false);
+    if ($pass1.val() != $pass2.val() && ($pass1.val() != "" && $pass2.val() != "")) {
+        $pass2.css('background-color', 'var(--color-error)');
+        $bt.prop('disabled', true);
+    } else if ($pass1.val() == $pass2.val() && ($pass1.val() != "" && $pass2.val() != "")) {
+        $pass2.css('background-color', 'var(--color-success)');
+        $bt.prop('disabled', false);
     } else {
-        $('#gedi_basebundle_utilisateur_password_second').css('background-color', 'var(--color-default)');
-        $('.bouton-submit-admin-entity').prop('disabled', true);
+        $pass2.css('background-color', 'var(--color-default)');
+        $bt.prop('disabled', true);
     }
 
     // test si le login n'est pas déjà utilisé
-    if (logins != null && logins.includes(username)) {
-        $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-error)');
-        $('.bouton-submit-admin-entity').prop('disabled', true);
+    if (logins != null && logins.includes($username.val())) {
+        $username.css('background-color', 'var(--color-error)');
+        $bt.prop('disabled', true);
     } else {
-        $('#gedi_basebundle_utilisateur_username').css('background-color', 'var(--color-default)');
-        $('.bouton-submit-admin-entity').prop('disabled', false);
+        $username.css('background-color', 'var(--color-default)');
+        $bt.prop('disabled', false);
     }
 
     // test si tous les champs sont remplis
-    if (username == "" || pass1 == "" || pass2 == "" || nom == "" || prenom == "") {
-        $('.bouton-submit-admin-entity').prop('disabled', true);
+    if ($username.val() == "" || $pass1.val() == "" || $pass2.val() == "" || $nom.val() == "" || $prenom.val() == "") {
+        $bt.prop('disabled', true);
+    }
+}
+
+/**
+ * Fonction de vérification de formulaire, permet de valider les champs coté client.
+ */
+function validFormGP(cp) {
+    var nomE = $('#gedi_basebundle_' + url + '_nom').val();
+    var user = $('#gedi_basebundle_' + url + '_idUtilisateurFk' +
+        (url.charAt(0).toUpperCase() + url.slice(1))).val();
+
+    var $bt = $('.bouton-submit-admin-entity');
+    // test si tous les champs sont remplis
+    if (nomE == "" || user == "" || (cp == true && $('#gedi_basebundle_projet_parent').val() == "")) {
+        $bt.prop('disabled', true);
+    } else {
+        $bt.prop('disabled', false);
     }
 }
 
@@ -252,27 +269,30 @@ $(function () {
      */
     $(document).ready(function () {
         $('.bouton-desactive').prop('disabled', true); // désactive par défaut les boutons de la classe bouton-desactive
-        document.getElementById("content").style.visibility = "visible";
+        $('#content').attr('style', 'visibility: visible');
 
         // change la variable nom en fonction de la page courante
         // charge les animations sur les pages
         if (window.location.href.lastIndexOf("/") == window.location.href.length - 1) {
-            document.getElementById("jumbo1").style.visibility = "visible";
-            $('#jumbo1').animateCss('zoomInDown');
+            var $jb = $('#jumbo1');
+            $jb.attr('style', 'visibility: visible');
+            $jb.animateCss('zoomInDown');
         } else if (window.location.href.indexOf("register") > -1) {
-            document.getElementById("panel-register").style.visibility = "visible";
-            $('#panel-register').animateCss('bounceInUp');
+            var $pr = $('#panel-register');
+            $pr.attr('style', 'visibility: visible');
+            $pr.animateCss('bounceInUp');
         } else if (window.location.href.indexOf("contact") > -1) {
-            document.getElementById("panel-contact").style.visibility = "visible";
-            $('#panel-contact').animateCss('bounceInUp');
+            var $pc = $('#panel-contact');
+            $pc.attr('style', 'visibility: visible');
+            $pc.animateCss('bounceInUp');
         } else if (window.location.href.indexOf("users_admin") > -1) {
-            nom = 'utilisateur';
+            url = types.UTILISATEUR;
         } else if (window.location.href.indexOf("groups_admin") > -1) {
-            nom = 'groupe';
+            url = types.GROUPE;
         } else if (window.location.href.indexOf("projects_admin") > -1) {
-            nom = 'projet';
+            url = types.PROJET;
         } else if (window.location.href.indexOf("docs_admin") > -1) {
-            nom = 'document';
+            url = types.DOCUMENT;
         } else if (window.location.href.indexOf("home_admin") > -1) {
             // if (nbNewUsers != null && nbNewUsers > 0) {
             var nbNewUsers = 3;
@@ -295,24 +315,16 @@ $(function () {
      * la sélection.
      */
     $table.on({
-        'check.bs.table': function () {
-            sel = $('#table_admin').bootstrapTable('getSelections');
-            $('.spanNbSel').html(sel.length);
-            hideOuShow(sel.length);
-        }, 'uncheck.bs.table': function () {
-            sel = $('#table_admin').bootstrapTable('getSelections');
-            $('.spanNbSel').html(sel.length);
-            hideOuShow(sel.length);
-        }, 'check-all.bs.table': function () {
-            sel = $('#table_admin').bootstrapTable('getSelections');
-            $('.spanNbSel').html(sel.length);
-            hideOuShow(sel.length);
-        }, 'uncheck-all.bs.table': function () {
-            sel = $('#table_admin').bootstrapTable('getSelections');
-            $('.spanNbSel').html(sel.length);
-            hideOuShow(sel.length);
-        }
+        'check.bs.table': sr,
+        'uncheck.bs.table': sr,
+        'check-all.bs.table': sr,
+        'uncheck-all.bs.table': sr
     });
+    function sr() {
+        sel = $table.bootstrapTable('getSelections');
+        $('.spanNbSel').html(sel.length);
+        hideOuShow(sel.length);
+    }
 
     /**
      * Listener sur les éléments de la classe btn-view-entity
@@ -320,11 +332,11 @@ $(function () {
      */
     $table.on('click', '.btn-view-entity', function () {
         var id = $(this).closest("tr").attr('data-uniqueid'); // récupère l'id de l'entité
-        $('#liste-children').empty(); // vide la liste avant affichage
+        $('#liste-children').empty(); // vide la liste
 
-        if (window.location.href.indexOf("groups_admin") > -1) {
+        if (url == types.GROUPE) {
             ajaxSend(id, types.UTILISATEUR);
-        } else if (window.location.href.indexOf("projects_admin") > -1) {
+        } else if (url == types.PROJET) {
             ajaxSend(id, types.DOCUMENT);
         }
     });
@@ -356,15 +368,11 @@ $(function () {
      * Met à jour du popup de suppression
      */
     $('.bouton-desactive').click(function () {
-        var nom_temp = nom;
+        var tmp = url;
         if (typeof sel != 'undefined') {
-            // ajoute un 's' si la selection contient plusieurs élements
-            // dans le popup de suppression
-            (sel.length > 1) ? nom_temp += 's' : nom_temp;
-
-            // écrit le texte dans le popup indiquant le nombre d'entités dans le tableau
+            (sel.length > 1) ? tmp += 's' : tmp;
             $('#nbSel').html('Vous êtes sur le point de supprimer définitivement ' +
-                sel.length + ' ' + nom_temp);
+                sel.length + ' ' + tmp);
         }
     });
 
@@ -392,9 +400,9 @@ $(function () {
      */
     $('#toggle-new-users').change(function () {
         if (!$('#toggle-new-users').prop('checked')) {
-            $('#table_admin').bootstrapTable('filterBy', {actif: ""});
+            $table.bootstrapTable('filterBy', {actif: ""});
         } else {
-            $('#table_admin').bootstrapTable('filterBy', {});
+            $table.bootstrapTable('filterBy', {});
         }
     });
 
@@ -403,7 +411,7 @@ $(function () {
      * Renseigne les champs nom de document et type.
      */
     $('#data_fichier').change(function () {
-        var uf = document.getElementById("data_fichier").value;
+        var uf = $(this).val();
         $('#data_nom').val(uf.substring(uf.lastIndexOf('\\') + 1, uf.lastIndexOf('.')));
         $('#data_typeDoc').val(uf.substring(uf.lastIndexOf('.') + 1, uf.length));
     });
@@ -433,14 +441,14 @@ $(function () {
         var formdata = new FormData($form[0]);
 
         // ne s'execute que sur la page docs_admin, cas de l'upload de fichier
-        if (window.location.href.indexOf("docs_admin") > -1 && selection[0].value == "") {
+        if (url == types.DOCUMENT && selection[0].value == "") {
             var file = document.getElementById("data_fichier");
             formdata.append('typeAction', types.UPLOAD);
             formdata.append('fichier', file.files[0]);
             ajaxSend(formdata, types.UPLOAD);
         } else {
             // ne s'execute que sur la page users_admin
-            if (window.location.href.indexOf("users_admin") > -1) {
+            if (url == types.UTILISATEUR) {
                 // une checkbox non cochée dans un formulaire n'est n'apparait pas dans
                 // le tableau après un serializeArray. On doit donc dire à la main qu'elle
                 // n'est pas cochée
@@ -471,15 +479,9 @@ $(function () {
      * Ne s'execute que sur la page users_admin
      */
     $('#popup-add').on({
-        'keyup': function () {
-            if (window.location.href.indexOf("users_admin") > -1) {
-                validFormUtilisateur();
-            }
-        }, 'focusout': function () {
-            if (window.location.href.indexOf("users_admin") > -1) {
-                validFormUtilisateur();
-            }
-        }
+        'keyup': validForm,
+        'focusout': validForm,
+        'click': validForm
     });
 
     /**
@@ -505,20 +507,20 @@ $(function () {
         $('form').trigger("reset"); // reset le formulaire
         $('#gedi_basebundle_utilisateur_actif').bootstrapToggle('off'); // met le toggle sur off
         $('#liste-projets').empty(); // vide la liste des projets sur projects_admin
-        $('#popup-admin-add-titre').html('Créer un ' + nom); // écrit le titre du modal
+        $('#popup-admin-add-titre').html('Créer un ' + url); // écrit le titre du modal
         var $bsae = $('.bouton-submit-admin-entity'); // récupère l'element de la classe bouton-submit-admin-entity
         $bsae.val('Créer'); // change la valeur de $bsae
         $('.assign-user').show(); // affiche le panel d'assignation d'utilisateur
         $('#bouton-upload').show(); // affiche le bouton upload
         $('#data_nom').prop('disabled', true);
         $('#data_typeDoc').prop('disabled', true);
+        $bsae.prop('disabled', true); // desactive le bouton submit du formulaire
 
         // ne s'execute que sur la page users_admin
         // récupère tous les login pour vérifier coté client si
         // on a pas un doublon de login
-        if (window.location.href.indexOf("users_admin") > -1) {
-            $bsae.prop('disabled', true); // desactive le bouton submit du formulaire
-            logins = $.map($('#table_admin').bootstrapTable('getData'), function (rows) {
+        if (url == types.UTILISATEUR) {
+            logins = $.map($table.bootstrapTable('getData'), function (rows) {
                 return rows.login; // met la liste des logins du tableau dans la variable globale logins
             });
         }
@@ -537,24 +539,24 @@ $(function () {
      * @param typeAction, type d'action à faire coté serveur [enregistré, modifié, supprimé, children]
      */
     function ajaxSend(selection, typeAction) {
-        var contentType, processData;
+        var ct, pd;
 
         // upload de fichiers
         if (typeAction == types.UPLOAD) {
-            contentType = false;
-            processData = false;
+            ct = false;
+            pd = false;
         } else {
             // toutes les autres requetes
             selection = {'data': selection, 'typeAction': typeAction};
-            contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
-            processData = true;
+            ct = 'application/x-www-form-urlencoded; charset=UTF-8';
+            pd = true;
         }
 
         $.ajax({
             type: 'POST', // type d'envoi
             url: window.location, // url d'envoi, ici ce sera toujours la page courante
-            contentType: contentType, // type de contenu
-            processData: processData, // pré-traitement de jquery
+            contentType: ct, // type de contenu
+            processData: pd, // pré-traitement de jquery
             data: selection, // données à envoyer au serveur
             success: function (data) { // traitement en cas de succes
                 switch (typeAction) {
@@ -574,20 +576,19 @@ $(function () {
                         completeRow(data); // finalise la création ou la modification
                         break;
                     case types.UTILISATEUR:
-                        if (window.location.href.indexOf("groups_admin") > -1) {
+                        if (url == types.GROUPE) {
                             $('#liste-children').prepend(data.reponse);
                         }
                         return 0;
                         break;
                     case types.DOCUMENT:
-                        if (window.location.href.indexOf("projects_admin") > -1) {
+                        if (url == types.PROJET) {
                             $('#liste-children').prepend(data.reponse);
                         }
                         return 0;
                         break;
                     case types.PROJET:
-                        if (window.location.href.indexOf("projects_admin") > -1
-                            || window.location.href.indexOf("docs_admin") > -1) {
+                        if (url == types.PROJET || url == types.DOCUMENT) {
                             var $lp = $('#liste-projets');
                             $lp.empty();
                             $lp.prepend(data.reponse);
@@ -603,7 +604,7 @@ $(function () {
                 activeDefault();
 
                 // affiche la notification de succes
-                showNotify('<strong>' + (nom.charAt(0).toUpperCase() + nom.slice(1)) +
+                showNotify('<strong>' + (url.charAt(0).toUpperCase() + url.slice(1)) +
                     ((typeAction == types.SUPPRESSION && selection.length > 1) ? 's bien ' + typeAction + 's' :
                         ' bien ' + typeAction) + '</strong>', 'glyphicon glyphicon-ok', 'success');
             },
@@ -646,7 +647,7 @@ $(function () {
         $table.bootstrapTable('scrollTo', 'bottom'); // scroll en bas du tableau
         // le code suivant ne s'execute que sur la page users_admin car les elements
         // suivants sont sur cette page uniquement
-        if (window.location.href.indexOf("users_admin") > -1) {
+        if (url == types.UTILISATEUR) {
             if (data.reponse.actif != "1") { // test des lignes du tableau reponse, on test si l'utilisateur est actif
                 // met la ligne en bleu si l'utilisateur est inactif
                 $('tr[data-uniqueid=' + data.reponse.id + ']').addClass('info text-info'); //BUG #2
