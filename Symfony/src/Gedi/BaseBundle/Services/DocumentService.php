@@ -85,9 +85,13 @@ class DocumentService
     {
         $objet = $this->em->find('GediBaseBundle:Document', $sel[0]['value']);
         $objet->setNom($sel[1]['value']);
-        $objet->setTypeDoc($sel[2]['value']);// a faire
+        $objet->setTypeDoc($sel[2]['value']);
         $objet->setTag($sel[3]['value']);
         $objet->setResume($sel[4]['value']);
+        $oldPath = $objet->getFichier();
+        $newPath = substr($oldPath, 0, strrpos($oldPath, ".") + 1) . $objet->getTypeDoc();
+        $objet->setFichier($newPath);
+        rename($this->targetDir . $oldPath, $this->targetDir . $newPath);
         $this->em->merge($objet);
         $this->em->flush();
         return $objet;

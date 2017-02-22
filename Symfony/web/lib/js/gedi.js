@@ -172,7 +172,7 @@ function edit(js_object_arg) {
             $('#gedi_basebundle_' + url + '_' + key + '_first').val(js_object[key]);
             $('#gedi_basebundle_' + url + '_' + key + '_second').val(js_object[key]);
         } else {
-            if (url == "document") {
+            if (url == types.DOCUMENT) {
                 $('#data_' + key).val(js_object[key]);
             } else {
                 $('#gedi_basebundle_' + url + '_' + key).val(js_object[key]);
@@ -188,7 +188,7 @@ function edit(js_object_arg) {
     $('#data_nom').prop('disabled', false);
     $('#data_typeDoc').prop('disabled', false);
     $('.assign-user').hide(); // masque le panel d'assignation d'utilisateur
-    $('#bouton-upload').hide(); // masque le bouton upload
+    $('#data_fichier').prop('disabled', true); // desactive le bouton upload
 }
 
 function validForm() {
@@ -529,6 +529,7 @@ $(function () {
         $('#bouton-upload').show(); // affiche le bouton upload
         $('#data_nom').prop('disabled', true);
         $('#data_typeDoc').prop('disabled', true);
+        $('#data_fichier').prop('disabled', false); // desactive le bouton upload
         $bsae.prop('disabled', true); // desactive le bouton submit du formulaire
 
         // ne s'execute que sur la page users_admin
