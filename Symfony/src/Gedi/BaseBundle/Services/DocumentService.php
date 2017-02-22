@@ -4,6 +4,8 @@ namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Gedi\BaseBundle\Entity\Document;
+use Symfony\Component\HttpFoundation\File\File;
+use ZipArchive;
 
 /**
  * Service permettant de manipuler les documents
@@ -74,6 +76,27 @@ class DocumentService
     public function read()
     {
         return $this->em->getRepository('GediBaseBundle:Document')->findAll();
+    }
+
+    /**
+     * Télécharge les fichiers selectionnés
+     * @param $sel
+     */
+    public function download($sel)
+    {
+        $zip = new ZipArchive();
+        $filename = $this->targetDir . "archive.zip";
+
+        if ($zip->open($filename, ZipArchive::CREATE) !== TRUE) {
+            exit("Impossible d'ouvrir le fichier <$filename>\n");
+        }
+
+        for ($i = 0; $i <= count($sel) - 1; $i++) {
+            $objet = $this->em->find('GediBaseBundle:Document', $sel[$i]);
+            $file = new File($this->targetDir . $objet->getFichier());
+            $zip->addFile($file);
+        }
+        $zip->close();
     }
 
     /**

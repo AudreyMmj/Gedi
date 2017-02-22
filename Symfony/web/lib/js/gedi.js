@@ -23,6 +23,7 @@ var logins;
 const types = {
     ENREGISTREMENT: "enregistré", // demande d'enregistrement
     UPLOAD: "uploadé", // demande d'enregistrement de fichier
+    DOWNLOAD: "téléchargé", // demande de téléchargement de fichier
     MODIFICATION: "modifié", // demande de modification
     SUPPRESSION: "supprimé", // demande de suppression
     UTILISATEUR: "utilisateur", // demande d'optention des utilisateurs d'une entité
@@ -432,6 +433,17 @@ $(function () {
     });
 
     /**
+     * Listener sur le bouton download de fichier.
+     * Télécharge les fichiers selectionnés
+     */
+    $('#bouton-download').click(function () {
+        var sel = $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id;
+        });
+        ajaxSend(sel, types.DOWNLOAD);
+    });
+
+    /**
      * Listener sur le bouton supprimer du popup de suppression
      * envoi la selection à supprimer au controller via ajaxSend
      */
@@ -591,6 +603,10 @@ $(function () {
                         $table.bootstrapTable('append', data.reponse);
                         completeRow(data); // finalise la création ou la modification
                         break;
+                    case types.DOWNLOAD:
+                        $table.bootstrapTable('uncheckAll');
+                        window.location = data.reponse;
+                        break;
                     case types.UTILISATEUR:
                         if (url == types.GROUPE) {
                             $('#liste-children').prepend(data.reponse);
@@ -621,8 +637,8 @@ $(function () {
 
                 // affiche la notification de succes
                 showNotify('<strong>' + (url.charAt(0).toUpperCase() + url.slice(1)) +
-                    ((typeAction == types.SUPPRESSION && selection.length > 1) ? 's bien ' + typeAction + 's' :
-                        ' bien ' + typeAction) + '</strong>', 'glyphicon glyphicon-ok', 'success');
+                    ((typeAction == types.SUPPRESSION && selection.length > 1) ? 's ' + typeAction + 's' :
+                        ' ' + typeAction) + '</strong>', 'glyphicon glyphicon-ok', 'success');
             },
             error: function () { // traitement en cas d'echec
                 // affiche la notification d'echec

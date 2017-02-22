@@ -329,6 +329,10 @@ class AdminController extends Controller
                         $objet = $this->get('document.service')->create($sel, $uploadedFile);
                     }
                     break;
+                case BaseEnum::DOWNLOAD:
+                    $this->get('document.service')->download($sel);
+                    $rows = "download";
+                    break;
                 case BaseEnum::SUPPRESSION:
                     $rows = $this->get('document.service')->delete($sel);
                     break;
@@ -387,5 +391,18 @@ class AdminController extends Controller
             'documentForm' => $form->createView(),
             'tab_users' => $tab_users
         ));
+    }
+
+    /**
+     * Page de téléchargment des fichiers de l'application
+     */
+    public function downloadAction()
+    {
+        header('Content-Type: application/octet-stream');
+        header('Content-disposition: attachment; filename=archive.zip');
+        header('Pragma: no-cache');
+        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        header('Expires: 0');
+        readfile($this->getParameter('fichiers_directory') . 'archive.zip');
     }
 }

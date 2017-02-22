@@ -6,6 +6,7 @@ abstract class BaseEnum
 {
     const ENREGISTREMENT = "enregistré"; // demande d'enregistrement
     const UPLOAD = "uploadé"; // demande d'enregistrement de fichiers
+    const DOWNLOAD = "téléchargé"; // demande de téléchargement de fichier
     const MODIFICATION = "modifié"; // demande de modification
     const SUPPRESSION = "supprimé"; // demande de suppression
     const UTILISATEUR = "utilisateur"; // demande d'optention des utilisateurs d'une entité
