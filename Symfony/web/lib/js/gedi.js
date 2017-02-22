@@ -192,14 +192,16 @@ function edit(js_object_arg) {
 }
 
 function validForm() {
-    if (url == types.UTILISATEUR) {
-        validFormUser();
-    } else if (url == types.GROUPE) {
-        validFormGP(false);
-    } else if (url == types.PROJET) {
-        validFormGP(true);
-    } else if (url == types.DOCUMENT) {
-        validFormDoc();
+    if ($('.bouton-submit-admin-entity').val() == "Créer") {
+        if (url == types.UTILISATEUR) {
+            validFormUser();
+        } else if (url == types.GROUPE) {
+            validFormGP(false);
+        } else if (url == types.PROJET) {
+            validFormGP(true);
+        } else if (url == types.DOCUMENT) {
+            validFormDoc();
+        }
     }
 }
 

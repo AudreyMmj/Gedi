@@ -85,6 +85,10 @@ class ProjetService
     {
         $objet = $this->em->find('GediBaseBundle:Projet', $sel[0]['value']);
         $objet->setNom($sel[1]['value']);
+        $oldPath = $objet->getPath();
+        $newPath = substr($oldPath, 0, strrpos($oldPath, "/") + 1) . $objet->getNom();
+        $objet->setPath($newPath);
+        $this->fs->rename($this->targetDir . $oldPath, $this->targetDir . $newPath);
         $this->em->merge($objet);
         $this->em->flush();
         return $objet;

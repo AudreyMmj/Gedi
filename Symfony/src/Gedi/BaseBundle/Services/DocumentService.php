@@ -75,10 +75,10 @@ class DocumentService
      * @return null|object
      */
     public function update($sel)
-    {//MAJ
+    {
         $objet = $this->em->find('GediBaseBundle:Document', $sel[0]['value']);
         $objet->setNom($sel[1]['value']);
-        $objet->setTypeDoc($sel[2]['value']);
+        $objet->setTypeDoc($sel[2]['value']);// a faire
         $objet->setTag($sel[3]['value']);
         $objet->setResume($sel[4]['value']);
         $this->em->merge($objet);
