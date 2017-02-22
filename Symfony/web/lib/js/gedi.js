@@ -198,6 +198,8 @@ function validForm() {
         validFormGP(false);
     } else if (url == types.PROJET) {
         validFormGP(true);
+    } else if (url == types.DOCUMENT) {
+        validFormDoc();
     }
 }
 
@@ -251,6 +253,17 @@ function validFormGP(cp) {
     var $bt = $('.bouton-submit-admin-entity');
     // test si tous les champs sont remplis
     if (nomE == "" || user == "" || (cp == true && $('#gedi_basebundle_projet_parent').val() == "")) {
+        $bt.prop('disabled', true);
+    } else {
+        $bt.prop('disabled', false);
+    }
+}
+
+function validFormDoc() {
+    var $bt = $('.bouton-submit-admin-entity');
+    if ($('#data_typeDoc').val() == "" || $('#data_idUtilisateurFkDocument').val() == "" ||
+        $('#data_resume').val() == "" || $('#data_nom').val() == "" ||
+        $('#data_tag').val() == "" || $('#data_idProjetFkDocument').val() == "") {
         $bt.prop('disabled', true);
     } else {
         $bt.prop('disabled', false);
