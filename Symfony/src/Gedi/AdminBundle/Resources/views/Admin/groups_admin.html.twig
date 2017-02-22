@@ -89,7 +89,8 @@
                 {% if (utilisateur.role == 'ROLE_USER' and utilisateur.actif == '1') %}
                     <a id="list-activable-item-{{ utilisateur.idUtilisateur }}" href="#"
                        class="list-group-item list-activable-item"
-                       onclick="addUser('{{ utilisateur.idUtilisateur }}');">{{ utilisateur.nom }} {{ utilisateur.prenom }}</a>
+                       onclick="addUser('{{ utilisateur.idUtilisateur }}');">
+                        <span class="glyphicon glyphicon-user"></span> {{ utilisateur.nom }} {{ utilisateur.prenom }}</a>
                 {% endif %}
             {% endfor %}
         </div>

@@ -248,7 +248,8 @@ class AdminController extends Controller
                         foreach ($tmp as $child) {
                             array_push($rows, '<a id="list-activable-item-project-' . $child->getidProjet() .
                                 '" href="#" onclick="addProject(' . $child->getidProjet() .
-                                ')" class="list-group-item list-activable-item">' . $child->getNom() . '</a>');
+                                ')" class="list-group-item list-activable-item"><span class="glyphicon glyphicon-folder-close"></span> ' .
+                                $child->getNom() . '</a>');
                         }
                     } else {
                         array_push($rows, '<a href="#" class="list-group-item">... vide</a>');
@@ -346,7 +347,8 @@ class AdminController extends Controller
                         foreach ($tmp as $child) {
                             array_push($rows, '<a id="list-activable-item-project-' . $child->getidProjet() .
                                 '" href="#" onclick="addProject(' . $child->getidProjet() .
-                                ')" class="list-group-item list-activable-item">' . $child->getNom() . '</a>');
+                                ')" class="list-group-item list-activable-item"><span class="glyphicon glyphicon-folder-close"></span> ' .
+                                $child->getNom() . '</a>');
                         }
                     } else {
                         array_push($rows, '<a href="#" class="list-group-item">... vide</a>');
