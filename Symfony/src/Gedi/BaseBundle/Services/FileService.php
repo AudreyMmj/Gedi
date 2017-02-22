@@ -21,14 +21,14 @@ class FileService
     /**
      * Fonction pour écrire le fichier sur le serveur
      * @param UploadedFile $file
-     * @param $utilisateur
      * @param $projet
      * @return string
+     * @internal param $utilisateur
      */
-    public function upload(UploadedFile $file, $utilisateur, $projet)
+    public function upload(UploadedFile $file, $projet)
     {
         $fileName = md5(uniqid()) . '.' . $file->guessExtension();
-        $file->move($this->targetDir . '/' . $utilisateur . '/' . $projet, $fileName);
+        $file->move($this->targetDir . '/' . $projet, $fileName);
         return $fileName;
     }
 }
