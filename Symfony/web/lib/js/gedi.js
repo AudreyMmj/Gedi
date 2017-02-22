@@ -197,9 +197,9 @@ function validForm() {
         if (url == types.UTILISATEUR) {
             validFormUser();
         } else if (url == types.GROUPE) {
-            validFormGP(false);
+            validFormGP();
         } else if (url == types.PROJET) {
-            validFormGP(true);
+            validFormGP();
         } else if (url == types.DOCUMENT) {
             validFormDoc();
         }
@@ -248,14 +248,14 @@ function validFormUser() {
 /**
  * Fonction de vérification de formulaire, permet de valider les champs coté client.
  */
-function validFormGP(cp) {
+function validFormGP() {
     var nomE = $('#gedi_basebundle_' + url + '_nom').val();
     var user = $('#gedi_basebundle_' + url + '_idUtilisateurFk' +
         (url.charAt(0).toUpperCase() + url.slice(1))).val();
 
     var $bt = $('.bouton-submit-admin-entity');
     // test si tous les champs sont remplis
-    if (nomE == "" || user == "" || (cp == true && $('#gedi_basebundle_projet_parent').val() == "")) {
+    if (nomE == "" || user == "") {
         $bt.prop('disabled', true);
     } else {
         $bt.prop('disabled', false);
