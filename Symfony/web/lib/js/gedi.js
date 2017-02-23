@@ -61,8 +61,14 @@ $(document).ready(function () {
             '</strong>', 'glyphicon glyphicon-info-sign', 'info');
         // }
     }
-    updateNbEntity(); // met à jour le nombre d'entités
-    activeDefault(); // active les éléments par défaut
+    //bouton de contact
+    if (!((window.location.href.indexOf("home_admin") > -1) || (window.location.href.indexOf("docs_admin") > -1) || (window.location.href.indexOf("projects_admin") > -1) || (window.location.href.indexOf("groups_admin") > -1)|| (window.location.href.indexOf("users_admin") > -1) || (window.location.href.indexOf("contact") > -1)))
+    {
+        showNotifyRight('','../img/contact_img.png', 'primary');
+    }
+
+    updateNbEntity();
+    activeDefault();
 });
 
 /*
@@ -158,14 +164,48 @@ function showNotify(texte, icon, type) {
             message: texte
         }, {
             type: type,
+            placement: {
+                from: "top",
+                align: "left"
+            },
             animate: {
                 enter: 'animated bounceInDown',
                 exit: 'animated bounceOutUp'
-            }
+            },
+            newest_on_top: true
         });
     }
 }
 
+//fonction d'affichage de pop-up sur la droite
+function showNotifyRight(texte, icon, type) {
+    //if (texte.length > 1) {
+        $.notify({
+            //options
+            icon: icon,
+            message: texte,
+            // à changer plus tard
+            url: 'http://localhost/Gedi/Symfony/web/contact'
+        },{
+            //settings
+            type: type,
+            icon_type: 'image',
+            allow_dismiss: false,
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            offset: {
+                x: 0,
+                y: 200
+            },
+            delay: 0,
+            animate: {
+                enter: 'animated slideInRight'
+            }
+        });
+    //}
+}
 /*
  Fonction d'édition d'entité. La fonction renseigne les champs du formulaire.
 
