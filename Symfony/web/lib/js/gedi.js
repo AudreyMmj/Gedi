@@ -142,7 +142,7 @@ function showNotifyRight(texte, icon, type) {
             delay: 0,
             animate: {
                 enter: 'animated slideInRight'
-            },
+            }
         });
     //}
 }
