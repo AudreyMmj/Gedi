@@ -26,6 +26,7 @@ class AdminController extends Controller
         // importation des utilisateurs
         $tab_users_last = $this->get('utilisateur.service')->readLast(5);
         $nb_users = $this->get('utilisateur.service')->count();
+        $nb_users_inactifs = $this->get('utilisateur.service')->countInactifs();
         // importation des projets
         $tab_projects_last = $this->get('projet.service')->readLast(5);
         $nb_projects = $this->get('projet.service')->count();
@@ -47,6 +48,7 @@ class AdminController extends Controller
             'tab_groups_last' => $tab_groups_last,
             'tab_docs_last' => $tab_docs_last,
             'nb_download' => $nb_download,
+            'nb_users_inactifs' => $nb_users_inactifs,
         ));
     }
 

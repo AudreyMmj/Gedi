@@ -106,6 +106,19 @@ class UtilisateurService
     }
 
     /**
+     * Retourne le nombre d'utilisateurs inactifs
+     * @return mixed
+     */
+    public function countInactifs()
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('count(u.idUtilisateur)');
+        $qb->where('u.actif = 0');
+        $qb->from('GediBaseBundle:Utilisateur', 'u');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * Met à jour un utilisateur et crée son repertoire de sauvegarde
      * si il n'était pas actif
      * @param $sel

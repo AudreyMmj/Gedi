@@ -276,6 +276,30 @@ function validFormDoc() {
         $bt.prop('disabled', false);
     }
 }
+/**
+ * Fonction executée sur le dashboard administrateur
+ * @param counter
+ */
+function dashboardStart(counter) {
+    if (counter < 9) {
+        setTimeout(function () {
+            var $p1 = $('#panel-' + counter);
+            $p1.attr('style', 'visibility: visible');
+            $p1.animateCss('bounceInUp');
+            counter++;
+            dashboardStart(counter);
+        }, 200);
+    } else {
+        setTimeout(function () {
+            var nbNewUsers = parseInt($('#nb_users_inactifs').html());
+            if (nbNewUsers > 0) {
+                showNotify('<strong>' + 'Vous avez ' + nbNewUsers +
+                    ((nbNewUsers > 1) ? ' demandes' : ' demande') + ' d\'ajout' +
+                    '</strong>', 'glyphicon glyphicon-info-sign', 'info');
+            }
+        }, 1500);
+    }
+}
 
 /**
  * =======================================================================
@@ -314,12 +338,7 @@ $(function () {
         } else if (window.location.href.indexOf("docs_admin") > -1) {
             url = types.DOCUMENT;
         } else if (window.location.href.indexOf("home_admin") > -1) {
-            // if (nbNewUsers != null && nbNewUsers > 0) {
-            // var nbNewUsers = 3;
-            // showNotify('<strong>' + 'Vous avez ' + nbNewUsers +
-            //     ((nbNewUsers > 1) ? ' demandes' : ' demande') + 'd\'ajout' +
-            //     '</strong>', 'glyphicon glyphicon-info-sign', 'info');
-            // }
+            dashboardStart(1);
         }
         updateNbEntity(); // met à jour le nombre d'entités
         activeDefault(); // active les éléments par défaut
@@ -543,8 +562,10 @@ $(function () {
         $bsae.val('Créer'); // change la valeur de $bsae
         $('.assign-user').show(); // affiche le panel d'assignation d'utilisateur
         $bsae.prop('disabled', true); // desactive le bouton submit du formulaire
-        $('#gedi_basebundle_' + url + '_idUtilisateurFk' + (url.charAt(0).toUpperCase() + url.slice(1))).removeAttr('value');;
-        $('#gedi_basebundle_' + url + '_id' + (url.charAt(0).toUpperCase() + url.slice(1))).removeAttr('value');;
+        $('#gedi_basebundle_' + url + '_idUtilisateurFk' + (url.charAt(0).toUpperCase() + url.slice(1))).removeAttr('value');
+        ;
+        $('#gedi_basebundle_' + url + '_id' + (url.charAt(0).toUpperCase() + url.slice(1))).removeAttr('value');
+        ;
 
         // users_admin
         $('#gedi_basebundle_utilisateur_actif').bootstrapToggle('off'); // met le toggle sur off

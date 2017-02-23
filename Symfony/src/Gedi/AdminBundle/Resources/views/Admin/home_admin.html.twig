@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block app_contenu %}
+    <div id="nb_users_inactifs" style="visibility:hidden">{{ nb_users_inactifs }}</div>
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <div class="panel panel-primary">
+                <div id="panel-1" style="visibility:hidden" class="panel panel-primary">
                     <div class="panel-heading text-center">
                         <a href="{{ path('users_admin') }}" class="text-white">
                             <h4><span class="glyphicon glyphicon-user"></span>
@@ -37,7 +38,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="panel panel-primary">
+                <div id="panel-2" style="visibility:hidden" class="panel panel-primary">
                     <div class="panel-heading text-center">
                         <a href="{{ path('groups_admin') }}" class="text-white">
                             <h4><span class="glyphicon glyphicon-th"></span> Groupes</h4>
@@ -65,7 +66,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="panel panel-primary">
+                <div id="panel-3" style="visibility:hidden" class="panel panel-primary">
                     <div class="panel-heading text-center">
                         <a href="{{ path('projects_admin') }}" class="text-white">
                             <h4><span class="glyphicon glyphicon-folder-close"></span> Projets</h4>
@@ -93,7 +94,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="panel panel-primary">
+                <div id="panel-4" style="visibility:hidden" class="panel panel-primary">
                     <div class="panel-heading text-center">
                         <a href="{{ path('docs_admin') }}" class="text-white">
                             <h4><span class="glyphicon glyphicon-file"></span> Documents</h4>
@@ -123,10 +124,11 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="panel" style="padding-left: 20px">
+                <div id="panel-5" class="panel" style="visibility:hidden">
                     <div class="row">
                         <div class="col-md-3">
-                            <h4 class="text-success"><span class="glyphicon glyphicon-cloud-upload"></span> Upload</h4>
+                            <h4 style="padding-left: 20px" class="text-success"><span
+                                        class="glyphicon glyphicon-cloud-upload"></span> Upload</h4>
                         </div>
                         <div class="col-md-3">
                             <h4>Jour <strong>{{ (nb_docs / 365)|slice(0, 5) }}</strong></h4>
@@ -141,10 +143,11 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="panel" style="padding-left: 20px">
+                <div id="panel-6" class="panel" style="visibility:hidden">
                     <div class="row">
                         <div class="col-md-3">
-                            <h4 class="text-danger"><span class="glyphicon glyphicon-cloud-download"></span> Download
+                            <h4 style="padding-left: 10px" class="text-danger"><span
+                                        class="glyphicon glyphicon-cloud-download"></span> Download
                             </h4>
                         </div>
                         <div class="col-md-3">
@@ -162,7 +165,7 @@
         </div>
 
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
+        <ul id="panel-7" style="visibility:hidden" class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
                 <a href="#users" aria-controls="users" role="tab" data-toggle="tab">
                     <span class="glyphicon glyphicon-user"></span>Utilisateurs
@@ -186,7 +189,7 @@
         </ul>
 
         <!-- Tab panes -->
-        <div class="tab-content">
+        <div id="panel-8" style="visibility:hidden" class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="users">
                 <div class="panel panel-default">
                     <div class="table-responsive">
