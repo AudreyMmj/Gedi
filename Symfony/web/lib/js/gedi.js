@@ -97,12 +97,47 @@ function showNotify(texte, icon, type) {
             message: texte
         }, {
             type: type,
+            placement: {
+                from: "top",
+                align: "left"
+            },
             animate: {
                 enter: 'animated bounceInDown',
                 exit: 'animated bounceOutUp'
-            }
+            },
+            newest_on_top: true
         });
     }
+}
+
+//fonction d'affichage de pop-up sur la droite
+function showNotifyRight(texte, icon, type) {
+    //if (texte.length > 1) {
+        $.notify({
+            //options
+            icon: icon,
+            message: texte,
+            // à changer plus tard
+            url: 'http://localhost/Gedi/Symfony/web/contact'
+        },{
+            //settings
+            type: type,
+            icon_type: 'image',
+            allow_dismiss: false,
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            offset: {
+                x: 0,
+                y: 200
+            },
+            delay: 0,
+            animate: {
+                enter: 'animated slideInRight'
+            }
+        });
+    //}
 }
 
 // =======================================================================

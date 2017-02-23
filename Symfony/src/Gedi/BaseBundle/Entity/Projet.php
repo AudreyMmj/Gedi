@@ -37,7 +37,7 @@ class Projet
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=false)
      */
-    private $path = '/var/www/html/gedi/';
+    private $path;
 
     /**
      * Date de création du projet
@@ -83,6 +83,19 @@ class Projet
     private $idProjetFkDocument;
 
     /**
+     * Un projet contient plusieurs projets.
+     * @ORM\OneToMany(targetEntity="Projet", mappedBy="parent")
+     */
+    private $children;
+
+    /**
+     * Plusieurs projets ont un projet parent
+     * @ORM\ManyToOne(targetEntity="Projet", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id_projet")
+     */
+    private $parent;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -90,6 +103,7 @@ class Projet
         $this->idGroupeGp = new ArrayCollection();
         $this->dateCreation = new \DateTime();
         $this->dateModification = new \DateTime();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -270,6 +284,59 @@ class Projet
     public function setIdProjetFkDocument($idProjetFkDocument)
     {
         $this->idProjetFkDocument = $idProjetFkDocument;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param mixed $children
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+    }
+
+    /**
+     * Ajouter un children
+     * @param $children
+     * @return $this
+     */
+    public function addChildren($children)
+    {
+        $this->children[] = $children;
+
+        return $this;
+    }
+
+    /**
+     * Supprimer un children
+     * @param $children
+     */
+    public function removeChildren($children)
+    {
+        $this->children->removeElement($children);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param mixed $parent
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
     }
 
     /**

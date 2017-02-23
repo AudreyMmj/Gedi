@@ -55,19 +55,36 @@
                 <td>{{ utilisateur.dateModification|date('Y-m-d H:i:s') }}</td>
                 <td>{{ utilisateur.actif }}</td>
                 <td data-align="center">
+                    {% if (utilisateur.role == 'ROLE_ADMIN') %}
+                        <span data-toggle="tooltip" data-placement="bottom"
+                              title="Accéder à l'espace administrateur">
+                            <a href="{{ path('home_admin') }}" type="button"
+                               class="btn btn-default btn-danger round-button">
+                                <span class="glyphicon glyphicon-dashboard"></span>
+                            </a>
+                        </span>
+                        <span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche administrateur">
+                        <button type="button" class="btn btn-default btn-danger round-button"
+                                data-toggle="modal" data-target="#popup-add"
+                                onclick="edit('{{ utilisateur.toArray|json_encode }}');">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        </span>
+                    {% else %}
                         <span data-toggle="tooltip" data-placement="bottom"
                               title="Accéder à l'espace utilisateur">
-                            <button type="button" class="btn btn-default btn-primary round-button">
+                            <a type="button" class="btn btn-default btn-primary round-button">
                                 <span class="glyphicon glyphicon-dashboard"></span>
-                            </button>
+                            </a>
                         </span>
-                    <span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche utilisateur">
+                        <span data-toggle="tooltip" data-placement="bottom" title="Editer la fiche utilisateur">
                         <button type="button" class="btn btn-default btn-warning round-button"
                                 data-toggle="modal" data-target="#popup-add"
                                 onclick="edit('{{ utilisateur.toArray|json_encode }}');">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </button>
                         </span>
+                    {% endif %}
                 </td>
             </tr>
         </article>

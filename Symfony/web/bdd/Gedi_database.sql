@@ -77,14 +77,17 @@ DELIMITER $$
 CREATE TABLE IF NOT EXISTS Projet (
 	id_projet INT(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id projet', -- id projet
 	nom VARCHAR(50) NOT NULL COMMENT 'nom du projet', -- nom du projet
-	path VARCHAR(255) DEFAULT '/var/www/html/gedi/' NOT NULL COMMENT 'chemin du projet', -- chemin du projet
+	path VARCHAR(255) NOT NULL COMMENT 'chemin du projet', -- chemin du projet
 	date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT 'date de création projet', -- date de création projet
 	date_modification TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'date de modification projet', -- date de modification projet
 	id_utilisateur_fk_projet INT(11) UNSIGNED DEFAULT NULL COMMENT 'propriétaire du projet', -- propriétaire du projet
+	parent_id INT(11) UNSIGNED DEFAULT NULL COMMENT 'projet parent', -- projet parent
 	CONSTRAINT pk_id_projet PRIMARY KEY (id_projet), -- contrainte de clé primaire sur id_projet
 	CONSTRAINT fk_utilisateur_projet FOREIGN KEY (id_utilisateur_fk_projet) REFERENCES Utilisateur (id_utilisateur) ON DELETE CASCADE ON UPDATE CASCADE, -- contrainte de clé étrangère sur id_utilisateur de la table Utilisateur, quand un utilisateur est supprimé, ses projets sont supprimés
 	CONSTRAINT un_path_titre_type_doc UNIQUE (path, nom) -- contrainte d'unicité sur path et nom
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1;
+
+ALTER TABLE Projet ADD FOREIGN KEY (parent_id) REFERENCES Projet(id_projet);
 
 -- ====================================================================================================
 -- Structure de la table Document
@@ -98,7 +101,7 @@ CREATE TABLE IF NOT EXISTS Document (
 	date_modification TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'date de modification document', -- date de modification du document
 	tag VARCHAR(255) DEFAULT NULL COMMENT 'tags du document', -- tags du document
 	resume TEXT DEFAULT NULL COMMENT 'resumé du document', -- résumé du document
-	path VARCHAR(255) DEFAULT '/var/www/html/gedi/' NOT NULL COMMENT 'chemin du document', -- chemin du document
+	path VARCHAR(255) NOT NULL COMMENT 'chemin du document', -- chemin du document
 	id_projet_fk_document INT(11) UNSIGNED DEFAULT NULL COMMENT 'foreign key id_projet', -- clé étrangère sur id_projet
 	id_utilisateur_fk_document INT(11) UNSIGNED NOT NULL COMMENT 'propriétaire du document', -- propriétaire du document
 	CONSTRAINT pk_id_document PRIMARY KEY (id_document), -- contrainte de clé primaire sur id_document

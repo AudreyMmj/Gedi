@@ -3,8 +3,10 @@
 namespace Gedi\BaseBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Gedi\BaseBundle\Entity\Projet;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Gedi\BaseBundle\Resources\Enum\BaseEnum;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Service permettant de manipuler les projets
@@ -19,12 +21,25 @@ class ProjetService
     private $em;
 
     /**
+     * @var Filesystem
+     */
+    private $fs;
+
+    /**
+     * @var string
+     */
+    private $targetDir;
+
+    /**
      * ProjetService constructor.
      * @param EntityManager $entityManager
+     * @param $targetDir
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, $targetDir)
     {
         $this->em = $entityManager;
+        $this->targetDir = $targetDir;
+        $this->fs = new Filesystem();
     }
 
     /**
@@ -38,8 +53,17 @@ class ProjetService
         $objet->setNom($sel[1]['value']);
         $utilisateur = $this->em->find('GediBaseBundle:Utilisateur', $sel[2]['value']);
         $objet->setIdUtilisateurFkProjet($utilisateur);
+        if ($sel[3]['value'] != null && $sel[3]['value'] != "") {
+            $parent = $this->em->find('GediBaseBundle:Projet', $sel[3]['value']);
+            $parent->addChildren($objet);
+            $objet->setParent($parent);
+            $objet->setPath($parent->getPath() . "/" . $objet->getNom());
+        } else {
+            $objet->setPath($objet->getIdUtilisateurFkProjet()->getIdUtilisateur() . "/" . $objet->getNom());
+        }
         $this->em->persist($objet);
         $this->em->flush();
+        $this->fs->mkdir($this->targetDir . $objet->getPath(), 0777);
         return $objet;
     }
 
@@ -69,18 +93,17 @@ class ProjetService
     /**
      * Supprime un ou plusieurs projets
      * @param $sel
-     * @return JsonResponse
+     * @return string
      */
     public function delete($sel)
     {
         for ($i = 0; $i <= count($sel) - 1; $i++) {
             $toDel = $this->em->find('GediBaseBundle:Projet', $sel[$i]['id']);
+            $this->fs->remove($this->targetDir . $toDel->getPath());
             $this->em->remove($toDel);
         }
         $this->em->flush();
-        $response = new JsonResponse();
-        $response->setData(array('reponse' => "OK"));
-        return $response;
+        return "OK";
     }
 
     /**
@@ -88,16 +111,17 @@ class ProjetService
      * @param $sel
      * @param $childType
      * @return array
+     * @throws Exception
      */
     public function getChildren($sel, $childType)
     {
         $objet = $this->em->find('GediBaseBundle:Projet', $sel);
-        $rows = [];
-        if ($childType == "documents") {
-            foreach ($objet->getIdProjetFkDocument() as $child) {
-                array_push($rows, $child->getNom() . " " . $child->getTypeDoc() . " - " . $child->getTag());
-            }
+        switch ($childType) {
+            case BaseEnum::DOCUMENT:
+                return $objet->getIdProjetFkDocument();
+                break;
+            default:
+                throw new Exception('ChildType n\'est pas défini');
         }
-        return $rows;
     }
 }

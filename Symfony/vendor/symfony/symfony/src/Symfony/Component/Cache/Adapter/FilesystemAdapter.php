@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use Symfony\Component\Cache\Exception\CacheException;
+
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
@@ -75,6 +77,10 @@ class FilesystemAdapter extends AbstractAdapter
 
         foreach ($values as $id => $value) {
             $ok = $this->write($this->getFile($id, true), $expiresAt."\n".rawurlencode($id)."\n".serialize($value), $expiresAt) && $ok;
+        }
+
+        if (!$ok && !is_writable($this->directory)) {
+            throw new CacheException(sprintf('Cache directory is not writable (%s)', $this->directory));
         }
 
         return $ok;

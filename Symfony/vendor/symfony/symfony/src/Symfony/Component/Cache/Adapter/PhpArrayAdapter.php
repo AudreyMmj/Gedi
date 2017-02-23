@@ -163,14 +163,12 @@ EOF;
      */
     public function getItem($key)
     {
-        if (null === $this->values) {
-            $this->initialize();
-        }
-
         if (!is_string($key)) {
             throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
         }
-
+        if (null === $this->values) {
+            $this->initialize();
+        }
         if (!isset($this->values[$key])) {
             return $this->fallbackPool->getItem($key);
         }
@@ -203,14 +201,13 @@ EOF;
      */
     public function getItems(array $keys = array())
     {
-        if (null === $this->values) {
-            $this->initialize();
-        }
-
         foreach ($keys as $key) {
             if (!is_string($key)) {
                 throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
             }
+        }
+        if (null === $this->values) {
+            $this->initialize();
         }
 
         return $this->generateItems($keys);
@@ -221,12 +218,11 @@ EOF;
      */
     public function hasItem($key)
     {
-        if (null === $this->values) {
-            $this->initialize();
-        }
-
         if (!is_string($key)) {
             throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
+        }
+        if (null === $this->values) {
+            $this->initialize();
         }
 
         return isset($this->values[$key]) || $this->fallbackPool->hasItem($key);
@@ -249,12 +245,11 @@ EOF;
      */
     public function deleteItem($key)
     {
-        if (null === $this->values) {
-            $this->initialize();
-        }
-
         if (!is_string($key)) {
             throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
+        }
+        if (null === $this->values) {
+            $this->initialize();
         }
 
         return !isset($this->values[$key]) && $this->fallbackPool->deleteItem($key);
@@ -265,10 +260,6 @@ EOF;
      */
     public function deleteItems(array $keys)
     {
-        if (null === $this->values) {
-            $this->initialize();
-        }
-
         $deleted = true;
         $fallbackKeys = array();
 
@@ -282,6 +273,9 @@ EOF;
             } else {
                 $fallbackKeys[] = $key;
             }
+        }
+        if (null === $this->values) {
+            $this->initialize();
         }
 
         if ($fallbackKeys) {
@@ -328,7 +322,7 @@ EOF;
      */
     private function initialize()
     {
-        $this->values = @(include $this->file) ?: array();
+        $this->values = file_exists($this->file) ? (include $this->file ?: array()) : array();
     }
 
     /**
@@ -370,5 +364,43 @@ EOF;
                 yield $key => $item;
             }
         }
+    }
+
+    /**
+     * @throws \ReflectionException When $class is not found and is required
+     *
+     * @internal
+     */
+    public static function throwOnRequiredClass($class)
+    {
+        $e = new \ReflectionException("Class $class does not exist");
+        $trace = $e->getTrace();
+        $autoloadFrame = array(
+            'function' => 'spl_autoload_call',
+            'args' => array($class),
+        );
+        $i = 1 + array_search($autoloadFrame, $trace, true);
+
+        if (isset($trace[$i]['function']) && !isset($trace[$i]['class'])) {
+            switch ($trace[$i]['function']) {
+                case 'get_class_methods':
+                case 'get_class_vars':
+                case 'get_parent_class':
+                case 'is_a':
+                case 'is_subclass_of':
+                case 'class_exists':
+                case 'class_implements':
+                case 'class_parents':
+                case 'trait_exists':
+                case 'defined':
+                case 'interface_exists':
+                case 'method_exists':
+                case 'property_exists':
+                case 'is_callable':
+                    return;
+            }
+        }
+
+        throw $e;
     }
 }

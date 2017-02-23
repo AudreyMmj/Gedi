@@ -151,6 +151,9 @@ HttpFoundation
     - `isInvalid`/`isSuccessful`/`isRedirection`/`isClientError`/`isServerError`
     - `isOk`/`isForbidden`/`isNotFound`/`isRedirect`/`isEmpty`
 
+ * The ability to check only for cacheable HTTP methods using `Request::isMethodSafe()` is
+   not supported anymore, use `Request::isMethodCacheable()` instead.
+
 HttpKernel
 ----------
 
@@ -183,8 +186,36 @@ Translation
 TwigBridge
 ----------
 
- * The possibility to inject the Form Twig Renderer into the form extension
-   has been removed. Inject it into the `TwigRendererEngine` instead.
+ * Removed the possibility to inject the Form `TwigRenderer` into the `FormExtension`.
+   Upgrade Twig to `^1.30`, inject the `Twig_Environment` into the `TwigRendererEngine` and load
+   the `TwigRenderer` using the `Twig_FactoryRuntimeLoader` instead.
+
+   Before:
+
+   ```php
+   use Symfony\Bridge\Twig\Extension\FormExtension;
+   use Symfony\Bridge\Twig\Form\TwigRenderer;
+   use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+
+   // ...
+   $rendererEngine = new TwigRendererEngine(array('form_div_layout.html.twig'));
+   $rendererEngine->setEnvironment($twig);
+   $twig->addExtension(new FormExtension(new TwigRenderer($rendererEngine, $csrfTokenManager)));
+   ```
+
+   After:
+
+   ```php
+   $rendererEngine = new TwigRendererEngine(array('form_div_layout.html.twig'), $twig);
+   $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader(array(
+       TwigRenderer::class => function () use ($rendererEngine, $csrfTokenManager) {
+           return new TwigRenderer($rendererEngine, $csrfTokenManager);
+       },
+   )));
+   $twig->addExtension(new FormExtension());
+   ```
+
+ * Removed the `TwigRendererEngineInterface` interface.
 
 Validator
 ---------
@@ -219,7 +250,7 @@ Validator
    ```
    
  * The default value of the strict option of the `Choice` Constraint has been
-   changed to `true` as of 4.0. If you need the the previous behaviour ensure to 
+   changed to `true` as of 4.0. If you need the previous behaviour ensure to 
    set the option to `false`.
 
 Yaml

@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\FrameworkBundle\CacheWarmer;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
 use Psr\Cache\CacheItemPoolInterface;
@@ -35,8 +36,8 @@ class AnnotationsCacheWarmer implements CacheWarmerInterface
 
     /**
      * @param Reader                 $annotationReader
-     * @param string                 $phpArrayFile     The PHP file where annotations are cached.
-     * @param CacheItemPoolInterface $fallbackPool     The pool where runtime-discovered annotations are cached.
+     * @param string                 $phpArrayFile     The PHP file where annotations are cached
+     * @param CacheItemPoolInterface $fallbackPool     The pool where runtime-discovered annotations are cached
      */
     public function __construct(Reader $annotationReader, $phpArrayFile, CacheItemPoolInterface $fallbackPool)
     {
@@ -66,19 +67,27 @@ class AnnotationsCacheWarmer implements CacheWarmerInterface
 
         $arrayPool = new ArrayAdapter(0, false);
         $reader = new CachedReader($this->annotationReader, new DoctrineProvider($arrayPool));
-        $throwingAutoloader = function ($class) { throw new \ReflectionException(sprintf('Class %s does not exist', $class)); };
-        spl_autoload_register($throwingAutoloader);
 
+        spl_autoload_register(array($adapter, 'throwOnRequiredClass'));
         try {
             foreach ($annotatedClasses as $class) {
                 try {
                     $this->readAllComponents($reader, $class);
                 } catch (\ReflectionException $e) {
                     // ignore failing reflection
+                } catch (AnnotationException $e) {
+                    /*
+                     * Ignore any AnnotationException to not break the cache warming process if an Annotation is badly
+                     * configured or could not be found / read / etc.
+                     *
+                     * In particular cases, an Annotation in your code can be used and defined only for a specific
+                     * environment but is always added to the annotations.map file by some Symfony default behaviors,
+                     * and you always end up with a not found Annotation.
+                     */
                 }
             }
         } finally {
-            spl_autoload_unregister($throwingAutoloader);
+            spl_autoload_unregister(array($adapter, 'throwOnRequiredClass'));
         }
 
         $values = $arrayPool->getValues();
