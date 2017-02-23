@@ -106,6 +106,14 @@ class DocumentService
         return $qb->getQuery()->getSingleScalarResult();
     }
 
+    public function sumDownload()
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('sum(u.nbDownload)');
+        $qb->from('GediBaseBundle:Document', 'u');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
     /**
      * Télécharge les fichiers selectionnés
      * @param $sel
@@ -121,10 +129,13 @@ class DocumentService
 
         for ($i = 0; $i <= count($sel) - 1; $i++) {
             $objet = $this->em->find('GediBaseBundle:Document', $sel[$i]);
+            $objet->addNbDownload();
             $file = new File($this->targetDir . $objet->getFichier());
             $zip->addFile($file);
+            $this->em->merge($objet);
         }
         $zip->close();
+        $this->em->flush();
     }
 
     /**

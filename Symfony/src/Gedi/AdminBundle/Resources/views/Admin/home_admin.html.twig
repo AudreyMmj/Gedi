@@ -148,13 +148,13 @@
                             </h4>
                         </div>
                         <div class="col-md-3">
-                            <h5>Jour</h5>
+                            <h4>Jour <strong>{{ (nb_download / 365)|slice(0, 5) }}</strong></h4>
                         </div>
                         <div class="col-md-3">
-                            <h5>Mois</h5>
+                            <h4>Mois <strong>{{ (nb_download / 12)|slice(0, 5) }}</strong></h4>
                         </div>
                         <div class="col-md-3">
-                            <h5>An</h5>
+                            <h4>An <strong>{{ nb_download }}</strong></h4>
                         </div>
                     </div>
                 </div>

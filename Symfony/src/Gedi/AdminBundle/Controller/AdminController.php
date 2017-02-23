@@ -35,6 +35,7 @@ class AdminController extends Controller
         // importation des documents
         $tab_docs_last = $this->get('document.service')->readLast(5);
         $nb_docs = $this->get('document.service')->count();
+        $nb_download = $this->get('document.service')->sumDownload();
 
         return $this->render('GediAdminBundle:Admin:home_admin.html.twig', array(
             'nb_users' => $nb_users,
@@ -45,6 +46,7 @@ class AdminController extends Controller
             'tab_projects_last' => $tab_projects_last,
             'tab_groups_last' => $tab_groups_last,
             'tab_docs_last' => $tab_docs_last,
+            'nb_download' => $nb_download,
         ));
     }
 
@@ -373,6 +375,7 @@ class AdminController extends Controller
                     "type" => '<span class="label label-default">' . $objet->getTypeDoc() . '</span>',
                     "datec" => date_format($objet->getDateCreation(), 'Y-m-d H:i:s'),
                     "datem" => date_format($objet->getDateModification(), 'Y-m-d H:i:s'),
+                    "nbdownload" => $objet->getNbDownload(),
                     "projet" => $objet->getidProjetFkDocument()->getNom(),
                     "propio" => $objet->getIdUtilisateurFkDocument()->getNom() . " " . $objet->getIdUtilisateurFkDocument()->getPrenom(),
                     "ctrl" => '<span data-toggle="tooltip" data-placement="bottom" title="Editer le document">' .

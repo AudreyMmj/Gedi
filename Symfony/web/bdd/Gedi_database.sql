@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS Document (
 	tag VARCHAR(255) DEFAULT NULL COMMENT 'tags du document', -- tags du document
 	resume TEXT DEFAULT NULL COMMENT 'resumé du document', -- résumé du document
 	path VARCHAR(255) NOT NULL COMMENT 'chemin du document', -- chemin du document
+	nb_download INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'nombre de téléchargements', -- nombre de téléchargements
 	id_projet_fk_document INT(11) UNSIGNED DEFAULT NULL COMMENT 'foreign key id_projet', -- clé étrangère sur id_projet
 	id_utilisateur_fk_document INT(11) UNSIGNED NOT NULL COMMENT 'propriétaire du document', -- propriétaire du document
 	CONSTRAINT pk_id_document PRIMARY KEY (id_document), -- contrainte de clé primaire sur id_document
