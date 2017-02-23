@@ -18,13 +18,19 @@
                     <div class="panel-body">
                         <ul class="list-group" style="height: auto">
                             <li class="list-group-item text-center">
-                                <h4>Total <strong>{{ tab_users|length }}</strong></h4>
+                                <h4>Total <strong>{{ nb_users }}</strong></h4>
                             </li>
                             <li class="list-group-item">
                                 <h4>Fréquence de création</h4>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour</p>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois</p>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour
+                                    <strong>{{ (nb_users / 365)|slice(0, 5) }}</strong>
+                                </p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois
+                                    <strong>{{ (nb_users / 12)|slice(0, 5) }}</strong>
+                                </p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an
+                                    <strong>{{ nb_users }}</strong>
+                                </p>
                             </li>
                         </ul>
                     </div>
@@ -40,13 +46,19 @@
                     <div class="panel-body">
                         <ul class="list-group" style="height: auto">
                             <li class="list-group-item text-center">
-                                <h4>Total <strong>{{ tab_groups|length }}</strong></h4>
+                                <h4>Total <strong>{{ nb_groups }}</strong></h4>
                             </li>
                             <li class="list-group-item">
                                 <h4>Fréquence de création</h4>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour</p>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois</p>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour
+                                    <strong>{{ (nb_groups / 365)|slice(0, 5) }}</strong>
+                                </p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois
+                                    <strong>{{ (nb_groups / 12)|slice(0, 5) }}</strong>
+                                </p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an
+                                    <strong>{{ nb_groups }}</strong>
+                                </p>
                             </li>
                         </ul>
                     </div>
@@ -62,13 +74,19 @@
                     <div class="panel-body">
                         <ul class="list-group" style="height: auto">
                             <li class="list-group-item text-center">
-                                <h4>Total <strong>{{ tab_projects|length }}</strong></h4>
+                                <h4>Total <strong>{{ nb_projects }}</strong></h4>
                             </li>
                             <li class="list-group-item">
                                 <h4>Fréquence de création</h4>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour</p>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois</p>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour
+                                    <strong>{{ (nb_projects / 365)|slice(0, 5) }}</strong>
+                                </p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois
+                                    <strong>{{ (nb_projects / 12)|slice(0, 5) }}</strong>
+                                </p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an
+                                    <strong>{{ nb_projects }}</strong>
+                                </p>
                             </li>
                         </ul>
                     </div>
@@ -84,13 +102,19 @@
                     <div class="panel-body">
                         <ul class="list-group" style="height: auto">
                             <li class="list-group-item text-center">
-                                <h4>Total <strong>{{ tab_docs|length }}</strong></h4>
+                                <h4>Total <strong>{{ nb_docs }}</strong></h4>
                             </li>
                             <li class="list-group-item">
                                 <h4>Fréquence de création</h4>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour</p>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois</p>
-                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour
+                                    <strong>{{ (nb_docs / 365)|slice(0, 5) }}</strong>
+                                </p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois
+                                    <strong>{{ (nb_docs / 12)|slice(0, 5) }}</strong>
+                                </p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an
+                                    <strong>{{ nb_docs }}</strong>
+                                </p>
                             </li>
                         </ul>
                     </div>
@@ -105,13 +129,13 @@
                             <h4 class="text-success"><span class="glyphicon glyphicon-cloud-upload"></span> Upload</h4>
                         </div>
                         <div class="col-md-3">
-                            <h5>Jour</h5>
+                            <h4>Jour <strong>{{ (nb_docs / 365)|slice(0, 5) }}</strong></h4>
                         </div>
                         <div class="col-md-3">
-                            <h5>Mois</h5>
+                            <h4>Mois <strong>{{ (nb_docs / 12)|slice(0, 5) }}</strong></h4>
                         </div>
                         <div class="col-md-3">
-                            <h5>An</h5>
+                            <h4>An <strong>{{ nb_docs }}</strong></h4>
                         </div>
                     </div>
                 </div>
@@ -180,7 +204,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for utilisateur in tab_users %}
+                            {% for utilisateur in tab_users_last %}
                                 <article>
                                     {% if (utilisateur.role == 'ROLE_ADMIN') %}
                                     <tr class="danger text-danger">
@@ -218,7 +242,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for groupe in tab_groups %}
+                            {% for groupe in tab_groups_last %}
                                 <article>
                                     <tr>
                                         <td>{{ groupe.nom }}</td>
@@ -248,7 +272,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for projet in tab_projects %}
+                            {% for projet in tab_projects_last %}
                                 <article>
                                     <tr>
                                         <td>{{ projet.nom }}</td>
@@ -280,7 +304,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for document in tab_docs %}
+                            {% for document in tab_docs_last %}
                                 <article>
                                     <tr>
                                         <td>{{ document.nom }}</td>

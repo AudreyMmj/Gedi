@@ -23,20 +23,28 @@ class AdminController extends Controller
      */
     public function homeAction()
     {
-        // importation de tous les utilisateurs
-        $tab_users = $this->get('utilisateur.service')->read();
-        // importation de tous les projets
-        $tab_projects = $this->get('projet.service')->read();
-        // importation de tous les groupes
-        $tab_groups = $this->get('groupe.service')->read();
-        // importation de tous les documents
-        $tab_docs = $this->get('document.service')->read();
+        // importation des utilisateurs
+        $tab_users_last = $this->get('utilisateur.service')->readLast(5);
+        $nb_users = $this->get('utilisateur.service')->count();
+        // importation des projets
+        $tab_projects_last = $this->get('projet.service')->readLast(5);
+        $nb_projects = $this->get('projet.service')->count();
+        // importation des groupes
+        $tab_groups_last = $this->get('groupe.service')->readLast(5);
+        $nb_groups = $this->get('groupe.service')->count();
+        // importation des documents
+        $tab_docs_last = $this->get('document.service')->readLast(5);
+        $nb_docs = $this->get('document.service')->count();
 
         return $this->render('GediAdminBundle:Admin:home_admin.html.twig', array(
-            'tab_users' => $tab_users,
-            'tab_projects' => $tab_projects,
-            'tab_groups' => $tab_groups,
-            'tab_docs' => $tab_docs,
+            'nb_users' => $nb_users,
+            'nb_projects' => $nb_projects,
+            'nb_groups' => $nb_groups,
+            'nb_docs' => $nb_docs,
+            'tab_users_last' => $tab_users_last,
+            'tab_projects_last' => $tab_projects_last,
+            'tab_groups_last' => $tab_groups_last,
+            'tab_docs_last' => $tab_docs_last,
         ));
     }
 

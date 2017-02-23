@@ -78,6 +78,34 @@ class UtilisateurService
     }
 
     /**
+     * Retourne les N derniers éléments
+     * @param $max
+     * @return array
+     */
+    public function readLast($max)
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('u')
+            ->from('GediBaseBundle:Utilisateur', 'u')
+            ->orderBy('u.dateCreation', 'DESC')
+            ->setMaxResults($max);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
+    /**
+     * Retourne le nombre d'entités en BDD
+     * @return mixed
+     */
+    public function count()
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('count(u.idUtilisateur)');
+        $qb->from('GediBaseBundle:Utilisateur', 'u');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * Met à jour un utilisateur et crée son repertoire de sauvegarde
      * si il n'était pas actif
      * @param $sel

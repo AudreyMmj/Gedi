@@ -79,6 +79,34 @@ class DocumentService
     }
 
     /**
+     * Retourne les N derniers éléments
+     * @param $max
+     * @return array
+     */
+    public function readLast($max)
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('u')
+            ->from('GediBaseBundle:Document', 'u')
+            ->orderBy('u.dateCreation', 'DESC')
+            ->setMaxResults($max);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
+    /**
+     * Retourne le nombre d'entités en BDD
+     * @return mixed
+     */
+    public function count()
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('count(u.idDocument)');
+        $qb->from('GediBaseBundle:Document', 'u');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * Télécharge les fichiers selectionnés
      * @param $sel
      */
