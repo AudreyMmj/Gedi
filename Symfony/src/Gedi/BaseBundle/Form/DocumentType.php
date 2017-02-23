@@ -17,14 +17,14 @@ class DocumentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('idDocument', HiddenType::class);
-        $builder->add('nom', TextType::class);
-        $builder->add('typeDoc', TextType::class);
-        $builder->add('tag', TextType::class);
-        $builder->add('resume', TextareaType::class);
-        $builder->add('idUtilisateurFkDocument', HiddenType::class);
-        $builder->add('idProjetFkDocument', HiddenType::class);
-        $builder->add('fichier', FileType::class);
+        $builder->add('idDocument', HiddenType::class, array('label' => false));
+        $builder->add('nom', TextType::class, array('label' => false));
+        $builder->add('typeDoc', TextType::class, array('label' => false));
+        $builder->add('tag', TextType::class, array('required' => false, 'label' => false));
+        $builder->add('resume', TextareaType::class, array('required' => false, 'label' => false));
+        $builder->add('idUtilisateurFkDocument', HiddenType::class, array('label' => false));
+        $builder->add('idProjetFkDocument', HiddenType::class, array('label' => false));
+        $builder->add('fichier', FileType::class, array('label' => false));
     }
 
     /**
@@ -42,6 +42,6 @@ class DocumentType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'gedi_basebundle_document';
+        return 'data';
     }
 }

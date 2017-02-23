@@ -79,6 +79,14 @@ class Document
     private $fichier;
 
     /**
+     * Nombre de téléchargements
+     * @var integer
+     *
+     * @ORM\Column(name="nb_download", type="integer", nullable=false)
+     */
+    private $nbDownload = 0;
+
+    /**
      * Projet du document
      * @var Projet
      *
@@ -306,13 +314,37 @@ class Document
     }
 
     /**
+     * @return int
+     */
+    public function getNbDownload()
+    {
+        return $this->nbDownload;
+    }
+
+    /**
+     * @param int $nbDownload
+     */
+    public function setNbDownload($nbDownload)
+    {
+        $this->nbDownload = $nbDownload;
+    }
+
+    /**
+     * Add a download
+     */
+    public function addNbDownload()
+    {
+        $this->nbDownload = $this->nbDownload + 1;
+    }
+
+    /**
      * Set idProjetFkDocument
      *
      * @param $idProjetFkDocument
      *
      * @return Document
      */
-    public function setIdProjetFkDocument($idProjetFkDocument = null)
+    public function setIdProjetFkDocument($idProjetFkDocument)
     {
         $this->idProjetFkDocument = $idProjetFkDocument;
 
@@ -336,7 +368,7 @@ class Document
      *
      * @return Document
      */
-    public function setIdUtilisateurFkDocument($idUtilisateurFkDocument = null)
+    public function setIdUtilisateurFkDocument($idUtilisateurFkDocument)
     {
         $this->idUtilisateurFkDocument = $idUtilisateurFkDocument;
 

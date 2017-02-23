@@ -17,3 +17,7 @@ projects_admin:
 docs_admin:
     path:     /docs_admin
     defaults: { _controller: GediAdminBundle:Admin:documents }
+
+download:
+    path:     /download
+    defaults: { _controller: GediAdminBundle:Admin:download }

@@ -76,7 +76,7 @@ class Projet
 
     /**
      * Documents du projet
-     * @var Document
+     * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Document", mappedBy="idProjetFkDocument", cascade={"all"})
      */
@@ -104,6 +104,7 @@ class Projet
         $this->dateCreation = new \DateTime();
         $this->dateModification = new \DateTime();
         $this->children = new ArrayCollection();
+        $this->idProjetFkDocument = new ArrayCollection();
     }
 
     /**
@@ -271,7 +272,7 @@ class Projet
     }
 
     /**
-     * @return Document
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getIdProjetFkDocument()
     {
@@ -279,11 +280,27 @@ class Projet
     }
 
     /**
-     * @param $idProjetFkDocument
+     * Add idProjetFkDocument
+     *
+     * @param $IdProjetFkDocument
+     *
+     * @return Projet
      */
-    public function setIdProjetFkDocument($idProjetFkDocument)
+    public function addIdProjetFkDocument($IdProjetFkDocument)
     {
-        $this->idProjetFkDocument = $idProjetFkDocument;
+        $this->idProjetFkDocument[] = $IdProjetFkDocument;
+
+        return $this;
+    }
+
+    /**
+     * Remove idProjetFkDocument
+     *
+     * @param $IdProjetFkDocument
+     */
+    public function removeIdProjetFkDocument($IdProjetFkDocument)
+    {
+        $this->idProjetFkDocument->removeElement($IdProjetFkDocument);
     }
 
     /**

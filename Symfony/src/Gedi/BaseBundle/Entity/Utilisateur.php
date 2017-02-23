@@ -130,15 +130,15 @@ class Utilisateur implements UserInterface
 
     /**
      * Projets dont l'utilisateur est propriétaire
-     * @var Projet
+     * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Projet", mappedBy="idUtilisateurFkProjet", cascade={"all"})
      */
     private $idUtilisateurFkProjet;
 
     /**
-     * Document dont l'utilisateur est propriétaire
-     * @var Document
+     * Documents dont l'utilisateur est propriétaire
+     * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Document", mappedBy="idUtilisateurFkDocument", cascade={"all"})
      */
@@ -151,6 +151,8 @@ class Utilisateur implements UserInterface
     {
         $this->idDocumentDu = new ArrayCollection();
         $this->idGroupeUg = new ArrayCollection();
+        $this->idUtilisateurFkDocument = new ArrayCollection();
+        $this->idUtilisateurFkProjet = new ArrayCollection();
         $this->dateCreation = new \DateTime();
         $this->dateModification = new \DateTime();
     }
@@ -478,7 +480,7 @@ class Utilisateur implements UserInterface
     }
 
     /**
-     * @return Projet
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getIdUtilisateurFkProjet()
     {
@@ -486,15 +488,31 @@ class Utilisateur implements UserInterface
     }
 
     /**
+     * Add idUtilisateurFkProjet
+     *
      * @param $idUtilisateurFkProjet
+     *
+     * @return Utilisateur
      */
-    public function setIdUtilisateurFkProjet($idUtilisateurFkProjet)
+    public function addIdUtilisateurFkProjet($idUtilisateurFkProjet)
     {
-        $this->idUtilisateurFkProjet = $idUtilisateurFkProjet;
+        $this->idUtilisateurFkProjet[] = $idUtilisateurFkProjet;
+
+        return $this;
     }
 
     /**
-     * @return Document
+     * Remove idUtilisateurFkProjet
+     *
+     * @param $idUtilisateurFkProjet
+     */
+    public function removeIdUtilisateurFkProjet($idUtilisateurFkProjet)
+    {
+        $this->idUtilisateurFkProjet->removeElement($idUtilisateurFkProjet);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getIdUtilisateurFkDocument()
     {
@@ -502,11 +520,27 @@ class Utilisateur implements UserInterface
     }
 
     /**
-     * @param $idUtilisateurFkDocument
+     * Add idUtilisateurFkDocument
+     *
+     * @param $IdUtilisateurFkDocument
+     *
+     * @return Utilisateur
      */
-    public function setIdUtilisateurFkDocument($idUtilisateurFkDocument)
+    public function addIdUtilisateurFkDocument($IdUtilisateurFkDocument)
     {
-        $this->idUtilisateurFkDocument = $idUtilisateurFkDocument;
+        $this->idUtilisateurFkDocument[] = $IdUtilisateurFkDocument;
+
+        return $this;
+    }
+
+    /**
+     * Remove idUtilisateurFkDocument
+     *
+     * @param $IdUtilisateurFkDocument
+     */
+    public function removeIdUtilisateurFkDocument($IdUtilisateurFkDocument)
+    {
+        $this->idUtilisateurFkDocument->removeElement($IdUtilisateurFkDocument);
     }
 
     /**

@@ -1,11 +1,15 @@
 .full {
-    background: url(../img/space_2.jpg) no-repeat center center fixed;
+    background: url(../img/Star_Wars_1.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
     height: 100%;
     width: 100%;
+}
+
+.background-app {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .round-button {
@@ -89,21 +93,24 @@ body {
     max-width: 25%;
 }
 
-.alert-primary {
-    padding-left: 0%;
-    max-width: 2%;
+.popover {
+    width: 500px;
+    height: auto;
 }
 
-.popover{
-    width:500px;
-    height:auto;
+#liste-children, .list-group {
+    height: 100px;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: auto;
 }
 
-#liste-children, .list-group{
-    height:100px;
-    width:100%;
-    overflow:hidden;
-    overflow-y:auto;
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
 }
 
 /* classe de couleurs personnalisée */

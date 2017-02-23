@@ -1,26 +1,8 @@
-{% extends "layout.html.twig" %}
+{% extends "GediUserBundle::layout_user.html.twig" %}
 
-{% block title %}Mon espace{% endblock %}
+{% block base_titre %}Mon espace{% endblock %}
 
-{% block content %}
-    {% for utilisateur in tab_objets %}
-        <article>
-            <h2><a class="descGroupe">{{ utilisateur.nom }}</a>
-            </h2>
-        </article>
-    {% endfor %}
-
-
-    <h3>Add a comment</h3>
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-
-    {% else %}
-        <a href="{{ path('login') }} ">Log in</a> to add comments.
-    {% endif %}
-    </p>
-
-{% block body %}{% endblock %}
-
+{% block base_contenu %}
     <a href="{{ path('shared_user') }} ">Documents partagés</a>
     <br>
     <a href="{{ path('account_user') }} ">Mon compte</a>

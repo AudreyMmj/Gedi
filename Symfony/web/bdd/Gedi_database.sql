@@ -102,12 +102,12 @@ CREATE TABLE IF NOT EXISTS Document (
 	tag VARCHAR(255) DEFAULT NULL COMMENT 'tags du document', -- tags du document
 	resume TEXT DEFAULT NULL COMMENT 'resumé du document', -- résumé du document
 	path VARCHAR(255) NOT NULL COMMENT 'chemin du document', -- chemin du document
+	nb_download INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'nombre de téléchargements', -- nombre de téléchargements
 	id_projet_fk_document INT(11) UNSIGNED DEFAULT NULL COMMENT 'foreign key id_projet', -- clé étrangère sur id_projet
 	id_utilisateur_fk_document INT(11) UNSIGNED NOT NULL COMMENT 'propriétaire du document', -- propriétaire du document
 	CONSTRAINT pk_id_document PRIMARY KEY (id_document), -- contrainte de clé primaire sur id_document
 	CONSTRAINT fk_projet_document FOREIGN KEY (id_projet_fk_document) REFERENCES Projet (id_projet) ON DELETE CASCADE ON UPDATE CASCADE, -- contrainte de clé etrangère sur id_projet de la table id_projet, quand on supprime un projet, on supprime les documents contenus
 	CONSTRAINT fk_utilisateur_document FOREIGN KEY (id_utilisateur_fk_document) REFERENCES Utilisateur (id_utilisateur) ON DELETE CASCADE ON UPDATE CASCADE, -- contrainte de cle étrangère sur id utilisateur, quand on supprime un utilisateur, on supprime les documents possédés
-	CONSTRAINT un_projet UNIQUE (id_projet_fk_document), -- contrainte d'unicité sur id_projet
 	CONSTRAINT un_path_titre_type_doc UNIQUE (path, nom, type_doc) -- contrainte d'unicité sur path, titre et type_doc
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1;
 

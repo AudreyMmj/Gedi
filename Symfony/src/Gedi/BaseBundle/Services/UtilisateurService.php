@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use Exception;
 use Gedi\BaseBundle\Entity\Utilisateur;
 use Gedi\BaseBundle\Resources\Enum\BaseEnum;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 /**
@@ -27,11 +26,6 @@ class UtilisateurService
     private $ef;
 
     /**
-     * @var Filesystem
-     */
-    private $fs;
-
-    /**
      * @var string
      */
     private $targetDir;
@@ -46,7 +40,6 @@ class UtilisateurService
     {
         $this->em = $entityManager;
         $this->ef = $encoderFactory;
-        $this->fs = new Filesystem();
         $this->targetDir = $targetDir;
     }
 
@@ -70,7 +63,7 @@ class UtilisateurService
         $this->em->persist($objet);
         $this->em->flush();
         if ($objet->getActif() == true) {
-            $this->fs->mkdir($this->targetDir . $objet->getIdUtilisateur(), 0777);
+            mkdir($this->targetDir . $objet->getIdUtilisateur(), 0777);
         }
         return $objet;
     }
@@ -82,6 +75,47 @@ class UtilisateurService
     public function read()
     {
         return $this->em->getRepository('GediBaseBundle:Utilisateur')->findAll();
+    }
+
+    /**
+     * Retourne les N derniers éléments
+     * @param $max
+     * @return array
+     */
+    public function readLast($max)
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('u')
+            ->from('GediBaseBundle:Utilisateur', 'u')
+            ->orderBy('u.dateCreation', 'DESC')
+            ->setMaxResults($max);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
+    /**
+     * Retourne le nombre d'entités en BDD
+     * @return mixed
+     */
+    public function count()
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('count(u.idUtilisateur)');
+        $qb->from('GediBaseBundle:Utilisateur', 'u');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Retourne le nombre d'utilisateurs inactifs
+     * @return mixed
+     */
+    public function countInactifs()
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('count(u.idUtilisateur)');
+        $qb->where('u.actif = 0');
+        $qb->from('GediBaseBundle:Utilisateur', 'u');
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -104,7 +138,7 @@ class UtilisateurService
         $this->em->merge($objet);
         $this->em->flush();
         if ($objet->getActif() == true) {
-            $this->fs->mkdir($this->targetDir . $objet->getIdUtilisateur(), 0777);
+            mkdir($this->targetDir . $objet->getIdUtilisateur(), 0777);
         }
         return $objet;
     }
@@ -118,7 +152,7 @@ class UtilisateurService
     public function delete($sel)
     {
         for ($i = 0; $i <= count($sel) - 1; $i++) {
-            $this->fs->remove($this->targetDir . $sel[$i]['id']);
+            rmdir($this->targetDir . $sel[$i]['id']);
             $toDel = $this->em->find('GediBaseBundle:Utilisateur', $sel[$i]['id']);
             $this->em->remove($toDel);
         }

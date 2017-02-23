@@ -19,8 +19,8 @@ class UtilisateurType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('idUtilisateur', HiddenType::class);
-        $builder->add('username', EmailType::class);
+        $builder->add('idUtilisateur', HiddenType::class, array('label' => false));
+        $builder->add('username', EmailType::class, array('label' => false));
         $builder->add('password', RepeatedType::class, array(
             'type' => PasswordType::class,
             'invalid_message' => 'Les mots de passe ne concordent pas',
@@ -29,8 +29,8 @@ class UtilisateurType extends AbstractType
             'first_options' => array('label' => 'Mot de passe'),
             'second_options' => array('label' => 'Confirmation de mot de passe'),
         ));
-        $builder->add('nom', TextType::class);
-        $builder->add('prenom', TextType::class);
+        $builder->add('nom', TextType::class, array('label' => false));
+        $builder->add('prenom', TextType::class, array('label' => false));
         $builder->add('actif', CheckboxType::class, array('required' => false, 'label' => false));
     }
 

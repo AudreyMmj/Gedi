@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use Exception;
 use Gedi\BaseBundle\Entity\Projet;
 use Gedi\BaseBundle\Resources\Enum\BaseEnum;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Service permettant de manipuler les projets
@@ -19,11 +18,6 @@ class ProjetService
      * @var EntityManager
      */
     private $em;
-
-    /**
-     * @var Filesystem
-     */
-    private $fs;
 
     /**
      * @var string
@@ -39,7 +33,6 @@ class ProjetService
     {
         $this->em = $entityManager;
         $this->targetDir = $targetDir;
-        $this->fs = new Filesystem();
     }
 
     /**
@@ -63,7 +56,7 @@ class ProjetService
         }
         $this->em->persist($objet);
         $this->em->flush();
-        $this->fs->mkdir($this->targetDir . $objet->getPath(), 0777);
+        mkdir($this->targetDir . $objet->getPath(), 0777);
         return $objet;
     }
 
@@ -77,6 +70,34 @@ class ProjetService
     }
 
     /**
+     * Retourne les N derniers éléments
+     * @param $max
+     * @return array
+     */
+    public function readLast($max)
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('u')
+            ->from('GediBaseBundle:Projet', 'u')
+            ->orderBy('u.dateCreation', 'DESC')
+            ->setMaxResults($max);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
+    /**
+     * Retourne le nombre d'entités en BDD
+     * @return mixed
+     */
+    public function count()
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('count(u.idProjet)');
+        $qb->from('GediBaseBundle:Projet', 'u');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * Met à jour un projet
      * @param $sel
      * @return null|object
@@ -85,6 +106,10 @@ class ProjetService
     {
         $objet = $this->em->find('GediBaseBundle:Projet', $sel[0]['value']);
         $objet->setNom($sel[1]['value']);
+        $oldPath = $objet->getPath();
+        $newPath = substr($oldPath, 0, strrpos($oldPath, "/") + 1) . $objet->getNom();
+        $objet->setPath($newPath);
+        rename($this->targetDir . $oldPath, $this->targetDir . $newPath);
         $this->em->merge($objet);
         $this->em->flush();
         return $objet;
@@ -99,7 +124,7 @@ class ProjetService
     {
         for ($i = 0; $i <= count($sel) - 1; $i++) {
             $toDel = $this->em->find('GediBaseBundle:Projet', $sel[$i]['id']);
-            $this->fs->remove($this->targetDir . $toDel->getPath());
+            rmdir($this->targetDir . $toDel->getPath());
             $this->em->remove($toDel);
         }
         $this->em->flush();

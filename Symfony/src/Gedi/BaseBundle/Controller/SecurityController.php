@@ -3,14 +3,13 @@
 namespace Gedi\BaseBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class SecurityController extends Controller
 {
     /**
      * Controller de la page login
-     * @Route("/login")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @internal param Request $request
      */
     public function loginAction()
     {

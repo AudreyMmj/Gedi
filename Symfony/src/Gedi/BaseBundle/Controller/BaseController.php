@@ -28,9 +28,9 @@ class BaseController extends Controller
     public function homeAction()
     {
         if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            return $this->render('GediAdminBundle:Admin:home_admin.html.twig');
+            return $this->redirectToRoute('home_admin');
         } elseif ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-            return $this->render('GediUserBundle:User:home_user.html.twig');
+            return $this->redirectToRoute('home_user');
         }
     }
 
