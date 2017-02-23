@@ -28,6 +28,12 @@ $(document).ready(function () {
             '</strong>', 'glyphicon glyphicon-info-sign', 'info');
         // }
     }
+    //bouton de contact
+    if (!((window.location.href.indexOf("home_admin") > -1) || (window.location.href.indexOf("docs_admin") > -1) || (window.location.href.indexOf("projects_admin") > -1) || (window.location.href.indexOf("groups_admin") > -1)|| (window.location.href.indexOf("users_admin") > -1) || (window.location.href.indexOf("contact") > -1)))
+    {
+        showNotifyRight('','../img/contact_img.png', 'primary');
+    }
+
     updateNbEntity();
     activeDefault();
 });
