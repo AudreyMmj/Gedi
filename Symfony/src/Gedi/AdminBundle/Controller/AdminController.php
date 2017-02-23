@@ -23,15 +23,14 @@ class AdminController extends Controller
      */
     public function homeAction()
     {
-        $em = $this->getDoctrine()->getManager();
         // importation de tous les utilisateurs
-        $tab_users = $em->getRepository('GediBaseBundle:Utilisateur')->findAll();
+        $tab_users = $this->get('utilisateur.service')->read();
         // importation de tous les projets
-        $tab_projects = $em->getRepository('GediBaseBundle:Projet')->findAll();
+        $tab_projects = $this->get('projet.service')->read();
         // importation de tous les groupes
-        $tab_groups = $em->getRepository('GediBaseBundle:Groupe')->findAll();
+        $tab_groups = $this->get('groupe.service')->read();
         // importation de tous les documents
-        $tab_docs = $em->getRepository('GediBaseBundle:Document')->findAll();
+        $tab_docs = $this->get('document.service')->read();
 
         return $this->render('GediAdminBundle:Admin:home_admin.html.twig', array(
             'tab_users' => $tab_users,

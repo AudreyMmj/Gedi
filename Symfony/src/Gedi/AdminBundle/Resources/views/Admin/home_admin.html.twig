@@ -5,13 +5,304 @@
 {% endblock %}
 
 {% block app_contenu %}
-    <a href="{{ path('groups_admin') }} ">Gestion des groupes</a>
-    <br>
-    <a href="{{ path('docs_admin') }} ">Gestion des documents</a>
-    <br>
-    <a href="{{ path('users_admin') }} ">Gestion des utilisateurs</a>
-    <br>
-    <a href="{{ path('projects_admin') }} ">Gestion des projets</a>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading text-center">
+                        <a href="{{ path('users_admin') }}" class="text-white">
+                            <h4><span class="glyphicon glyphicon-user"></span>
+                                Utilisateurs</h4>
+                        </a>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group" style="height: auto">
+                            <li class="list-group-item text-center">
+                                <h4>Total <strong>{{ tab_users|length }}</strong></h4>
+                            </li>
+                            <li class="list-group-item">
+                                <h4>Fréquence de création</h4>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading text-center">
+                        <a href="{{ path('groups_admin') }}" class="text-white">
+                            <h4><span class="glyphicon glyphicon-th"></span> Groupes</h4>
+                        </a>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group" style="height: auto">
+                            <li class="list-group-item text-center">
+                                <h4>Total <strong>{{ tab_groups|length }}</strong></h4>
+                            </li>
+                            <li class="list-group-item">
+                                <h4>Fréquence de création</h4>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading text-center">
+                        <a href="{{ path('projects_admin') }}" class="text-white">
+                            <h4><span class="glyphicon glyphicon-folder-close"></span> Projets</h4>
+                        </a>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group" style="height: auto">
+                            <li class="list-group-item text-center">
+                                <h4>Total <strong>{{ tab_projects|length }}</strong></h4>
+                            </li>
+                            <li class="list-group-item">
+                                <h4>Fréquence de création</h4>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading text-center">
+                        <a href="{{ path('docs_admin') }}" class="text-white">
+                            <h4><span class="glyphicon glyphicon-file"></span> Documents</h4>
+                        </a>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group" style="height: auto">
+                            <li class="list-group-item text-center">
+                                <h4>Total <strong>{{ tab_docs|length }}</strong></h4>
+                            </li>
+                            <li class="list-group-item">
+                                <h4>Fréquence de création</h4>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par jour</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par mois</p>
+                                <p><span class="glyphicon glyphicon-calendar text-primary"></span> Par an</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel" style="padding-left: 20px">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h4 class="text-success"><span class="glyphicon glyphicon-cloud-upload"></span> Upload</h4>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Jour</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Mois</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>An</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel" style="padding-left: 20px">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h4 class="text-danger"><span class="glyphicon glyphicon-cloud-download"></span> Download
+                            </h4>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Jour</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Mois</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>An</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#users" aria-controls="users" role="tab" data-toggle="tab">
+                    <span class="glyphicon glyphicon-user"></span>Utilisateurs
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">
+                    <span class="glyphicon glyphicon-th"></span> Groupes
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#projects" aria-controls="projects" role="tab" data-toggle="tab">
+                    <span class="glyphicon glyphicon-folder-close"></span> Projets
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#docs" aria-controls="docs" role="tab" data-toggle="tab">
+                    <span class="glyphicon glyphicon-file"></span> Documents
+                </a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="users">
+                <div class="panel panel-default">
+                    <div class="table-responsive">
+                        <table class="table" data-toggle="table" data-striped="true"
+                               data-classes="table-no-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th data-field="nom" data-sortable="true" data-align="center">Nom</th>
+                                <th data-field="prenom" data-sortable="true" data-align="center">Prenom</th>
+                                <th data-field="login" data-sortable="true" data-align="center">Login</th>
+                                <th data-field="datec" data-sortable="true" data-align="center">Date de création</th>
+                                <th data-field="datem" data-sortable="true" data-align="center">Date de modification
+                                </th>
+                                <th data-field="actif" data-visible="false">Actif</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for utilisateur in tab_users %}
+                                <article>
+                                    {% if (utilisateur.role == 'ROLE_ADMIN') %}
+                                    <tr class="danger text-danger">
+                                        {% elseif (utilisateur.actif == '0') %}
+                                    <tr class="info text-info">
+                                        {% else %}
+                                    <tr>
+                                        {% endif %}
+                                        <td>{{ utilisateur.nom }}</td>
+                                        <td>{{ utilisateur.prenom }}</td>
+                                        <td>{{ utilisateur.username }}</td>
+                                        <td>{{ utilisateur.dateCreation|date('Y-m-d H:i:s') }}</td>
+                                        <td>{{ utilisateur.dateModification|date('Y-m-d H:i:s') }}</td>
+                                        <td>{{ utilisateur.actif }}</td>
+                                    </tr>
+                                </article>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="groups">
+                <div class="panel panel-default">
+                    <div class="table-responsive">
+                        <table class="table" data-toggle="table" data-striped="true"
+                               data-classes="table-no-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th data-field="nom" data-sortable="true" data-align="center">Nom du groupe</th>
+                                <th data-field="datec" data-sortable="true" data-align="center">Date de création</th>
+                                <th data-field="datem" data-sortable="true" data-align="center">Date de modification
+                                </th>
+                                <th data-field="propio" data-sortable="true" data-align="center">Propriétaire</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for groupe in tab_groups %}
+                                <article>
+                                    <tr>
+                                        <td>{{ groupe.nom }}</td>
+                                        <td>{{ groupe.dateCreation|date('Y-m-d H:i:s') }}</td>
+                                        <td>{{ groupe.dateModification|date('Y-m-d H:i:s') }}</td>
+                                        <td>{{ groupe.idUtilisateurFkGroupe.nom }} {{ groupe.idUtilisateurFkGroupe.prenom }}</td>
+                                    </tr>
+                                </article>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="projects">
+                <div class="panel panel-default">
+                    <div class="table-responsive">
+                        <table class="table" data-toggle="table" data-striped="true"
+                               data-classes="table-no-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th data-field="nom" data-sortable="true" data-align="center">Nom du projet</th>
+                                <th data-field="datec" data-sortable="true" data-align="center">Date de création</th>
+                                <th data-field="datem" data-sortable="true" data-align="center">Date de modification
+                                </th>
+                                <th data-field="propio" data-sortable="true" data-align="center">Propriétaire</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for projet in tab_projects %}
+                                <article>
+                                    <tr>
+                                        <td>{{ projet.nom }}</td>
+                                        <td>{{ projet.dateCreation|date('Y-m-d H:i:s') }}</td>
+                                        <td>{{ projet.dateModification|date('Y-m-d H:i:s') }}</td>
+                                        <td>{{ projet.idUtilisateurFkProjet.nom }} {{ projet.idUtilisateurFkProjet.prenom }}</td>
+                                    </tr>
+                                </article>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="docs">
+                <div class="panel panel-default">
+                    <div class="table-responsive">
+                        <table class="table" data-toggle="table" data-striped="true"
+                               data-classes="table-no-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th data-field="nom" data-sortable="true">Nom du document</th>
+                                <th data-field="type" data-sortable="true" data-align="center">Type</th>
+                                <th data-field="datec" data-sortable="true" data-align="center">Date de création</th>
+                                <th data-field="datem" data-sortable="true" data-align="center">Date de modification
+                                </th>
+                                <th data-field="projet" data-sortable="true" data-align="center">Projet</th>
+                                <th data-field="propio" data-sortable="true" data-align="center">Propriétaire</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for document in tab_docs %}
+                                <article>
+                                    <tr>
+                                        <td>{{ document.nom }}</td>
+                                        <td data-align="center"><span
+                                                    class="label label-default">{{ document.typeDoc }}</span></td>
+                                        <td>{{ document.dateCreation|date('Y-m-d H:i:s') }}</td>
+                                        <td>{{ document.dateModification|date('Y-m-d H:i:s') }}</td>
+                                        <td>{{ document.idProjetFkDocument.nom }}</td>
+                                        <td>{{ document.idUtilisateurFkDocument.nom }} {{ document.idUtilisateurFkDocument.prenom }}</td>
+                                    </tr>
+                                </article>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <ol class="breadcrumb">
+            <li><a href="{{ path('start') }}">Home</a></li>
+            <li class="active">Administration</li>
+        </ol>
+    </div>
 {% endblock %}
-
-

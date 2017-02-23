@@ -315,10 +315,10 @@ $(function () {
             url = types.DOCUMENT;
         } else if (window.location.href.indexOf("home_admin") > -1) {
             // if (nbNewUsers != null && nbNewUsers > 0) {
-            var nbNewUsers = 3;
-            showNotify('<strong>' + 'Vous avez ' + nbNewUsers +
-                ((nbNewUsers > 1) ? ' demandes' : ' demande') + 'd\'ajout' +
-                '</strong>', 'glyphicon glyphicon-info-sign', 'info');
+            // var nbNewUsers = 3;
+            // showNotify('<strong>' + 'Vous avez ' + nbNewUsers +
+            //     ((nbNewUsers > 1) ? ' demandes' : ' demande') + 'd\'ajout' +
+            //     '</strong>', 'glyphicon glyphicon-info-sign', 'info');
             // }
         }
         updateNbEntity(); // met à jour le nombre d'entités
