@@ -326,6 +326,14 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default" style="padding-left: 20px">
+                    <h4><span class="glyphicon glyphicon-hdd"></span> Mémoire occupée
+                        <strong>{{ (memorySize / 1048576)|slice(0, 10) }}</strong> Kilo bytes</h4>
+                </div>
+            </div>
+        </div>
         <br>
         <ol class="breadcrumb">
             <li><a href="{{ path('start') }}">Home</a></li>

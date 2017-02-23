@@ -37,6 +37,7 @@ class AdminController extends Controller
         $tab_docs_last = $this->get('document.service')->readLast(5);
         $nb_docs = $this->get('document.service')->count();
         $nb_download = $this->get('document.service')->sumDownload();
+        $memorySize = $this->get('fichier.service')->memorySize();
 
         return $this->render('GediAdminBundle:Admin:home_admin.html.twig', array(
             'nb_users' => $nb_users,
@@ -49,6 +50,7 @@ class AdminController extends Controller
             'tab_docs_last' => $tab_docs_last,
             'nb_download' => $nb_download,
             'nb_users_inactifs' => $nb_users_inactifs,
+            'memorySize' => $memorySize,
         ));
     }
 
