@@ -15,9 +15,9 @@ class GroupeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('idGroupe', HiddenType::class);
-        $builder->add('nom', TextType::class);
-        $builder->add('idUtilisateurFkGroupe', HiddenType::class);
+        $builder->add('idGroupe', HiddenType::class, array('label' => false));
+        $builder->add('nom', TextType::class, array('label' => false));
+        $builder->add('idUtilisateurFkGroupe', HiddenType::class, array('label' => false));
     }
 
     /**

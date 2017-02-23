@@ -192,6 +192,9 @@ function edit(js_object_arg) {
     $('#data_fichier').prop('disabled', true); // desactive le bouton upload
 }
 
+/**
+ * Fonction de vérification de formulaire
+ */
 function validForm() {
     if ($('.bouton-submit-admin-entity').val() == "Créer") {
         if (url == types.UTILISATEUR) {
@@ -207,8 +210,7 @@ function validForm() {
 }
 
 /**
- * Fonction de vérification de formulaire, permet de valider les champs coté client.
- * Cette fonction s'execute uniquement sur la page users_admin
+ * Fonction de vérification de formulaire utilisateur
  */
 function validFormUser() {
     var $bt = $('.bouton-submit-admin-entity');
@@ -246,7 +248,7 @@ function validFormUser() {
 }
 
 /**
- * Fonction de vérification de formulaire, permet de valider les champs coté client.
+ * Fonction de vérification de formulaire groupe et projet
  */
 function validFormGP() {
     var nomE = $('#gedi_basebundle_' + url + '_nom').val();
@@ -262,11 +264,13 @@ function validFormGP() {
     }
 }
 
+/**
+ * Fonction de vérification de formulaire document
+ */
 function validFormDoc() {
     var $bt = $('.bouton-submit-admin-entity');
     if ($('#data_typeDoc').val() == "" || $('#data_idUtilisateurFkDocument').val() == "" ||
-        $('#data_resume').val() == "" || $('#data_nom').val() == "" ||
-        $('#data_tag').val() == "" || $('#data_idProjetFkDocument').val() == "") {
+        $('#data_nom').val() == "" || $('#data_idProjetFkDocument').val() == "") {
         $bt.prop('disabled', true);
     } else {
         $bt.prop('disabled', false);
@@ -531,27 +535,38 @@ $(function () {
      * La fonction vide le formulaire de son contenu et met à jour le modal
      */
     $(".bouton-admin-popup-add").click(function () {
+
+        // toutes les pages
         $('form').trigger("reset"); // reset le formulaire
-        $('#gedi_basebundle_utilisateur_actif').bootstrapToggle('off'); // met le toggle sur off
-        $('#liste-projets').empty(); // vide la liste des projets sur projects_admin
         $('#popup-admin-add-titre').html('Créer un ' + url); // écrit le titre du modal
         var $bsae = $('.bouton-submit-admin-entity'); // récupère l'element de la classe bouton-submit-admin-entity
         $bsae.val('Créer'); // change la valeur de $bsae
         $('.assign-user').show(); // affiche le panel d'assignation d'utilisateur
-        $('#bouton-upload').show(); // affiche le bouton upload
-        $('#data_nom').prop('disabled', true);
-        $('#data_typeDoc').prop('disabled', true);
-        $('#data_fichier').prop('disabled', false); // desactive le bouton upload
         $bsae.prop('disabled', true); // desactive le bouton submit du formulaire
+        $('#gedi_basebundle_' + url + '_idUtilisateurFk' + (url.charAt(0).toUpperCase() + url.slice(1))).removeAttr('value');;
+        $('#gedi_basebundle_' + url + '_id' + (url.charAt(0).toUpperCase() + url.slice(1))).removeAttr('value');;
 
-        // ne s'execute que sur la page users_admin
-        // récupère tous les login pour vérifier coté client si
-        // on a pas un doublon de login
+        // users_admin
+        $('#gedi_basebundle_utilisateur_actif').bootstrapToggle('off'); // met le toggle sur off
+        // récupère tous les login pour vérifier coté client si on a pas un doublon de login
         if (url == types.UTILISATEUR) {
             logins = $.map($table.bootstrapTable('getData'), function (rows) {
                 return rows.login; // met la liste des logins du tableau dans la variable globale logins
             });
         }
+
+        // projects_admin
+        $('#gedi_basebundle_projet_parent').removeAttr('value');
+        $('#liste-projets').empty(); // vide la liste des projets sur projects_admin
+
+        // docs_admin
+        $('#bouton-upload').show(); // affiche le bouton upload
+        $('#data_nom').prop('disabled', true);
+        $('#data_typeDoc').prop('disabled', true);
+        $('#data_fichier').prop('disabled', false); // desactive le bouton upload
+        $('#data_idUtilisateurFkDocument').removeAttr('value');
+        $('#data_idProjetFkDocument').removeAttr('value');
+        $('#data_idDocument').removeAttr('value');
     });
 
     // ======================================================================================================

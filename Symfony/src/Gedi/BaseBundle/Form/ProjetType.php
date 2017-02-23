@@ -15,10 +15,10 @@ class ProjetType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('idProjet', HiddenType::class);
-        $builder->add('nom', TextType::class);
-        $builder->add('idUtilisateurFkProjet', HiddenType::class);
-        $builder->add('parent', HiddenType::class);
+        $builder->add('idProjet', HiddenType::class, array('label' => false));
+        $builder->add('nom', TextType::class, array('label' => false));
+        $builder->add('idUtilisateurFkProjet', HiddenType::class, array('label' => false));
+        $builder->add('parent', HiddenType::class, array('label' => false));
     }
 
     /**
