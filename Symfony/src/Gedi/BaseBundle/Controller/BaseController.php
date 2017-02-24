@@ -15,8 +15,7 @@ class BaseController extends Controller
      */
     public function startAction()
     {
-        return $this->render('GediBaseBundle:Base:start.html.twig', array(
-        ));
+        return $this->render('GediBaseBundle:Base:start.html.twig', array());
     }
 
     /**
@@ -50,10 +49,7 @@ class BaseController extends Controller
 
         // enregistre l'utilisateur lorsque le formulaire est soumis
         if ($utilisateurForm->isSubmitted() && $utilisateurForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($utilisateur);
-            $em->flush();
-
+            $this->get('utilisateur.service')->register($utilisateur);
             return $this->redirectToRoute('start');
         }
 

@@ -55,6 +55,20 @@ class UtilisateurService
     }
 
     /**
+     * Enregistre les nouvelles demandes d'ajout utilisateur
+     * @param Utilisateur $objet
+     */
+    public function register(Utilisateur $objet)
+    {
+        $objet->setSalt(substr(md5(time()), 0, 23));
+        $encoder = $this->ef->getEncoder($objet);
+        $password = $encoder->encodePassword($objet->getPassword(), $objet->getSalt());
+        $objet->setPassword($password);
+        $this->em->persist($objet);
+        $this->em->flush();
+    }
+
+    /**
      * Enregistre un utilisateur dans la BDD
      * et crée son répertoire de sauvegarde
      * @param $sel
@@ -139,16 +153,18 @@ class UtilisateurService
     {
         $objet = $this->em->find('GediBaseBundle:Utilisateur', $sel[0]['value']);
         $objet->setUsername($sel[1]['value']);
-        $objet->setSalt(substr(md5(time()), 0, 23));
-        $encoder = $this->ef->getEncoder($objet);
-        $password = $encoder->encodePassword($sel[2]['value'], $objet->getSalt());
-        $objet->setPassword($password);
+        if ($objet->getPassword() != $sel[2]['value']) {
+            $objet->setSalt(substr(md5(time()), 0, 23));
+            $encoder = $this->ef->getEncoder($objet);
+            $password = $encoder->encodePassword($sel[2]['value'], $objet->getSalt());
+            $objet->setPassword($password);
+        }
         $objet->setNom($sel[4]['value']);
         $objet->setPrenom($sel[5]['value']);
         $objet->setActif(($sel[6]['value'] == "false") ? false : true);
         $this->em->merge($objet);
         $this->em->flush();
-        if ($objet->getActif() == true) {
+        if ($objet->getActif() == true && !file_exists($this->targetDir . $objet->getIdUtilisateur())) {
             mkdir($this->targetDir . $objet->getIdUtilisateur(), 0777);
         }
         return $objet;
