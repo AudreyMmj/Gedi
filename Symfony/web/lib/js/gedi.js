@@ -26,10 +26,14 @@ const types = {
     DOWNLOAD: "téléchargé", // demande de téléchargement de fichier
     MODIFICATION: "modifié", // demande de modification
     SUPPRESSION: "supprimé", // demande de suppression
-    UTILISATEUR: "utilisateur", // demande d'optention des utilisateurs d'une entité
-    DOCUMENT: "document", // demande d'optention des documents d'une entité
-    PROJET: "projet", // demande d'optention des projets d'une entité
-    GROUPE: "groupe" // demande d'optention des groupes d'une entité
+    UTILISATEUR: "utilisateur", // demande d'optention des utilisateurs d'une entité || page users_admin
+    DOCUMENT: "document", // demande d'optention des documents d'une entité || page docs_admin
+    PROJET: "projet", // demande d'optention des projets d'une entité || page projects_admin
+    GROUPE: "groupe", // demande d'optention des groupes d'une entité || page groups_admin
+    HOME_USER: "home_user", // page bureau utilisateur
+    RECENT_USER: "recent_user", // page elements recents utilisateur
+    SHARED_USER: "shared_user", // page elements partagés utilisateur
+    ACCOUNT_USER: "account_user" // page account_user
 };
 
 // ======================================================================================================
@@ -147,12 +151,48 @@ function showNotify(texte, icon, type) {
             message: texte
         }, {
             type: type,
+            placement: {
+                from: "top",
+                align: "left"
+            },
             animate: {
                 enter: 'animated bounceInDown',
                 exit: 'animated bounceOutUp'
             }
         });
     }
+}
+
+/**
+ * Fonction d'affichage de pop-up de contact
+ */
+function showNotifyContact() {
+    var icon = '../img/contact_img.png';
+    if (url == types.HOME_USER || url == types.SHARED_USER ||
+        url == types.RECENT_USER || url == types.ACCOUNT_USER) {
+        icon = '../../img/contact_img.png';
+    }
+    $.notify({
+        icon: icon,
+        url: 'http://localhost/Gedi/Symfony/web/app_dev.php/contact'
+    }, {
+        type: 'null',
+        icon_type: 'image',
+        allow_dismiss: false,
+        placement: {
+            from: "top",
+            align: "right"
+        },
+        offset: {
+            x: -270,
+            y: ($(window).height() / 2)
+        },
+        delay: 0,
+        url_target: '_self',
+        animate: {
+            enter: 'animated bounceInRight'
+        }
+    });
 }
 
 /**
@@ -321,14 +361,18 @@ $(function () {
             var $jb = $('#jumbo1');
             $jb.attr('style', 'visibility: visible');
             $jb.animateCss('zoomInDown');
+            showNotifyContact();
         } else if (window.location.href.indexOf("register") > -1) {
             var $pr = $('#panel-register');
             $pr.attr('style', 'visibility: visible');
             $pr.animateCss('bounceInUp');
+            showNotifyContact();
         } else if (window.location.href.indexOf("contact") > -1) {
             var $pc = $('#panel-contact');
             $pc.attr('style', 'visibility: visible');
             $pc.animateCss('bounceInUp');
+        } else if (window.location.href.indexOf("login") > -1) {
+            showNotifyContact();
         } else if (window.location.href.indexOf("users_admin") > -1) {
             url = types.UTILISATEUR;
         } else if (window.location.href.indexOf("groups_admin") > -1) {
@@ -339,6 +383,18 @@ $(function () {
             url = types.DOCUMENT;
         } else if (window.location.href.indexOf("home_admin") > -1) {
             dashboardStart(1);
+        } else if (window.location.href.indexOf("home_user") > -1) {
+            url = types.HOME_USER;
+            showNotifyContact();
+        } else if (window.location.href.indexOf("account_user") > -1) {
+            url = types.ACCOUNT_USER;
+            showNotifyContact();
+        } else if (window.location.href.indexOf("recent_user") > -1) {
+            url = types.RECENT_USER;
+            showNotifyContact();
+        } else if (window.location.href.indexOf("shared_user") > -1) {
+            url = types.SHARED_USER;
+            showNotifyContact();
         }
         updateNbEntity(); // met à jour le nombre d'entités
         activeDefault(); // active les éléments par défaut
