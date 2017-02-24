@@ -20,9 +20,9 @@
     <title>GEDI - {% block app_titre %}{% endblock %}</title>
 </head>
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <body class="background-app">
+<body class="background-app">
 {% else %}
-    <body class="full">
+<body class="full">
 {% endif %}
 <div class="container">
     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
@@ -66,8 +66,6 @@
                                     <li><a href="{{ path('docs_admin') }}"><span
                                                     class="glyphicon glyphicon-file"></span> Documents</a></li>
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Paramètres</a></li>
-                                    <li role="separator" class="divider"></li>
                                     <li><a id="btn-logout" href="{{ path('logout') }}"><span
                                                     class="glyphicon glyphicon-log-out"></span>
                                             Deconnexion</a></li>
@@ -77,7 +75,7 @@
                             <!-- le menu déroulant, apparait lorsqu'un USER est connecté -->
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <span class="glyphicon glyphicon-user"></span> Bienvenue, {#{{ app.user.prenom }}#}
+                                    <span class="glyphicon glyphicon-user"></span> Bienvenue, {{ app.user.prenom }}
                                     <b
                                             class="caret"></b></a>
                                 <ul class="dropdown-menu">
