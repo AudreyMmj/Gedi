@@ -31,16 +31,27 @@ class UtilisateurService
     private $targetDir;
 
     /**
+     * @var FileService
+     */
+    private $fs;
+
+    /**
      * UtilisateurService constructor.
      * @param EntityManager $entityManager
      * @param EncoderFactory $encoderFactory
      * @param $targetDir
+     * @param FileService $fileService
      */
-    public function __construct(EntityManager $entityManager, EncoderFactory $encoderFactory, $targetDir)
+    public function __construct(EntityManager $entityManager, EncoderFactory $encoderFactory, $targetDir, FileService $fileService)
     {
         $this->em = $entityManager;
         $this->ef = $encoderFactory;
         $this->targetDir = $targetDir;
+        $this->fs = $fileService;
+
+        if (!file_exists($targetDir)) {
+            mkdir($targetDir, 0777);
+        }
     }
 
     /**
@@ -152,7 +163,9 @@ class UtilisateurService
     public function delete($sel)
     {
         for ($i = 0; $i <= count($sel) - 1; $i++) {
-            rmdir($this->targetDir . $sel[$i]['id']);
+            if (file_exists($this->targetDir . $sel[$i]['id'])) {
+                $this->fs->rmdir_recursive($this->targetDir . $sel[$i]['id']);
+            }
             $toDel = $this->em->find('GediBaseBundle:Utilisateur', $sel[$i]['id']);
             $this->em->remove($toDel);
         }

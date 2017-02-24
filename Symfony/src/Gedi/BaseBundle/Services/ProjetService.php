@@ -25,14 +25,20 @@ class ProjetService
     private $targetDir;
 
     /**
+     * @var FileService
+     */
+    private $fs;
+
+    /**
      * ProjetService constructor.
      * @param EntityManager $entityManager
      * @param $targetDir
      */
-    public function __construct(EntityManager $entityManager, $targetDir)
+    public function __construct(EntityManager $entityManager, $targetDir, FileService $fileService)
     {
         $this->em = $entityManager;
         $this->targetDir = $targetDir;
+        $this->fs = $fileService;
     }
 
     /**
@@ -124,7 +130,7 @@ class ProjetService
     {
         for ($i = 0; $i <= count($sel) - 1; $i++) {
             $toDel = $this->em->find('GediBaseBundle:Projet', $sel[$i]['id']);
-            rmdir($this->targetDir . $toDel->getPath());
+            $this->fs->rmdir_recursive($this->targetDir . $toDel->getPath());
             $this->em->remove($toDel);
         }
         $this->em->flush();
