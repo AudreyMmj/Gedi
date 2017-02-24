@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class UserController extends Controller
 {
     /**
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_USER') or has_role('ROLE_ADMIN')")
      */
     public function homeAction(Request $request)
     {
@@ -29,7 +29,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_USER') or has_role('ROLE_ADMIN')")
      */
     public function accountAction()
     {
@@ -37,7 +37,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_USER') or has_role('ROLE_ADMIN')")
      */
     public function sharedAction()
     {
@@ -45,7 +45,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_USER') or has_role('ROLE_ADMIN')")
      */
     public function recentAction()
     {

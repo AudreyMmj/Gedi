@@ -13,12 +13,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class AdminController extends Controller
 {
     /**
      * Page d'accueil du back office
+     * @Security("has_role('ROLE_ADMIN')")
      * @return Response
      */
     public function homeAction()
@@ -57,8 +58,9 @@ class AdminController extends Controller
     /**
      * Page d'administration des utilisateurs de l'application
      * @param Request $request
-     * @return JsonResponse|Response
+     * @Security("has_role('ROLE_ADMIN')")
      * @throws Exception
+     * @return JsonResponse|Response
      */
     public function usersAction(Request $request)
     {
@@ -130,6 +132,7 @@ class AdminController extends Controller
     /**
      * Page d'administration des groupes de l'application
      * @param Request $request
+     * @Security("has_role('ROLE_ADMIN')")
      * @return JsonResponse|Response
      * @throws Exception
      */
@@ -214,6 +217,7 @@ class AdminController extends Controller
     /**
      * Page d'administration des projets de l'application
      * @param Request $request
+     * @Security("has_role('ROLE_ADMIN')")
      * @return JsonResponse|Response
      * @throws Exception
      */
@@ -312,6 +316,7 @@ class AdminController extends Controller
     /**
      * Page d'administration des documents de l'application
      * @param Request $request
+     * @Security("has_role('ROLE_ADMIN')")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws Exception
      */
