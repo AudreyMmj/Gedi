@@ -40,4 +40,19 @@ class FileService
     {
         return disk_total_space($this->targetDir);
     }
+
+    /**
+     * Fonction de suppression recursive, supprime un repertoire
+     * avec tout son contenu
+     * @param $dir
+     */
+    public function rmdir_recursive($dir)
+    {
+        foreach (scandir($dir) as $file) {
+            if ('.' === $file || '..' === $file) continue;
+            if (is_dir("$dir/$file")) $this->rmdir_recursive("$dir/$file");
+            else unlink("$dir/$file");
+        }
+        rmdir($dir);
+    }
 }

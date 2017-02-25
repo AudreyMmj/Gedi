@@ -115,13 +115,17 @@ class DocumentService
     }
 
     /**
-     * Télécharge les fichiers selectionnés
+     * Télécharge les fichiers selectionnés dans une archive zip
      * @param $sel
      */
     public function download($sel)
     {
         $zip = new ZipArchive();
         $filename = $this->targetDir . "archive.zip";
+
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
 
         if ($zip->open($filename, ZipArchive::CREATE) !== TRUE) {
             exit("Impossible d'ouvrir le fichier <$filename>\n");
@@ -130,8 +134,7 @@ class DocumentService
         for ($i = 0; $i <= count($sel) - 1; $i++) {
             $objet = $this->em->find('GediBaseBundle:Document', $sel[$i]);
             $objet->addNbDownload();
-            $file = new File($this->targetDir . $objet->getFichier());
-            $zip->addFile($file);
+            $zip->addFile($this->targetDir . $objet->getFichier(), $objet->getNom() . '.' . $objet->getTypeDoc());
             $this->em->merge($objet);
         }
         $zip->close();

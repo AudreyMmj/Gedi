@@ -31,16 +31,41 @@ class UtilisateurService
     private $targetDir;
 
     /**
+     * @var FileService
+     */
+    private $fs;
+
+    /**
      * UtilisateurService constructor.
      * @param EntityManager $entityManager
      * @param EncoderFactory $encoderFactory
      * @param $targetDir
+     * @param FileService $fileService
      */
-    public function __construct(EntityManager $entityManager, EncoderFactory $encoderFactory, $targetDir)
+    public function __construct(EntityManager $entityManager, EncoderFactory $encoderFactory, $targetDir, FileService $fileService)
     {
         $this->em = $entityManager;
         $this->ef = $encoderFactory;
         $this->targetDir = $targetDir;
+        $this->fs = $fileService;
+
+        if (!file_exists($targetDir)) {
+            mkdir($targetDir, 0777);
+        }
+    }
+
+    /**
+     * Enregistre les nouvelles demandes d'ajout utilisateur
+     * @param Utilisateur $objet
+     */
+    public function register(Utilisateur $objet)
+    {
+        $objet->setSalt(substr(md5(time()), 0, 23));
+        $encoder = $this->ef->getEncoder($objet);
+        $password = $encoder->encodePassword($objet->getPassword(), $objet->getSalt());
+        $objet->setPassword($password);
+        $this->em->persist($objet);
+        $this->em->flush();
     }
 
     /**
@@ -128,16 +153,18 @@ class UtilisateurService
     {
         $objet = $this->em->find('GediBaseBundle:Utilisateur', $sel[0]['value']);
         $objet->setUsername($sel[1]['value']);
-        $objet->setSalt(substr(md5(time()), 0, 23));
-        $encoder = $this->ef->getEncoder($objet);
-        $password = $encoder->encodePassword($sel[2]['value'], $objet->getSalt());
-        $objet->setPassword($password);
+        if ($objet->getPassword() != $sel[2]['value']) {
+            $objet->setSalt(substr(md5(time()), 0, 23));
+            $encoder = $this->ef->getEncoder($objet);
+            $password = $encoder->encodePassword($sel[2]['value'], $objet->getSalt());
+            $objet->setPassword($password);
+        }
         $objet->setNom($sel[4]['value']);
         $objet->setPrenom($sel[5]['value']);
         $objet->setActif(($sel[6]['value'] == "false") ? false : true);
         $this->em->merge($objet);
         $this->em->flush();
-        if ($objet->getActif() == true) {
+        if ($objet->getActif() == true && !file_exists($this->targetDir . $objet->getIdUtilisateur())) {
             mkdir($this->targetDir . $objet->getIdUtilisateur(), 0777);
         }
         return $objet;
@@ -152,7 +179,9 @@ class UtilisateurService
     public function delete($sel)
     {
         for ($i = 0; $i <= count($sel) - 1; $i++) {
-            rmdir($this->targetDir . $sel[$i]['id']);
+            if (file_exists($this->targetDir . $sel[$i]['id'])) {
+                $this->fs->rmdir_recursive($this->targetDir . $sel[$i]['id']);
+            }
             $toDel = $this->em->find('GediBaseBundle:Utilisateur', $sel[$i]['id']);
             $this->em->remove($toDel);
         }
